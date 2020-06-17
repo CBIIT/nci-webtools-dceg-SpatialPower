@@ -5,12 +5,10 @@ import { Results } from './results';
 import { postJSON } from '../../services/query';
 
 export function Calculate() {
-    const [params, setParams] = useState({});
     const [results, setResults] = useState({});
     const [errors, setErrors] = useState([]);
 
     async function handleSubmit(params) {
-        setParams(params);
         setResults({});
         setErrors([]);
 
@@ -39,10 +37,7 @@ export function Calculate() {
                 <div className="card shadow-sm h-100">
                     <div className="card-body">
                         {errors.map((error, i) => <Alert variant="danger" dismissible onClose={e => removeError(i)}>{error}</Alert>)}
-
-
                         <Results results={results} />
-
                     </div>
                 </div>
             </div>

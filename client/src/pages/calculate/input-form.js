@@ -19,11 +19,13 @@ export function InputForm({ className = '', onSubmit }) {
 
         switch(target.type) {
             case 'checkbox':
-                value = Boolean(target.checked)
+                value = Boolean(target.checked);
                 break;
             case 'number':
                 value = Number(target.value);
                 break;
+            default:
+                value = target.value;
         }
 
         setParams({ ...params, [name]: value });

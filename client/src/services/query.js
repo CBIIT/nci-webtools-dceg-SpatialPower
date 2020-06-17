@@ -8,7 +8,7 @@ export async function postJSON(url, data) {
         let value = data[key];
 
         //  add the key to the object, coercing numeric strings to numbers
-        if (value.length && value !== null || value !== undefined)
+        if (value.length && value !== null && value !== undefined)
             body[key] = isNaN(value) ? value : +value;
     }
 
