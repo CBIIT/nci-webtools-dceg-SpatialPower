@@ -37,30 +37,26 @@ for (let folder of [config.logging.folder, config.results.folder])
         fs.mkdirSync(folder, {recursive: true})
 
 // handle calculation submission
-app.post('/submit', (request, response) => {
+app.post('/submit', async (request, response) => {
     try {
         const id = crypto.randomBytes(16).toString('hex');
-        const calculate = r.bind(null, path.resolve(__dirname, 'calculate.R'), 'calculate');
-        const params = {
-            ...request.body, 
-            workingDirectory: path.resolve(config.results.folder),
-            id, 
-        };
-        const results = calculate({params});
-        response.json(results);
-    } catch(error) {
-        logger.error(error);
-        response.status(500).json(error.toString());
-    }
-});
-
-// handle queue submission
-app.post('/submit-queue', async (request, response) => {
-    try {
-        const id = crypto.randomBytes(16).toString('hex');
-        const message = {body: {id, ...request.body}};
-        await producer.send([message]);
-        response.json({id}); // return message id
+        if (request.body.queue) {
+            // enqueue message and send a response with the request id
+            const message = {body: {id, ...request.body}};
+            await producer.send([message]);
+            response.json({id}); // return message id
+        } else {
+            // otherwise, perform calculation and return results
+            response.json(r(
+                path.resolve(__dirname, 'calculate.R'), // path to R source file
+                'calculate', // name of method to call
+                [{
+                    ...request.body, 
+                    workingDirectory: path.resolve(config.results.folder),
+                    id, 
+                }]
+            ));
+        }
     } catch(error) {
         logger.error(error);
         response.status(500).json(error.toString());
