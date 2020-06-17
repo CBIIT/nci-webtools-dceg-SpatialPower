@@ -4,6 +4,8 @@ CBIIT DCEG spatial power calculation tool
 ### Getting Started
 
 #### Install Dependencies
+Ensure that R is in your path.
+
 ```bash
 npm install
 npm run install-r-packages # May need to run in administrative terminal on Windows
