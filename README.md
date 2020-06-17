@@ -26,6 +26,12 @@ npm start
 # Server runs on port 4000 by default
 ```
 
+#### Start Queue Worker
+```bash
+npm run start-queue-worker
+# Queue worker listens to an SQS Endpoint
+```
+
 #### Start Client
 ```bash
 cd client
