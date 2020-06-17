@@ -42,8 +42,8 @@ app.post('/submit', async (request, response) => {
         const id = crypto.randomBytes(16).toString('hex');
         if (request.body.queue) {
             // enqueue message and send a response with the request id
-            const message = {body: {id, ...request.body}};
-            await producer.send([message]);
+            const messageBody = {id, ...request.body};
+            await producer.send([{id, body: JSON.stringify(messageBody)}]);
             response.json({id}); // return message id
         } else {
             // otherwise, perform calculation and return results
