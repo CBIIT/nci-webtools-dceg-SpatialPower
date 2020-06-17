@@ -53,12 +53,12 @@ export function Footer({
             </div>
 
             <div className="row mb-3">
-                {columns.map(column => 
-                    <div className="col-md">
+                {columns.map((column, columnIndex) => 
+                    <div key={`column-${columnIndex}`} className="col-md">
                         <div className="h5 font-weight-normal">{column.title.toUpperCase()}</div>
                         <ul className="list-style-none">
-                            {column.links.map(link => 
-                                <li>
+                            {column.links.map((link, linkIndex) => 
+                                <li key={`link-${columnIndex}-${linkIndex}`}>
                                     <a className="text-light font-weight-bold" href={link.href}>{link.title}</a>
                                 </li>
                             )}
@@ -71,8 +71,8 @@ export function Footer({
 
         <div className="text-center">
             <ul className="list-style-none inline-list">
-                {footerLinks.map(link => 
-                    <li><a className="text-light font-weight-bold" href={link.href}>{link.title}</a></li>
+                {footerLinks.map((link, linkIndex) => 
+                    <li key={`footer-link-${linkIndex}`}><a className="text-light font-weight-bold" href={link.href}>{link.title}</a></li>
                 )}
             </ul>
             {footerText}
