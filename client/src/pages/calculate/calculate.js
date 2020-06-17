@@ -5,24 +5,34 @@ import { Results } from './results';
 import { postJSON } from '../../services/query';
 
 export function Calculate() {
+    const [params, setParams] = useState({});
     const [results, setResults] = useState({});
-    const [errors, setErrors] = useState([]);
+    const [messages, setMessages] = useState([]);
 
     async function handleSubmit(params) {
+        setParams(params);
         setResults({});
-        setErrors([]);
+        setMessages([]);
 
         try {
             console.log(params);
-            const url = params.queue ? 'submit-queue' : 'submit';
-            setResults(await postJSON(url, params));
+            const results = await postJSON('submit', params);
+
+            if (params.queue) {
+                // if the request was enqueued, notify the user
+                setMessages([{type: 'primary', text: `Your request has been enqueued, and results will be sent to: ${params.email}.`}]);
+            } else {
+                // otherwise, show results
+                setResults(results);
+            }
+
         } catch (error) {
-            setErrors([error]);
+            setMessages([{type: 'danger', text: error}]);
         }
     }
 
-    function removeError(index) {
-        setErrors(errors.filter((e, i) => i !== index))
+    function removeMessage(index) {
+        setMessages(messages.filter((e, i) => i !== index))
     }    
 
     return <div className="container my-4">
@@ -36,8 +46,8 @@ export function Calculate() {
             <div className="col-md-8">
                 <div className="card shadow-sm h-100">
                     <div className="card-body">
-                        {errors.map((error, i) => <Alert variant="danger" dismissible onClose={e => removeError(i)}>{error}</Alert>)}
-                        <Results results={results} />
+                        {messages.map((message, i) => <Alert variant={message.type} dismissible onClose={e => removeMessage(i)}>{message.text}</Alert>)}
+                        {<Results results={results} />}
                     </div>
                 </div>
             </div>
