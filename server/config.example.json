@@ -1,21 +1,30 @@
 {
     "port": 4000,
+    "results": {
+        "folder": "results"
+    },
     "logging": {
-        "folder": "../logs",
+        "folder": "logs",
         "level": "debug"
     },
     "queue": {
         "url": "",
-        "region": "",
-        "accessKeyId": "...",
-        "secretAccessKey": "..."
+        "region": "us-east-1",
+        "accessKeyId": "",
+        "secretAccessKey": ""
     },
     "email": {
         "admin": "",
         "sender": "",
-        "url": "",
-        "region": "",
-        "accessKeyId": "...",
-        "secretAccessKey": "..."
+        "baseUrl": "",
+        "region": "us-east-1",
+        "accessKeyId": "",
+        "secretAccessKey": ""
+    },
+    "s3": {
+        "bucket": "",
+        "region": "us-east-1",
+        "accessKeyId": "",
+        "secretAccessKey": ""
     }
 }
