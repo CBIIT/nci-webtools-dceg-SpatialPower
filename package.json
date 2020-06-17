@@ -27,6 +27,8 @@
     "nodemailer": "^6.4.8",
     "r-wrapper": "^1.0.3",
     "sqs-consumer": "^5.4.0",
-    "sqs-producer": "^2.0.2"
+    "sqs-producer": "^2.0.2",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.5.0"
   }
 }
