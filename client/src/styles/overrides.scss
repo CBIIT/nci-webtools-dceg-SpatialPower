@@ -2,8 +2,20 @@
     outline: none;
 }
 
+.bg-primary-darker {
+    background-color: $primary-darker !important;
+}
+
+.bg-primary-gradient {
+    background: linear-gradient(45deg, $primary, $primary-darker) !important;
+}
+
 .alert-dismissible .close {
     padding: 0 .25rem;
+}
+
+.btn {
+    font-weight: 500;
 }
 
 .nav-link {
