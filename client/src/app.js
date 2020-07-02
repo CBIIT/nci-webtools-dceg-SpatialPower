@@ -25,6 +25,27 @@ export function App() {
     },
   ];
 
+  const cardLinks = [
+    {
+      action:'Feature 1',
+      title:'Feature 1',
+      cardTitle:'Feature 1',
+      cardText:'Perform Feature 1'
+    },
+    {
+      action:'Feature 2',
+      title:'Feature 2',
+      cardTitle:'Feature 2',
+      cardText:'Perform Feature 2'
+    },
+    {
+      action:'Feature 3',
+      title:'Feature 3',
+      cardTitle:'Feature 3',
+      cardText:'Perform Feature 3'
+    }
+  ];
+
   return (
     <Router>
       <Header 
@@ -32,7 +53,7 @@ export function App() {
         url="https://dceg.cancer.gov/"
       />    
       <Navbar links={links} />
-      <Route path="/" exact={true} component={Home} />
+      <Route path="/" exact={true}  render={(_) => <Home links={cardLinks} />}/>
       <Route path="/calculate" component={Calculate} />
       <Route path="/about" component={About} />
       <Footer 
