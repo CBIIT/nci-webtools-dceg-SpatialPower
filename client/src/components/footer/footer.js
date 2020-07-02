@@ -4,6 +4,8 @@ import React from 'react';
 export function Footer({
     style = {},
 
+    className = "",
+
     title = <>
         <div className="h4 mb-0">National Cancer Institute</div>
         <div className="h6">at the National Institutes of Health</div>
@@ -44,7 +46,7 @@ export function Footer({
     </span>    
 }) {
 
-    return <footer className="bg-primary text-light py-4" style={style}>
+    return <footer className={className || "bg-primary text-light py-4"} style={style}>
         <div className="container">
             <div className="row mb-4">
                 <div className="col">

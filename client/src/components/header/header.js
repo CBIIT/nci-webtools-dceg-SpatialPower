@@ -10,15 +10,16 @@ export function Header({
     url = 'https://www.cancer.gov/'
 }) {
     return <header className={className} style={style}>
-        <a href={url} target="_blank" rel="noopener noreferrer">
-            <img 
-                src={imageSource} 
-                style={imageStyle}
-                className={imageClassName}
-                height="60" 
-                alt="National Cancer Institute Logo" 
-                {...imageProps}
-            />
-        </a>
+        
+            <a href={url} target="_blank" rel="noopener noreferrer">
+                <img 
+                    src={imageSource} 
+                    style={imageStyle}
+                    className={imageClassName}
+                    height="60" 
+                    alt="National Cancer Institute Logo" 
+                    {...imageProps}
+                />
+            </a>
     </header>
 }

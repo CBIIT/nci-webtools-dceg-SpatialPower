@@ -20,10 +20,22 @@ if (config.queue.accessKeyId && config.queue.secretAccessKey) {
 const app = Consumer.create({
   queueUrl: config.queue.url,
   handleMessage: async (message) => {
-    console.log(message);
-
-    /*
     try {
+
+      /*
+      let params = JSON.parse(message);
+
+      const results = r(
+        path.resolve(__dirname, 'calculate.R'), // path to R source file
+        'calculate', // name of method to call
+        [{
+          ...request.body,
+          workingDirectory: path.resolve(config.results.folder),
+          id,
+        }]
+      )
+
+
       const calculate = r.bind(null, path.resolve(__dirname, 'calculate.R'), 'calculate');
       const params = {
         ...request.body,
@@ -31,14 +43,11 @@ const app = Consumer.create({
         id,
       };
       const results = calculate({ params });
+      */
     } catch (error) {
-      console.error(error);
-
+      logger.error(error);
+      throw ({ error, message })
     }
-
-    const output = calculate(message);
-    */
-    console.log(output);
   },
   sqs: new AWS.SQS({
     httpOptions: {
@@ -90,7 +99,7 @@ function readTemplate(filePath, data) {
   // replace {tokens} with data values
   // or removes them if not found
   return template.replace(
-    /{[^{}]+}/g, 
+    /{[^{}]+}/g,
     key => data[key.replace(/[{}]+/g, '')] || ''
   );
 }
