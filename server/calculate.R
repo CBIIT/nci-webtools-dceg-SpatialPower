@@ -1,5 +1,7 @@
 
 calculate <- function(params) {
+
+    # working directory should be a unique, empty folder
     setwd(params$workingDirectory)
 
     unit.circle <- spatstat::disc(radius = 0.5, centre = c(0.5, 0.5))
