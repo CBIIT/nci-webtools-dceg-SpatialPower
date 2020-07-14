@@ -1,11 +1,17 @@
 import React from 'react';
-import BootstrapTable from 'react-bootstrap-table-next';
+import {
+    Table,
+    paginationText,
+    paginationSizeSelector,
+    paginationButton,
+} from '@cbiitss/react-components';
 import paginationFactory from 'react-bootstrap-table2-paginator';
+import filterFactory from 'react-bootstrap-table2-filter';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 
 export function Results({ results }) {
-    if (!Object.keys(results).length)
+    if (!Object.keys(results).length || !results.rx || !results.n_con)
         return null;
 
     let statistics = new Array(results.rx.length);
@@ -45,7 +51,14 @@ export function Results({ results }) {
             { dataField: 'ry', text: 'Y coord', sort: true },
         ],
         data: statistics,
-        pagination: paginationFactory({ showTotal: true }),
+        filter: filterFactory(),
+        pagination: paginationFactory({
+            showTotal: true,
+            sizePerPageList: [10, 50, 100],
+            // paginationTotalRenderer: paginationText('cell', 'cells'),
+            sizePerPageRenderer: paginationSizeSelector,
+            pageButtonRenderer: paginationButton
+        }),
     };
 
     let simulationsTable = {
@@ -59,7 +72,14 @@ export function Results({ results }) {
             { dataField: 't_obs', text: 'T statistic length', sort: true },
         ],
         data: simulations,
-        pagination: paginationFactory({ showTotal: true }),
+        filter: filterFactory(),
+        pagination: paginationFactory({
+            showTotal: true,
+            sizePerPageList: [10, 50, 100],
+            // paginationTotalRenderer: paginationText('simulation', 'simulations'),
+            sizePerPageRenderer: paginationSizeSelector,
+            pageButtonRenderer: paginationButton
+        }),
     };
 
     return <>
@@ -67,7 +87,7 @@ export function Results({ results }) {
             {results.plots.map((plot, i) =>
                 <Tab eventKey={`plot-${i + 1}`} title={`Plot ${i + 1}`}>
                     <div className="text-center">
-                        <img className="img-fluid" src={`results/${plot}`} alt={`Plot ${i + 1}`} />
+                        <img className="img-fluid" src={`results/${results.id}/${plot}`} alt={`Plot ${i + 1}`} />
                     </div>
                 </Tab>
             )}
@@ -88,21 +108,16 @@ export function Results({ results }) {
 
             <Tab eventKey="statistics" title="Statistics">
                 <div className="my-4">
-                    <BootstrapTable bootstrap4 striped bordered hover condensed {...statisticsTable} />
+                    <Table {...statisticsTable} />
                 </div>
             </Tab>
 
             <Tab eventKey="simulations" title="Simulations">
                 <div className="my-4">
-                    <BootstrapTable bootstrap4 striped bordered hover condensed {...simulationsTable} />
+                    <Table {...simulationsTable} />
                 </div>
             </Tab>
-
-
         </Tabs>
-
-
-
     </>
 
 }
