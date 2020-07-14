@@ -1,17 +1,14 @@
 import React, { useEffect } from 'react';
-import { Route, useLocation } from 'react-router-dom';
-import { Header } from './components/header/header';
-import { Footer } from './components/footer/footer';
-import { Navbar } from './components/navbar/navbar';
+import { Route, useLocation, NavLink } from 'react-router-dom';
+import { Navbar, NCIHeader, NCIFooter } from '@cbiitss/react-components'
 import { Home } from './pages/home/home';
 import { Calculate } from './pages/calculate/calculate';
 import { About } from './pages/about/about';
-import { useResetScroll } from './components/hooks/reset-scroll';
 import './styles/main.scss';
 
 export function App() {
   const { pathname } = useLocation();
-  useResetScroll(pathname);
+  useEffect(_ => window.scrollTo(0, 0), [pathname]);
 
   const links = [
     {
@@ -30,20 +27,33 @@ export function App() {
 
   return (
     <>
-      <Header 
+      <NCIHeader 
         imageSource="assets/images/dceg-logo.svg" 
         url="https://dceg.cancer.gov/"
       />    
-      <Navbar links={links} />
+      <Navbar 
+        className="bg-primary py-0 shadow-sm"
+        innerClassName="container"
+        links={links}
+        renderer={link => 
+          <NavLink
+              key={`navlink-${link.index}`}
+              exact
+              activeClassName="active"
+              className="nav-link text-white px-3 text-uppercase"
+              to={link.route} >
+              {link.title}
+          </NavLink>}
+      />
       <Route path="/" exact={true} component={Home} />
-      <Route path="/calculate" component={Calculate} />
+      <Route path="/calculate/:id?" component={Calculate} />
       <Route path="/about" component={About} />
-      <Footer 
+      <NCIFooter 
         className="py-4 bg-primary-gradient text-light"
-        title={<>
+        title={<div className="mb-4">
             <div className="h4 mb-0">Division of Cancer Epidemiology and Genetics</div>
             <div className="h6">at the National Cancer Institute</div>
-        </>}
+        </div>}
       />
     </>
   );
