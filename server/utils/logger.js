@@ -2,7 +2,7 @@
 // winston.emitErrs = true;
 const path = require('path');
 const { createLogger, format, transports } = require('winston');
-const { folder: logFolder, level: logLevel } = require('../config.json').logging;
+const { folder: logFolder, level: logLevel } = require('../config.json').logs;
 require('winston-daily-rotate-file');
 
 module.exports = new createLogger({
