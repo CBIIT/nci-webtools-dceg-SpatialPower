@@ -1,11 +1,13 @@
 
 
-export async function postJSON(url, data) {
-
+export async function fetchJSON(url, params) {
     const response = await fetch(url, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
+        ...params,
+        headers: {
+            ...(params ? params.headers : null), 
+            'Content-Type': 'application/json',
+            'Accept': 'applciation/json',
+        },
     });
 
     if (response.ok) {
@@ -13,4 +15,11 @@ export async function postJSON(url, data) {
     } else {
         throw(await response.text());
     }
+}
+
+export async function postJSON(url, data) {
+    return await fetchJSON(url, {
+        method: 'POST',
+        body: JSON.stringify(data)
+    });
 }
