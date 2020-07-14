@@ -4,15 +4,18 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SparrpowR Results</title>
+    <title>Processing Results</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
     Dear SparrpowR User, <br>
-    <p>The job <b>{{job_id}}</b> you submitted using parameters {{parameters}} on {{timestamp}} has been processed. You can view the results at: <a href="{{results_url}}">{{results_url}}</a>. This link will expire two weeks from today.</p>
-    - SparrpowR Team <br>
-    <p>(Note: Please do not reply to this email. If you need assistance, please contact <a href="mailto:SparrpowRWebAdmin@mail.nih.gov">SparrpowRWebAdmin@mail.nih.gov</a>)</p>
+    <p>The job you submitted on {originalTimestamp} has been processed. Download your results using the links below:</p>
+    <a href="{resultsUrl}">{resultsUrl}</a>
+    <p>
+        Please do not reply to this email. If you need assistance, please contact <a href="mailto:{supportEmail}">{supportEmail}</a>. 
+        Include the following job id in your email: {id}
+    </p>
 </body>
 
 </html>

@@ -4,14 +4,17 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SparrpowR Error</title>
+    <title>Processing Error</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
     Dear SparrpowR User, <br>
-    <p>The job <b>{{job_id}}</b> you submitted using the following parameters {{parameters}} on {{timestamp}} could not be processed due to an internal error. Please contact <a href="mailto:SparrpowRWebAdmin@mail.nih.gov">SparrpowRWebAdmin@mail.nih.gov</a> if this issue persists.</p>
-    - SparrpowR Team
+    <p>
+        The job you submitted on {originalTimestamp} could not be processed due to an internal error. 
+        Please contact <a href="mailto:{supportEmail}">{supportEmail}</a> if this issue continues to occur. 
+        Include the following job id in your email: {id}
+    </p>
 </body>
 
 </html>
