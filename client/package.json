@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@cbiitss/react-components": "^0.1.1",
     "@reduxjs/toolkit": "^1.4.0",
     "bootstrap": "^4.5.0",
     "react": "^16.13.1",
