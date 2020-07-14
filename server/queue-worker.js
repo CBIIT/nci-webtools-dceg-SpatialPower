@@ -1,107 +1,201 @@
 const fs = require('fs');
-const https = require('https');
 const path = require('path');
+const crypto = require('crypto');
 const AWS = require('aws-sdk');
-const { Consumer } = require('sqs-consumer');
-const email = require('./utils/email');
+const nodemailer = require('nodemailer');
+const r = require('r-wrapper');
 const config = require('./config.json');
+const logger = require('./utils/logger');
 
-
-// use credentials from config.json if supplied, otherwise
-// fall back to default credentials locations/IAM role
-if (config.queue.accessKeyId && config.queue.secretAccessKey) {
-  AWS.config.update({
-    region: config.queue.region,
-    accessKeyId: config.queue.accessKeyId,
-    secretAccessKey: config.queue.secretAccessKey
-  });
-}
-
-const app = Consumer.create({
-  queueUrl: config.queue.url,
-  handleMessage: async (message) => {
-    try {
-
-      /*
-      let params = JSON.parse(message);
-
-      const results = r(
-        path.resolve(__dirname, 'calculate.R'), // path to R source file
-        'calculate', // name of method to call
-        [{
-          ...request.body,
-          workingDirectory: path.resolve(config.results.folder),
-          id,
-        }]
-      )
-
-
-      const calculate = r.bind(null, path.resolve(__dirname, 'calculate.R'), 'calculate');
-      const params = {
-        ...request.body,
-        workingDirectory: path.resolve(config.results.folder),
-        id,
-      };
-      const results = calculate({ params });
-      */
-    } catch (error) {
-      logger.error(error);
-      throw ({ error, message })
+(async function main() {
+    // update aws configuration if all keys are supplied, otherwise
+    // fall back to default credentials/IAM role
+    if (config.aws) {
+        AWS.config.update(config.aws);
     }
-  },
-  sqs: new AWS.SQS({
-    httpOptions: {
-      agent: new https.Agent({
-        keepAlive: true
-      })
+
+    // create required folders 
+    for (let folder of [config.logs.folder, config.results.folder]) {
+      fs.mkdirSync(folder, {recursive: true});
     }
-  })
-});
 
-// register error handler
-app.on('error', handleError);
-app.on('processing_error', handleError);
-
-async function handleError(error) {
-  console.log('ERROR', error);
-  const data = error.data;
-  const errorMessage = error.message;
-  const templateData = {
-    id: error.id,
-    message: error.message,
-  };
-
-  // send admin error email
-  const adminEmailResults = await email.sendMail({
-    from: config.email.sender,
-    to: config.email.admin,
-    subject: 'SparrpowR Error',
-    html: readTemplate(__dirname + '/templates/admin-failure-email.html', templateData),
-  });
-
-  // send user error email
-  const userEmailResults = await email.sendMail({
-    from: config.email.sender,
-    to: data.email,
-    subject: 'SparrpowR Error',
-    html: readTemplate(__dirname + '/templates/user-failure-email.html', templateData),
-  });
-}
+    receiveMessage();
+})();
 
 /**
  * Reads a template, substituting {tokens} with data values
- * @param {*} filepath 
- * @param {*} data 
+ * @param {string} filepath 
+ * @param {object} data 
  */
-function readTemplate(filePath, data) {
-  const template = fs.readFileSync(path.resolve(filePath)).toString();
-
-  // replace {tokens} with data values
-  // or removes them if not found
-  return template.replace(
-    /{[^{}]+}/g,
-    key => data[key.replace(/[{}]+/g, '')] || ''
-  );
+async function readTemplate(filePath, data) {
+    const template = await fs.promises.readFile(path.resolve(filePath));
+  
+    // replace {tokens} with data values or removes them if not found
+    return String(template).replace(
+      /{[^{}]+}/g,
+      key => data[key.replace(/[{}]+/g, '')] || ''
+    );
 }
 
-app.start();
+/**
+ * Writes the contents of a stream to a file and resolves once complete
+ * @param {*} readStream 
+ * @param {*} filePath 
+ */
+function streamToFile(readStream, filePath) {
+    return new Promise((resolve, reject) => {
+        const file = fs.createWriteStream(filePath);
+        const stream = readStream.pipe(file);
+        stream.on('error', error => reject(error));
+        stream.on('close', _ => resolve());
+    });
+}
+
+/**
+ * Processes a message and sends emails when finished
+ * @param {object} params 
+ */
+async function processMessage(params) {
+    const s3 = new AWS.S3();
+    const email = nodemailer.createTransport({
+        SES: new AWS.SES()
+    });
+
+    try {
+        // get calculation results
+        params.workingDirectory = path.resolve(config.results.folder, params.id);
+        const sourcePath = path.resolve(__dirname, 'calculate.R');
+        await fs.promises.mkdir(params.workingDirectory, {recursive: true});
+        const results = r(sourcePath, 'calculate', [params]);
+
+        // upload results
+        await s3.upload({
+            Body: JSON.stringify(results),
+            Bucket: config.s3.bucket,
+            Key: `${config.s3.outputKeyPrefix}${params.id}/results.json`
+        }).promise();
+
+        // upload plots
+        for (let filename of results.plots) {
+          const filepath = path.resolve(params.workingDirectory, filename);
+          await s3.upload({
+              Body: fs.createReadStream(filepath),
+              Bucket: config.s3.bucket,
+              Key: `${config.s3.outputKeyPrefix}${params.id}/${filename}`
+          }).promise();
+        }
+
+        // specify email template variables
+        const templateData = {
+            originalTimestamp: params.timestamp,
+            resultsUrl: `${config.email.baseUrl}#calculate/${params.id}`
+        };
+
+        // send user success email
+        logger.info(`Sending user success email`);
+        const userEmailResults = await email.sendMail({
+            from: config.email.sender,
+            to: params.email,
+            subject: 'Conversion Results',
+            html: await readTemplate(__dirname + '/templates/user-success-email.html', templateData),
+        });
+
+        return true;
+    } catch (e) {
+        console.log(e);
+        // catch exceptions related to conversion (assume s3/ses configuration is valid)
+        logger.error(e);
+
+        // template variables
+        const templateData = {
+            id: params.id,
+            parameters: JSON.stringify(params, null, 4),
+            originalTimestamp: params.timestamp,
+            exception: e.toString(),
+            processOutput: e.stdout ? e.stdout.toString() : null,
+            supportEmail: config.email.admin,
+        };
+
+        // send admin error email
+        logger.info(`Sending admin error email`);
+        const adminEmailResults = await email.sendMail({
+            from: config.email.sender,
+            to: config.email.admin,
+            subject: `Conversion Error: ${params.id}`, // searchable calculation error subject
+            html: await readTemplate(__dirname + '/templates/admin-failure-email.html', templateData),
+        });
+
+        // send user error email
+        if (params.email) {
+            logger.info(`Sending user error email`);
+            const userEmailResults = await email.sendMail({
+                from: config.email.sender,
+                to: params.email,
+                subject: 'Conversion Error',
+                html: await readTemplate(__dirname + '/templates/user-failure-email.html', templateData),
+            });
+        }
+
+        return false;
+    }
+}
+
+/**
+ * Receives messages from the queue at regular intervals,
+ * specified by config.pollInterval
+ */
+async function receiveMessage() {
+    const sqs = new AWS.SQS();
+
+    try {
+        // to simplify running multiple workers in parallel, 
+        // fetch one message at a time
+        const data = await sqs.receiveMessage({
+            QueueUrl: config.queue.url,
+            VisibilityTimeout: config.queue.visibilityTimeout,
+            MaxNumberOfMessages: 1
+        }).promise();
+
+        if (data.Messages && data.Messages.length > 0) {
+            const message = data.Messages[0];
+            const params = JSON.parse(message.Body);
+
+            // while processing is not complete, update the message's visibilityTimeout
+            const intervalId = setInterval(_ => sqs.changeMessageVisibility({
+                QueueUrl: config.queue.url,
+                ReceiptHandle: message.ReceiptHandle,
+                VisibilityTimeout: config.queue.visibilityTimeout
+            }), 1000 * 60);
+
+            // processMessage should return a boolean status indicating success or failure
+            const status = await processMessage(params);
+            clearInterval(intervalId);
+            
+            // if message was not processed successfully, send it to the
+            // error queue (add metadata in future if needed)
+            if (!status) {
+                // generate new unique id for error message
+                const id = crypto.randomBytes(16).toString('hex');
+                await sqs.sendMessage({
+                    QueueUrl: config.queue.errorUrl,
+                    MessageDeduplicationId: id,
+                    MessageGroupId: id,
+                    MessageBody: JSON.stringify(params),
+                }).promise();
+            }
+
+            // remove original message from queue once processed
+            await sqs.deleteMessage({
+                QueueUrl: config.queue.url,
+                ReceiptHandle: message.ReceiptHandle
+            }).promise();
+        }
+    } catch (e) {
+        // catch exceptions related to sqs
+        logger.error(e);
+    } finally {
+        // schedule receiving next message
+        setTimeout(receiveMessage, 1000 * config.queue.pollInterval);
+    }
+}
+
