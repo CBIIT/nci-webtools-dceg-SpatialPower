@@ -1,30 +1,34 @@
 {
-    "port": 4000,
-    "results": {
-        "folder": "results"
+    "server": {
+        "port": 4000,
+        "static": "client/build"
     },
-    "logging": {
+    "logs": {
         "folder": "logs",
         "level": "debug"
     },
-    "queue": {
-        "url": "",
-        "region": "us-east-1",
+    "results": {
+        "folder": "results"
+    },
+    "aws": {
+        "region": "",
         "accessKeyId": "",
         "secretAccessKey": ""
+    },    
+    "queue": {
+        "url": "",
+        "errorUrl": "",
+        "visibilityTimeout": 60,
+        "pollInterval": 60
     },
     "email": {
         "admin": "",
         "sender": "",
-        "baseUrl": "",
-        "region": "us-east-1",
-        "accessKeyId": "",
-        "secretAccessKey": ""
+        "baseUrl": "http://localhost:3000/"
     },
     "s3": {
         "bucket": "",
-        "region": "us-east-1",
-        "accessKeyId": "",
-        "secretAccessKey": ""
+        "inputKeyPrefix": "",
+        "outputKeyPrefix": ""
     }
 }
