@@ -1,16 +1,17 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom'
 import Card from 'react-bootstrap/Card'
+import './home.css';
 
 export function Home() {
 
     const cards = [
         {
-            title: 'Feature 1',
-            body: 'Description for Feature 1',
+            title: 'Spatial Power',
+            body: 'Compute the statistical power of a spatial relative risk function using randomly generated data.',
             action: {
-                route: 'action',
-                text: 'Action',
+                route: 'calculate',
+                text: 'Run Estimate',
             }
         },
         {
@@ -25,7 +26,7 @@ export function Home() {
             title: 'Feature 3',
             body: 'Description for Feature 3',
             action: {
-                route: 'about',
+                route: 'calculate',
                 text: 'Action',
             }
         }
@@ -33,10 +34,11 @@ export function Home() {
 
     return <>
         <div className="jumbotron jumbotron-fluid text-light bg-primary-darker">
-            <div className="container">
+            <div className="container text-center">
                 <h1 className="display-4 mb-4">
                     <span className="d-inline-block py-4" style={{ borderBottom: '2px solid white' }}>SparrpowR Web Tool</span>
                 </h1>
+
                 <p className="lead">Estimate statistical power of spatial clusters</p>
                 <NavLink className="btn btn-lg btn-outline-light" to="calculate">Perform Analysis</NavLink>
             </div>
@@ -50,7 +52,6 @@ export function Home() {
                             <Card.Header className="h5 bg-primary text-white">
                                 {title}
                             </Card.Header>
-
                             <Card.Body>
                                 <Card.Text>
                                     {body}
