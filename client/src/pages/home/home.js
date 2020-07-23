@@ -40,7 +40,7 @@ export function Home() {
                 </h1>
 
                 <p className="lead">Estimate statistical power of spatial clusters</p>
-                <NavLink className="btn btn-lg btn-outline-light" to="calculate">Perform Analysis</NavLink>
+                <NavLink className="btn btn-lg btn-outline-light" to="calculate">Run Estimate</NavLink>
             </div>
         </div>
 
