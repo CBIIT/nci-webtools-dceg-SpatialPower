@@ -6,30 +6,14 @@ import './home.css';
 export function Home() {
 
     const cards = [
-        {
+        /*{
             title: 'Spatial Power',
             body: 'Compute the statistical power of a spatial relative risk function using randomly generated data.',
             action: {
                 route: 'calculate',
                 text: 'Run Estimate',
             }
-        },
-        {
-            title: 'Feature 2',
-            body: 'Description for Feature 2',
-            action: {
-                route: 'calculate',
-                text: 'Action',
-            }
-        },
-        {
-            title: 'Feature 3',
-            body: 'Description for Feature 3',
-            action: {
-                route: 'calculate',
-                text: 'Action',
-            }
-        }
+        },*/
     ];
 
     return <>
