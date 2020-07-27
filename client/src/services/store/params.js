@@ -5,6 +5,8 @@ export const getInitialState = () => ({
     simTotal: '',
     xCases: '',
     yCases: '',
+    samp_case: 'uniform',
+    samp_control: 'uniform',
     nCase: '',
     nControl: '',
     queue: true,

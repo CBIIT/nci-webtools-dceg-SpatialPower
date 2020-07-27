@@ -50,6 +50,7 @@ export function InputForm({
     }
 
     return <form className={className}>
+        
         <div className="form-group">
             <label htmlFor="simTotal" className="font-weight-semibold">simTotal</label>
             <input type="number" id="simTotal" name="simTotal" className="form-control" value={params.simTotal} onChange={handleChange} />
@@ -66,9 +67,32 @@ export function InputForm({
         </div>
 
         <div className="form-group">
+            <label htmlFor="samp_case" className="font-weight-semibold">samp_case</label>
+            <select className="form-control" name="samp_case" id="samp_case" onChange={handleChange}> 
+                <option value="uniform">uniform</option>
+                <option value="MVN">MVN</option>
+                <option value="CSR">CSR</option>
+                <option value="IPP">IPP</option>
+            </select>
+        </div>
+
+        <div className="form-group">
+            <label htmlFor="samp_control" className="font-weight-semibold">samp_control</label>
+            <select className="form-control" name="samp_control" id="samp_control" onChange={handleChange}> 
+                <option value="uniform">uniform</option>
+                <option value="systematic">systematic</option>
+                <option value="MVN">MVN</option>
+                <option value="CSR">CSR</option>
+                <option value="IPP">IPP</option>
+                <option value="clustered">clustered</option>
+            </select>
+        </div>
+
+        <div className="form-group">
             <label htmlFor="nCase" className="font-weight-semibold">nCase</label>
             <input type="number" id="nCase" name="nCase" className="form-control" value={params.nCase} onChange={handleChange} />
         </div>
+     
 
         <div className="form-group">
             <label htmlFor="nControl" className="font-weight-semibold">nControl</label>
