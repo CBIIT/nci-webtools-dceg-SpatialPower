@@ -107,7 +107,7 @@ export function InputForm({
             </div>
 
             <div className="form-group custom-control">
-                <input type="radio" id="casconFalse" name="cascon" value={false} onChange={handleChange} />
+                <input type="radio" id="casconFalse" name="cascon" value={false} checked={true} onChange={handleChange} />
                 <label htmlFor="cascon">False</label>
             </div>
         </div>
@@ -117,7 +117,6 @@ export function InputForm({
             <input type="checkbox" className="custom-control-input" id="submit-queue" name="queue" checked={params.queue} onChange={handleChange} />
             <label className="custom-control-label" htmlFor="submit-queue">Submit this job to a queue</label>
         </div>
-
 
 
         <div className="form-group">

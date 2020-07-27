@@ -2,14 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 import { mergeObject } from './utils';
 
 export const getInitialState = () => ({
-    simTotal: '',
+    simTotal: '2',
     xCases: '',
     yCases: '',
     samp_case: 'uniform',
     samp_control: 'uniform',
     nCase: '',
     nControl: '',
-    queue: true,
+    queue: false,
     email: '',
     cascon: 'false',
 });
