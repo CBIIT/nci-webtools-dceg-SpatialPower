@@ -43,7 +43,7 @@ export function Home() {
                 <NavLink className="btn btn-lg btn-outline-light" to="calculate">Run Estimate</NavLink>
             </div>
         </div>
-
+        {/*
         <div className="container mb-5">
             <div className="row">
                 {cards.map(({title, body, action}, i) => 
@@ -69,6 +69,6 @@ export function Home() {
                     </div>
                 )}
             </div>
-        </div>
+        </div>*/}
     </>
 }

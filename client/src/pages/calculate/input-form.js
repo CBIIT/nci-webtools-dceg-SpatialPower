@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actions as paramsActions, getInitialState as getInitialParams } from '../../services/store/params';
 const { merge: _mergeParams, reset: _resetParams } = paramsActions;
 
-export function InputForm({ 
-    className = '', 
-    onSubmit = e => { }, 
-    onReset = e => { } 
+export function InputForm({
+    className = '',
+    onSubmit = e => { },
+    onReset = e => { }
 }) {
     const dispatch = useDispatch();
     const params = useSelector(state => state.params);
@@ -75,10 +75,26 @@ export function InputForm({
             <input type="number" id="nControl" name="nControl" className="form-control" value={params.nControl} onChange={handleChange} />
         </div>
 
+        <div className="d-flex">
+            cascon
+            <div className="form-group custom-control">
+                <input type="radio" id="casconTrue" name="cascon" value={true} onChange={handleChange} />
+                <label htmlFor="cascon">True</label>
+            </div>
+
+            <div className="form-group custom-control">
+                <input type="radio" id="casconFalse" name="cascon" value={false} onChange={handleChange} />
+                <label htmlFor="cascon">False</label>
+            </div>
+        </div>
+
+
         <div className="form-group custom-control custom-checkbox">
             <input type="checkbox" className="custom-control-input" id="submit-queue" name="queue" checked={params.queue} onChange={handleChange} />
             <label className="custom-control-label" htmlFor="submit-queue">Submit this job to a queue</label>
         </div>
+
+
 
         <div className="form-group">
             <label

@@ -9,6 +9,7 @@ export const getInitialState = () => ({
     nControl: '',
     queue: true,
     email: '',
+    cascon: 'false',
 });
 
 export const { actions, reducer } = createSlice({
