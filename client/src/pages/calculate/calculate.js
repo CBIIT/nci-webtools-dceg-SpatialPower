@@ -7,18 +7,17 @@ import { actions as messagesActions } from '../../services/store/messages';
 import { InputForm } from './input-form';
 import { Results } from './results';
 import { fetchJSON, postJSON } from '../../services/query';
-const { merge: _mergeResults, reset: _resetResults } = resultsActions;
-const { merge: _mergeMessages, reset: _resetMessages, removeByIndex: _removeMessageByIndex } = messagesActions;
+const actions = {...resultsActions, ...messagesActions};
 
 export function Calculate({match}) {
     const dispatch = useDispatch();
     const results = useSelector(state => state.results);
     const messages = useSelector(state => state.messages);
-    const mergeResults = results => dispatch(_mergeResults(results));
-    const mergeMessages = messages => dispatch(_mergeMessages(messages));
-    const resetResults = _ => dispatch(_resetResults());
-    const resetMessages = _ => dispatch(_resetMessages());
-    const removeMessageByIndex = index => dispatch(_removeMessageByIndex(index));
+    const mergeResults = results => dispatch(actions.mergeResults(results));
+    const mergeMessages = messages => dispatch(actions.mergeMessages(messages));
+    const resetResults = _ => dispatch(actions.resetResults());
+    const resetMessages = _ => dispatch(actions.resetMessages());
+    const removeMessageByIndex = index => dispatch(actions.removeMessageByIndex(index));
 
     // run once
     useEffect(() => {
