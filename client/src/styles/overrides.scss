@@ -37,3 +37,8 @@
 .nav-tabs .nav-link {
     border-bottom: 2px solid transparent;
 }
+
+.custom-checkbox .custom-control-input:disabled:checked ~ .custom-control-label::before,
+.custom-checkbox .custom-control-input[readonly]:checked ~ .custom-control-label::before {
+    background-color: rgba(24, 83, 148, 0.5);
+}
