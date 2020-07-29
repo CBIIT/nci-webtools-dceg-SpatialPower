@@ -27,7 +27,10 @@ export function Home() {
                 <NavLink className="btn btn-lg btn-outline-light" to="calculate">Run Estimate</NavLink>
             </div>
         </div>
-
+        <div className="container lead mb-4">
+            SparrpowR estimates the power of enviornmental epidemiologic studies to detect spatial clustering of cancer cases in a geographic area of interest (e.g., a U.S. county)
+        </div>
+        {/*
         <div className="container mb-5">
             <div className="row">
                 {cards.map(({title, body, action}, i) => 
@@ -53,6 +56,6 @@ export function Home() {
                     </div>
                 )}
             </div>
-        </div>
+        </div>*/}
     </>
 }
