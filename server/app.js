@@ -25,24 +25,34 @@ app.use(compression());
 // handle calculation submission
 app.post('/submit', async (request, response) => {
     try {
+        // generate unique id for response
         const id = crypto.randomBytes(16).toString('hex');
-        if (request.body.queue) {
+
+        // assign id to body
+        let body = {...request.body, id};
+
+        // set empty strings in body
+        for (const key in body)
+            if (body[key] === '')
+                delete body[key];
+
+        if (body.queue) {
             // enqueue message and send a response with the request id
             await new AWS.SQS().sendMessage({
                 QueueUrl: config.queue.url,
                 MessageDeduplicationId: id,
                 MessageGroupId: id,
-                MessageBody: JSON.stringify({id, ...request.body})
+                MessageBody: JSON.stringify(body)
             }).promise();
             response.json({id});
         } else {
-            // otherwise, perform calculation and return results
-            const workingDirectory = path.resolve(config.results.folder, id);
-            const params = {...request.body, id, workingDirectory};
-            const sourcePath = path.resolve(__dirname, 'calculate.R');
+            // ensure working directory exists
+            body.workingDirectory = path.resolve(config.results.folder, id);
+            await fs.promises.mkdir(body.workingDirectory, {recursive: true});
 
-            await fs.promises.mkdir(workingDirectory, {recursive: true});
-            const results = r(sourcePath, 'calculate', [params]);
+            // perform calculation and return results
+            const sourcePath = path.resolve(__dirname, 'calculate.R');
+            const results = r(sourcePath, 'calculate', [body]);
             response.json(results);
         }
     } catch(error) {

@@ -7,7 +7,7 @@ export const { actions, reducer } = createSlice({
     name: 'results',
     initialState: getInitialState(),
     reducers: {
-        merge: mergeObject,
-        reset: getInitialState,
+        mergeResults: mergeObject,
+        resetResults: getInitialState,
     }
 });

@@ -6,30 +6,14 @@ import './home.css';
 export function Home() {
 
     const cards = [
-        {
+        /*{
             title: 'Spatial Power',
             body: 'Compute the statistical power of a spatial relative risk function using randomly generated data.',
             action: {
                 route: 'calculate',
                 text: 'Run Estimate',
             }
-        },
-        {
-            title: 'Feature 2',
-            body: 'Description for Feature 2',
-            action: {
-                route: 'calculate',
-                text: 'Action',
-            }
-        },
-        {
-            title: 'Feature 3',
-            body: 'Description for Feature 3',
-            action: {
-                route: 'calculate',
-                text: 'Action',
-            }
-        }
+        },*/
     ];
 
     return <>
@@ -42,6 +26,9 @@ export function Home() {
                 <p className="lead">Estimate statistical power of spatial clusters</p>
                 <NavLink className="btn btn-lg btn-outline-light" to="calculate">Run Estimate</NavLink>
             </div>
+        </div>
+        <div className="container lead mb-4">
+            SparrpowR estimates the power of enviornmental epidemiologic studies to detect spatial clustering of cancer cases in a geographic area of interest (e.g., a U.S. county)
         </div>
         {/*
         <div className="container mb-5">
