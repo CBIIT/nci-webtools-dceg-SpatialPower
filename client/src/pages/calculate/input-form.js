@@ -121,22 +121,6 @@ export function InputForm({
         </div>
 
         <div className="form-group">
-            <label htmlFor="x_case" className="font-weight-semibold">x_case</label>
-            <input type="number" id="x_case" name="x_case" className="form-control" value={params.x_case} onChange={handleChange} />
-            <small className="form-text text-muted">
-                Numeric value, or numeric vector, of x-coordinate(s) of case cluster(s).
-            </small>
-        </div>
-
-        <div className="form-group">
-            <label htmlFor="y_case" className="font-weight-semibold">y_case</label>
-            <input type="number" id="y_case" name="y_case" className="form-control" value={params.y_case} onChange={handleChange} />
-            <small className="form-text text-muted">
-                Numeric value, or numeric vector, of y-coordinate(s) of case cluster(s).
-            </small>
-        </div>
-
-        <div className="form-group">
             <label htmlFor="samp_case" className="font-weight-semibold">samp_case</label>
             <select id="samp_case" name="samp_case" className="custom-select" value={params.samp_case} onChange={handleSampChange}>
                 <option selected value="" hidden>(select option)</option>
@@ -164,6 +148,22 @@ export function InputForm({
             </select>
             <small className="form-text text-muted">
             Character string specifying whether to randomize the control locations uniformly (samp_control="uniform"), systematically (samp_control="systematic"), multivariate normal (samp_control="MVN"), with complete spatial randomness (samp_control="CSR"), using the inhomogeneous Poisson process (samp_control="IPP"), or a realisation of the Neyman-Scott cluster process (samp_control="clustered").
+            </small>
+        </div>
+
+        <div className="form-group">
+            <label htmlFor="x_case" className="font-weight-semibold">x_case</label>
+            <input type="number" id="x_case" name="x_case" className="form-control" value={params.x_case} onChange={handleChange} />
+            <small className="form-text text-muted">
+                Numeric value, or numeric vector, of x-coordinate(s) of case cluster(s).
+            </small>
+        </div>
+
+        <div className="form-group">
+            <label htmlFor="y_case" className="font-weight-semibold">y_case</label>
+            <input type="number" id="y_case" name="y_case" className="form-control" value={params.y_case} onChange={handleChange} />
+            <small className="form-text text-muted">
+                Numeric value, or numeric vector, of y-coordinate(s) of case cluster(s).
             </small>
         </div>
 
