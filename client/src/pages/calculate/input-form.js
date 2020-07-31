@@ -51,6 +51,51 @@ export function InputForm({
         mergeParams(newParams);
     }
 
+    function handleSampChange(event){
+
+        const {name, value} = getInputEventValue(event);
+        const newParams = {...params, [name]: value};
+
+        if(value === 'uniform'){
+            if(name === 'samp_case'){
+                newParams.x_case = 0.5
+                newParams.y_case = 0.5
+                newParams.r_case = 1
+            }
+            else if(name === 'samp_control'){
+                newParams.x_control = 0.5
+                newParams.y_control = 0.5
+                newParams.r_control = 1
+            }
+        }
+
+        else if(value === 'MVN'){
+            if(name === 'samp_case'){
+                newParams.x_case = 0.5
+                newParams.y_case = 0.5
+                newParams.r_case = 0.33
+            }
+            else if(name === 'samp_control'){
+                newParams.x_control = 0.5
+                newParams.y_control = 0.5
+                newParams.r_control = 0.33
+            }
+        }
+        else if(value === 'CSR'){
+            if(name === 'samp_case'){
+                newParams.x_case = 0.5
+                newParams.y_case = 0.5
+                newParams.r_case = 1
+            }
+            else if(name === 'samp_control'){
+                newParams.x_control = 0.5
+                newParams.y_control = 0.5
+                newParams.r_control = 1
+            }
+        }
+        mergeParams(newParams);
+    }
+
     function handleSubmit(event) {
         event.preventDefault();
         if (onSubmit) {
@@ -69,7 +114,7 @@ export function InputForm({
     return <form className={className}>
         <div className="form-group">
             <label htmlFor="sim_total" className="font-weight-semibold">sim_total</label>
-            <input type="number" id="sim_total" name="sim_total" className="form-control" value={params.sim_total} onChange={handleChange} />
+            <input type="number" id="sim_total" name="sim_total" className="form-control" value={params.sim_total ? params.sim_total : ''} onChange={handleChange} />
             <small className="form-text text-muted">
                 Integer, specifying the number of simulation iterations to perform.
             </small>            
@@ -93,7 +138,7 @@ export function InputForm({
 
         <div className="form-group">
             <label htmlFor="samp_case" className="font-weight-semibold">samp_case</label>
-            <select id="samp_case" name="samp_case" className="custom-select" value={params.samp_case} onChange={handleChange}>
+            <select id="samp_case" name="samp_case" className="custom-select" value={params.samp_case} onChange={handleSampChange}>
                 <option selected value="" hidden>(select option)</option>
                 <option value="uniform">Uniform</option>
                 <option value="MVN">Multivariate Normal (MVN)</option>
@@ -108,7 +153,7 @@ export function InputForm({
 
         <div className="form-group">
             <label htmlFor="samp_control" className="font-weight-semibold">samp_control</label>
-            <select id="samp_control" name="samp_control" className="custom-select" value={params.samp_control} onChange={handleChange}>
+            <select id="samp_control" name="samp_control" className="custom-select" value={params.samp_control} onChange={handleSampChange}>
                 <option selected value="" hidden>(select option)</option>
                 <option value="uniform">Uniform</option>
                 <option value="systematic">Systematic</option>
@@ -140,7 +185,7 @@ export function InputForm({
 
         <div className="form-group">
             <label htmlFor="n_case" className="font-weight-semibold">n_case</label>
-            <input type="number" id="n_case" name="n_case" className="form-control" value={params.n_case} onChange={handleChange} />
+            <input type="number" id="n_case" name="n_case" className="form-control" value={params.n_case ? params.n_case : ''} onChange={handleChange} />
             <small className="form-text text-muted">
                 Numeric value, or numeric vector, of the sample size for case locations in each cluster.
             </small>
@@ -149,7 +194,7 @@ export function InputForm({
 
         <div className="form-group">
             <label htmlFor="n_control" className="font-weight-semibold">n_control</label>
-            <input type="number" id="n_control" name="n_control" className="form-control" value={params.n_control} onChange={handleChange} />
+            <input type="number" id="n_control" name="n_control" className="form-control" value={params.n_control ? params.n_control : ''} onChange={handleChange} />
             <small className="form-text text-muted">
                 Numeric value, or numeric vector, of the sample size for control locations in each cluster.
             </small>
@@ -221,7 +266,7 @@ export function InputForm({
 
         <div className="form-group">
             <label htmlFor="lower_tail" className="font-weight-semibold">lower_tail</label>
-            <input type="number" id="lower_tail" name="lower_tail" className="form-control" value={params.lower_tail} onChange={handleChange} />
+            <input type="number" id="lower_tail" name="lower_tail" className="form-control" value={params.lower_tail ? params.lower_tail : ''} onChange={handleChange} />
             <small className="form-text text-muted">
                 Optional. Numeric value of lower p-value threshold (default=0.025).
             </small>
@@ -237,7 +282,7 @@ export function InputForm({
 
         {params.cascon && <div className="form-group">
             <label htmlFor="upper_tail" className="font-weight-semibold">upper_tail</label>
-            <input type="number" id="upper_tail" name="upper_tail" className="form-control" value={params.upper_tail} onChange={handleChange} />
+            <input type="number" id="upper_tail" name="upper_tail" className="form-control" value={params.upper_tail ? params.lower_tail : ''} onChange={handleChange} />
             <small className="form-text text-muted">
                 Optional. Numeric value of upper p-value threshold (default=0.975). Ignored if cascon=FALSE.
             </small>

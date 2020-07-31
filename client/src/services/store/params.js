@@ -3,15 +3,15 @@ import { mergeObject } from './utils';
 
 export const getInitialState = () => ({
     win: 'unit.circle',
-    sim_total: '',
+    sim_total: 2,
     x_case: '',
     y_case: '',
     samp_case: '',
     samp_control: '',
     x_control: '',
     y_control: '',
-    n_case: '',
-    n_control: '',
+    n_case: 100,
+    n_control: 200,
     npc_control: '',
     r_case: '',
     r_control: '',
