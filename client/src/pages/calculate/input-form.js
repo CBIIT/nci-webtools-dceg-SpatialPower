@@ -288,6 +288,22 @@ export function InputForm({
             </small>
         </div>}
 
+        <div className="form-group">
+            <label htmlFor="p_thresh" className="font-weight-semibold">p_thresh</label>
+            <input type="number" id="p_thresh" name="p_thresh" className="form-control" value={params.p_thresh} onChange={handleChange} />
+            <small className="form-text text-muted">
+                A numeric value between 0 and 1 (default = 0.8) for the power threshold
+            </small>
+        </div>
+
+        <div className="form-group custom-control custom-checkbox">
+            <input type="checkbox" className="custom-control-input" id="plot_pts" name="plot_pts" checked={params.plot_pts} onChange={handleChange} />
+            <label className="custom-control-label" htmlFor="plot_pts">plot_pts</label>
+            <small className="form-text text-muted">
+                Logical. If TRUE (the default), the points from the first simulation iteration willbe added to second plot. Not if FALSE.
+            </small>
+        </div>
+
         <div className="form-group custom-control custom-checkbox">
             <input type="checkbox" className="custom-control-input" id="queue" name="queue" checked={params.queue} onChange={handleChange} readOnly={params.simTotal > simQueueCutoff} />
             <label className="custom-control-label" htmlFor="queue">submit job to queue</label>

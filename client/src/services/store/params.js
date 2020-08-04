@@ -23,6 +23,8 @@ export const getInitialState = () => ({
     lower_tail: 0.025,
     upper_tail: 0.975,
     cascon: false,
+    p_thresh: 0.8,
+    plot_pts: true,
     queue: false,
     email: '',
     cascon: 'false',

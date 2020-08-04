@@ -37,9 +37,10 @@ calculate <- function(params) {
     # specifying width and height above default makes plotting area collide with legend
     png(paste0(params$id, ".%d.png"))
     sparrpowR::spatial_plots(output,
-            p_thresh = 0.9,
+            p_thresh = params$p_thresh,
             chars = c(4,5),
             sizes = c(0.6,0.3),
+            plot_pts = params$plot_pts,
             cols = c("blue", "green", "red", "purple", "orange"))
     dev.off()
 
