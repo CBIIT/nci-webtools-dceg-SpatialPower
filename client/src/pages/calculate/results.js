@@ -1,8 +1,11 @@
 import React from 'react';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
+import { useSelector } from 'react-redux';
 
 export function Results({ results }) {
+    const params = useSelector(state => state.params);
+
     if (!results.plots || !results.summary) 
         return null;
 
@@ -37,6 +40,7 @@ export function Results({ results }) {
                     </tr>
                 </thead>
                 <tbody>
+                    
                     {summary.map(({title, mean, standardDeviation}, i) => 
                         <tr key={`results-summary-item-${i}`}>
                             <td>{title}</td>
@@ -45,7 +49,10 @@ export function Results({ results }) {
                         </tr>)}
                 </tbody>
             </table>
+            <b>Number of simulations: </b>
+            {params.sim_total}
         </div>
+        
     </>
 
 }
