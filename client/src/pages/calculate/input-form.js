@@ -266,14 +266,14 @@ export function InputForm({
 
         <div className="form-group">
             <label htmlFor="lower_tail" className="font-weight-semibold">lower_tail</label>
-            <input type="number" id="lower_tail" name="lower_tail" className="form-control" value={params.lower_tail ? params.lower_tail : ''} onChange={handleChange} />
+            <input type="number" id="lower_tail" name="lower_tail" className="form-control" value={params.lower_tail} onChange={handleChange} />
             <small className="form-text text-muted">
                 Optional. Numeric value of lower p-value threshold (default=0.025).
             </small>
         </div>
 
         <div className="form-group custom-control custom-checkbox">
-            <input type="checkbox" className="custom-control-input" id="cascon" name="cascon" checked={params.cascon} onChange={handleChange} />
+            <input type="checkbox" className="custom-control-input" id="cascon" name="cascon" onChange={handleChange} />
             <label className="custom-control-label" htmlFor="cascon">cascon</label>
             <small className="form-text text-muted">
                 Logical. If TRUE, computes the statistical power to detect case clusters and control clusters. If FALSE (the default), computes the statistical power to detect case clusters only.
@@ -282,7 +282,7 @@ export function InputForm({
 
         {params.cascon && <div className="form-group">
             <label htmlFor="upper_tail" className="font-weight-semibold">upper_tail</label>
-            <input type="number" id="upper_tail" name="upper_tail" className="form-control" value={params.upper_tail ? params.lower_tail : ''} onChange={handleChange} />
+            <input type="number" id="upper_tail" name="upper_tail" className="form-control" value={params.upper_tail} onChange={handleChange} />
             <small className="form-text text-muted">
                 Optional. Numeric value of upper p-value threshold (default=0.975). Ignored if cascon=FALSE.
             </small>
