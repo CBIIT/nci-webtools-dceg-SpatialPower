@@ -68,12 +68,12 @@ export function InputForm({
             if(name === 'samp_case'){
                 newParams.x_case = 0.5
                 newParams.y_case = 0.5
-                newParams.r_case = 0.33
+                newParams.s_case = 0.33
             }
             else if(name === 'samp_control'){
                 newParams.x_control = 0.5
                 newParams.y_control = 0.5
-                newParams.r_control = 0.33
+                newParams.s_control = 0.33
             }
         }
 
@@ -220,7 +220,7 @@ export function InputForm({
             </small>
         </div>}
 
-        {params.samp_control === 'MVN' && <div className="form-group">
+        {params.samp_case === 'MVN' && <div className="form-group">
             <label htmlFor="s_case" className="font-weight-semibold">s_case</label>
             <input type="number" id="s_case" name="s_case" className="form-control" value={params.s_case} onChange={handleChange} />
             <small className="form-text text-muted">
