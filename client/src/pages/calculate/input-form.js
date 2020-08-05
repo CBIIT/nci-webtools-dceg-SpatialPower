@@ -148,7 +148,7 @@ export function InputForm({
 
         <div className="form-group">
             <label htmlFor="x_case" className="font-weight-semibold">x_case</label>
-            <input type="number" id="x_case" name="x_case" className="form-control" value={params.x_case} onChange={handleChange} />
+            <input type="number" step="any" id="x_case" name="x_case" className="form-control" value={params.x_case} onChange={handleChange} />
             <small className="form-text text-muted">
                 Specify x-coordinate(s) of case cluster(s) as a numeric value or vector.
             </small>
@@ -156,7 +156,7 @@ export function InputForm({
 
         <div className="form-group">
             <label htmlFor="y_case" className="font-weight-semibold">y_case</label>
-            <input type="number" id="y_case" name="y_case" className="form-control" value={params.y_case} onChange={handleChange} />
+            <input type="number" step="any" id="y_case" name="y_case" className="form-control" value={params.y_case} onChange={handleChange} />
             <small className="form-text text-muted">
                 Specify y-coordinate(s) of case cluster(s) as a numeric value or vector.
             </small>
@@ -164,7 +164,7 @@ export function InputForm({
 
         {params.samp_control === 'MVN' && <div className="form-group">
             <label htmlFor="x_control" className="font-weight-semibold">x_control</label>
-            <input type="number" id="x_control" name="x_control" className="form-control" value={params.x_control} onChange={handleChange} />
+            <input type="number" step="any" id="x_control" name="x_control" className="form-control" value={params.x_control} onChange={handleChange} />
             <small className="form-text text-muted">
                 Specify x-coordinate(s) of control cluster(s) as a numeric value or vector.
             </small>
@@ -172,7 +172,7 @@ export function InputForm({
 
         {params.samp_control === 'MVN' && <div className="form-group">
             <label htmlFor="y_control" className="font-weight-semibold">y_control</label>
-            <input type="number" id="y_control" name="y_control" className="form-control" value={params.y_control} onChange={handleChange} />
+            <input type="number" step="any" id="y_control" name="y_control" className="form-control" value={params.y_control} onChange={handleChange} />
             <small className="form-text text-muted">
                 Specify y-coordinate(s) of control cluster(s) as a numeric value or vector.
             </small>
@@ -261,7 +261,7 @@ export function InputForm({
 
         <div className="form-group">
             <label htmlFor="lower_tail" className="font-weight-semibold">lower_tail</label>
-            <input type="number" id="lower_tail" name="lower_tail" className="form-control" value={params.lower_tail} onChange={handleChange} />
+            <input type="number" step="any" id="lower_tail" name="lower_tail" className="form-control" value={params.lower_tail} onChange={handleChange} />
             <small className="form-text text-muted">
                 Optional. Specify a numeric value for the lower p-value threshold (default=0.025).
             </small>
@@ -277,7 +277,7 @@ export function InputForm({
 
         {params.cascon && <div className="form-group">
             <label htmlFor="upper_tail" className="font-weight-semibold">upper_tail</label>
-            <input type="number" id="upper_tail" name="upper_tail" className="form-control" value={params.upper_tail} onChange={handleChange} />
+            <input type="number" step="any" id="upper_tail" name="upper_tail" className="form-control" value={params.upper_tail} onChange={handleChange} />
             <small className="form-text text-muted">
                 Optional. Specify a numeric value for the upper p-value threshold (default=0.975).
             </small>
@@ -285,7 +285,7 @@ export function InputForm({
 
         <div className="form-group">
             <label htmlFor="p_thresh" className="font-weight-semibold">p_thresh</label>
-            <input type="number" id="p_thresh" name="p_thresh" className="form-control" value={params.p_thresh} onChange={handleChange} />
+            <input type="number" step="any" id="p_thresh" name="p_thresh" className="form-control" value={params.p_thresh} onChange={handleChange} />
             <small className="form-text text-muted">
                 Specify a numeric value between 0 and 1 (default = 0.8) for the power threshold.
             </small>
