@@ -24,11 +24,17 @@ export function Home() {
                 </h1>
 
                 <p className="lead">Estimate statistical power of spatial clusters</p>
-                <NavLink className="btn btn-lg btn-outline-light" to="calculate">Run Estimate</NavLink>
+                <NavLink className="btn btn-lg btn-outline-light" to="calculate">Run Calculation</NavLink>
             </div>
         </div>
         <div className="container lead mb-4">
-            SparrpowR estimates the power of enviornmental epidemiologic studies to detect spatial clustering of cancer cases in a geographic area of interest (e.g., a U.S. county)
+            <p>
+                The sparrpowR web tool serves as a frontend interface for the <a className="font-weight-bold" href="https://cran.r-project.org/web/packages/sparrpowR/index.html">sparrpowR package</a>. The webtool has the same functionality as the package, but allows users to easily input their study parameters into an online form instead of interacting directly with R.
+            </p>
+
+            <p>
+                The webtool displays the calculated power in tabular form as well as graphically, with the same graphics directly produced by the R package. Users are  able to download their power results and visualizations directly from the webtool for implementation in presentations, grant applications, or even publications.
+            </p>
         </div>
         {/*
         <div className="container mb-5">
