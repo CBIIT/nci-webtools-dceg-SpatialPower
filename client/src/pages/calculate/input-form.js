@@ -67,7 +67,7 @@ export function InputForm({
             newParams.y_control = 0.5
             newParams.s_control = 0.33
         }
-        
+
         mergeParams(newParams);
     }
 
@@ -368,6 +368,8 @@ export function InputForm({
                 <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
             </OverlayTrigger>
         </div>
+
+        <hr class="mt-4" style={{backgroundColor:'#808080'}}/>
 
         <div className="form-group custom-control custom-checkbox">
             <input

@@ -20,11 +20,11 @@ export function Home() {
         <div className="jumbotron jumbotron-fluid text-light bg-primary-darker">
             <div className="container text-center">
                 <h1 className="display-4 mb-4">
-                    <span className="d-inline-block py-4" style={{ borderBottom: '2px solid white' }}>SparrpowR Web Tool</span>
+                    <span className="d-inline-block py-4" style={{ borderBottom: '2px solid white' }}>Spatial Power Web Tool</span>
                 </h1>
 
                 <p className="lead">Estimate statistical power of spatial clusters</p>
-                <NavLink className="btn btn-lg btn-outline-light" to="calculate">Run Calculation</NavLink>
+                <NavLink className="btn btn-lg btn-outline-light" to="sparrpowR">Run Calculation</NavLink>
             </div>
         </div>
         <div className="container lead mb-4">
