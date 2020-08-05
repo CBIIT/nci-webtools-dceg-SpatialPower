@@ -12,14 +12,9 @@ export const getInitialState = () => ({
     y_control: '',
     n_case: 100,
     n_control: 200,
-    npc_control: '',
     r_case: '',
-    r_control: '',
     s_case: '',
     s_control: '',
-    l_case: '',
-    l_control: '',
-    e_control: '',
     lower_tail: 0.025,
     upper_tail: 0.975,
     cascon: false,
@@ -27,7 +22,6 @@ export const getInitialState = () => ({
     plot_pts: true,
     queue: false,
     email: '',
-    cascon: 'false',
 });
 
 export const { actions, reducer } = createSlice({
