@@ -1,5 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import { actions, getInitialState } from '../../services/store/params';
 
 export function InputForm({
@@ -110,10 +112,9 @@ export function InputForm({
     return <form className={className}>
         <div className="form-group">
             <label htmlFor="sim_total" className="font-weight-semibold">sim_total</label>
-            <input type="number" id="sim_total" name="sim_total" className="form-control" value={params.sim_total ? params.sim_total : ''} onChange={handleChange} />
-            <small className="form-text text-muted">
-                Specify the number of simulation iterations to perform.
-            </small>            
+            <OverlayTrigger placement="right" overlay={<Tooltip id="sim_total_tooltip">Specify the number of simulation iterations to perform.</Tooltip>}>
+                <input type="number" id="sim_total" name="sim_total" className="form-control" value={params.sim_total || ''} onChange={handleChange} />
+            </OverlayTrigger>
         </div>
 
         <div className="form-group">
