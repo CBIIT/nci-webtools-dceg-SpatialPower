@@ -315,6 +315,7 @@ export function InputForm({
                 overlay={<Tooltip id="samp_case_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for case locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
+                    step="any"
                     id="s_case"
                     name="s_case"
                     className="form-control"
@@ -330,6 +331,7 @@ export function InputForm({
                 overlay={<Tooltip id="samp_case_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for control locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
+                    step="any"
                     id="s_control"
                     name="s_control"
                     className="form-control"
