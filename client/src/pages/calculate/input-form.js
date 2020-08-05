@@ -52,45 +52,22 @@ export function InputForm({
         }
 
         // set default parameters
-        if (value === 'uniform') {
-            if (name === 'samp_case') {
-                newParams.x_case = 0.5
-                newParams.y_case = 0.5
-                newParams.r_case = 1
-            }
-            else if (name === 'samp_control') {
-                newParams.x_control = 0.5
-                newParams.y_control = 0.5
-                newParams.r_control = 1
-            }
-        }
+        if(name === 'samp_case'){
+            newParams.x_case = 0.5
+            newParams.y_case = 0.5
 
-        else if (value === 'MVN') {
-            if (name === 'samp_case') {
-                newParams.x_case = 0.5
-                newParams.y_case = 0.5
+            if(value === 'MVN')
                 newParams.s_case = 0.33
-            }
-            else if (name === 'samp_control') {
-                newParams.x_control = 0.5
-                newParams.y_control = 0.5
-                newParams.s_control = 0.33
-            }
-        }
-
-        else if (value === 'CSR') {
-            if (name === 'samp_case') {
-                newParams.x_case = 0.5
-                newParams.y_case = 0.5
+            else
                 newParams.r_case = 1
-            }
-            else if (name === 'samp_control') {
-                newParams.x_control = 0.5
-                newParams.y_control = 0.5
-                newParams.r_control = 1
-            }
         }
 
+        if(value === 'MVN' && name === 'samp_control'){
+            newParams.x_control = 0.5
+            newParams.y_control = 0.5
+            newParams.s_control = 0.33
+        }
+        
         mergeParams(newParams);
     }
 
