@@ -16,8 +16,8 @@ export function App() {
       title: 'Home',
     },
     {
-      route: '/calculate',
-      title: 'Calculate',
+      route: '/SparrpowR',
+      title: 'SparrpowR',
     },
     {
       route: '/about',
@@ -42,11 +42,11 @@ export function App() {
               activeClassName="active"
               className="nav-link text-white px-3 text-uppercase"
               to={link.route} >
-              {link.title}
+              <b>{link.title}</b>
           </NavLink>}
       />
       <Route path="/" exact={true} component={Home} />
-      <Route path="/calculate/:id?" component={Calculate} />
+      <Route path="/SparrpowR/:id?" component={Calculate} />
       <Route path="/about" component={About} />
       <NCIFooter 
         className="py-4 bg-primary-gradient text-light"
