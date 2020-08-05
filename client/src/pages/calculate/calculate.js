@@ -77,7 +77,6 @@ export function Calculate({match}) {
 
     return <div className="container py-4">
         <LoadingOverlay active={results.loading} />
-        <h1 className="h4 mb-4">Spatial Risk Calculation</h1>
         <div className="row">
             <div className="col-md-4">
                 <div className="card shadow-sm h-100">
