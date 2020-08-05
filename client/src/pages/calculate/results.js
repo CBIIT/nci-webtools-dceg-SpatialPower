@@ -20,10 +20,16 @@ export function Results({ results }) {
         { title: 'Global T statistic length', mean: results.summary.mean_t_obs, standardDeviation: results.summary.sd_t_obs, },
     ];
 
+    const plotNames = [
+        'Simulated Case Control Clusters',
+        'Local Power',
+        'Local Power Above Threshold'
+    ]
+
     return <>
         <Tabs id="results-plots">
             {results.plots.map((plot, i) =>
-                <Tab key={`results-plot-${i}`} eventKey={`plot-${i + 1}`} title={`Plot ${i + 1}`}>
+                <Tab key={`results-plot-${i}`} eventKey={plotNames[i]} title={plotNames[i]}>
                     <div className="text-center">
                         <img className="img-fluid" src={`results/${results.id}/${plot}`} alt={`Plot ${i + 1}`} />
                     </div>
