@@ -61,6 +61,28 @@ app.post('/submit', async (request, response) => {
     }
 });
 
+
+// handle replotting
+app.post('/replot', async (request, response) => {
+    try {
+        let { body } = request;
+
+        // ensure working directory exists
+        body.workingDirectory = path.resolve(config.results.folder, body.id);
+        await fs.promises.mkdir(body.workingDirectory, {recursive: true});
+
+        // replot
+        const sourcePath = path.resolve(__dirname, 'calculate.R');
+        const results = r(sourcePath, 'replot', [body]);
+        response.json(results);
+
+    } catch(error) {
+        logger.error(error);
+        response.status(500).json(error.toString());
+    }
+});
+
+
 // download plots to results folder and return results from s3 when visiting 
 // the application from a queue-generated url
 app.get('/fetch-results', async (request, response) => {

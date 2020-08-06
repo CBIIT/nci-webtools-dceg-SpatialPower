@@ -31,11 +31,14 @@ calculate <- function(params) {
         cascon = params$cascon,
         n_core = 4)
 
+    # save output file
+    saveRDS(output, "output.RData")
+
     #svg file sizes are rather large compared to png (too many paths)
     #svg("plot-%d.svg")
 
     # specifying width and height above default makes plotting area collide with legend
-    png(paste0(params$id, ".%d.png"))
+    png(".%d.png")
     sparrpowR::spatial_plots(output,
             p_thresh = params$p_thresh,
             chars = c(4,5),
@@ -47,7 +50,7 @@ calculate <- function(params) {
     # add generated plots
     files <- list.files(".")
     output$id <- params$id
-    output$plots <- files[grep(params$id, files)]
+    output$plots <- files[grep("png", files)]
     output$summary <- list(
         mean_n_con = mean(output$n_con),
         mean_n_cas = mean(output$n_cas),
@@ -62,4 +65,28 @@ calculate <- function(params) {
     )
 
     output
+}
+
+replot <- function(params) {
+    # working directory should be a unique, empty folder
+    setwd(params$workingDirectory)
+
+    # save output file
+    output <- readRDS("output.RData")
+
+    # specifying width and height above default makes plotting area collide with legend
+    png(".%d.png")
+    sparrpowR::spatial_plots(
+            output,
+            p_thresh = params$p_thresh,
+            chars = c(4,5),
+            sizes = c(0.6,0.3),
+            plot_pts = params$plot_pts,
+            cols = params$cols)
+    dev.off()
+
+    # add generated plots
+    files <- list.files(".")
+    output$plots <- files[grep("png", files)]
+    plots
 }
