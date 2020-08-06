@@ -38,7 +38,7 @@ calculate <- function(params) {
     #svg("plot-%d.svg")
 
     # specifying width and height above default makes plotting area collide with legend
-    png(".%d.png")
+    png("plot-%d.png")
     sparrpowR::spatial_plots(output,
             p_thresh = params$p_thresh,
             chars = c(4,5),
@@ -75,7 +75,7 @@ replot <- function(params) {
     output <- readRDS("output.RData")
 
     # specifying width and height above default makes plotting area collide with legend
-    png(".%d.png")
+    png("plot-%d.png")
     sparrpowR::spatial_plots(
             output,
             p_thresh = params$p_thresh,
