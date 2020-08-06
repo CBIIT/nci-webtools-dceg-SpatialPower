@@ -40,14 +40,3 @@ RUN Rscript -e "install.packages( \
     lib = .Library, \
     repos='https://cloud.r-project.org/' \
 )"
-
-COPY . /deploy
-
-WORKDIR /deploy
-
-RUN npm install \
- && cd client \
- && npm install \
- && npm run build
-
-CMD npm start
