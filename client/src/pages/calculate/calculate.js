@@ -7,9 +7,9 @@ import { actions as messagesActions } from '../../services/store/messages';
 import { InputForm } from './input-form';
 import { Results } from './results';
 import { fetchJSON, postJSON } from '../../services/query';
-const actions = {...resultsActions, ...messagesActions};
+const actions = { ...resultsActions, ...messagesActions };
 
-export function Calculate({match}) {
+export function Calculate({ match }) {
     const dispatch = useDispatch();
     const results = useSelector(state => state.results);
     const messages = useSelector(state => state.messages);
@@ -32,21 +32,21 @@ export function Calculate({match}) {
         resetMessages();
 
         try {
-            mergeResults({loading: true});
+            mergeResults({ loading: true });
             const results = await postJSON('submit', params);
 
             if (params.queue) {
                 // if the request was enqueued, notify the user
-                mergeMessages([{type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.`}]);
+                mergeMessages([{ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` }]);
             } else {
                 // otherwise, show results
                 mergeResults(results);
             }
 
         } catch (error) {
-            mergeMessages([{type: 'danger', text: error}]);
+            mergeMessages([{ type: 'danger', text: error }]);
         } finally {
-            mergeResults({loading: false});
+            mergeResults({ loading: false });
         }
     }
 
@@ -61,17 +61,17 @@ export function Calculate({match}) {
         resetMessages();
 
         try {
-            mergeResults({loading: true});
+            mergeResults({ loading: true });
             const results = await fetchJSON(`fetch-results/?id=${id}`);
             if (results) {
                 mergeResults(results);
             } else {
-                mergeMessages([{type: 'danger', text: `No results could be found for the specified id.`}]);
+                mergeMessages([{ type: 'danger', text: `No results could be found for the specified id.` }]);
             }
         } catch (error) {
-            mergeMessages([{type: 'danger', text: error}]);
+            mergeMessages([{ type: 'danger', text: error }]);
         } finally {
-            mergeResults({loading: false});
+            mergeResults({ loading: false });
         }
     }
 
@@ -80,23 +80,19 @@ export function Calculate({match}) {
         <div className="row">
             <div className="col-md-4">
                 <div className="card shadow-sm h-100">
-                    <InputForm className="card-body" onSubmit={handleSubmit} onReset={handleReset}/>
+                    <InputForm className="card-body" onSubmit={handleSubmit} onReset={handleReset} />
                 </div>
             </div>
             <div className="col-md-8">
-                <div className="card shadow-sm h-100">
-                    <div className="card-body">
-                        {messages.map((message, i) => 
-                            <Alert 
-                                key={`results-alert-${i}`} 
-                                variant={message.type} 
-                                dismissible 
-                                onClose={e => removeMessageByIndex(i)}>
-                                {message.text}
-                            </Alert>)}
-                        {<Results results={results} />}
-                    </div>
-                </div>
+                {messages.map((message, i) =>
+                    <Alert
+                        key={`results-alert-${i}`}
+                        variant={message.type}
+                        dismissible
+                        onClose={e => removeMessageByIndex(i)}>
+                        {message.text}
+                    </Alert>)}
+                {<Results results={results} />}
             </div>
         </div>
     </div>

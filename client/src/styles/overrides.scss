@@ -51,3 +51,13 @@
 .custom-checkbox .custom-control-input[readonly]:checked ~ .custom-control-label::before {
     background-color: rgba(24, 83, 148, 0.5);
 }
+
+.table td,
+.table th   {
+    border: 0;
+    padding: 0.25rem;
+}
+
+.table thead th{
+    border: 0
+}
