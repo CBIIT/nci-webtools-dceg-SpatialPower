@@ -142,7 +142,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>
 
-        <hr class="mt-4" style={{backgroundColor:'#808080'}}/>
+        <hr class="mt-4" style={{borderTop:'2px solid #c3c4c9'}}/>
 
         <div className="form-group">
             <label htmlFor="x_case" className="font-weight-bold">X Case</label>
@@ -255,7 +255,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        <hr class="mt-4" style={{backgroundColor:'#808080'}}/>
+        <hr class="mt-4" style={{borderTop:'2px solid #c3c4c9'}}/>
 
         <div className="form-group">
             <label htmlFor="n_case" className="font-weight-bold">N Case</label>
@@ -287,8 +287,6 @@ export function InputForm({
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
-
-
 
         <div className="form-group">
             <label htmlFor="lower_tail" className="font-weight-bold">Lower Tail</label>
@@ -369,7 +367,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>
 
-        <hr class="mt-4" style={{backgroundColor:'#808080'}}/>
+        <hr class="mt-4" style={{borderTop:'2px solid #c3c4c9'}}/>
 
         <div className="form-group custom-control custom-checkbox">
             <input

@@ -27,9 +27,12 @@ export function Calculate({ match }) {
 
     async function handleSubmit(params) {
         console.log(params);
+        
 
         resetResults();
         resetMessages();
+
+        mergeResults({ submitted: true })
 
         try {
             mergeResults({ loading: true });
@@ -84,6 +87,11 @@ export function Calculate({ match }) {
                 </div>
             </div>
             <div className="col-md-8">
+                {results.submitted === false && <div className="card shadow-sm h-100 mb-3">
+                    <div className="card-body">
+                        Specify the sample case and control and provide simulation configuration on the left panel. The results will be displayed here once you click on the Submit button.
+                    </div>
+                </div>}
                 {messages.map((message, i) =>
                     <Alert
                         key={`results-alert-${i}`}
