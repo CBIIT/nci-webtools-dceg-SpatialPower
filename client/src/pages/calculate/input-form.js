@@ -89,7 +89,7 @@ export function InputForm({
 
     return <form className={className}>
         <div className="form-group">
-            <label htmlFor="samp_case" className="font-weight-semibold">Sample Case</label>
+            <label htmlFor="samp_case" className="font-weight-bold">Sample Case</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Specify how case locations are randomized.</Tooltip>}>
@@ -108,7 +108,7 @@ export function InputForm({
         </div>
 
         <div className="form-group">
-            <label htmlFor="samp_control" className="font-weight-semibold">Sample Control</label>
+            <label htmlFor="samp_control" className="font-weight-bold">Sample Control</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Specify how control locations are randomized.</Tooltip>}>
@@ -128,7 +128,7 @@ export function InputForm({
         </div>
 
         <div className="form-group">
-            <label htmlFor="sim_total" className="font-weight-semibold">Number of Simulations</label>
+            <label htmlFor="sim_total" className="font-weight-bold">Number of Simulations</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="sim_total_tooltip">Specify the number of simulation iterations to perform.</Tooltip>}>
@@ -145,7 +145,7 @@ export function InputForm({
         <hr class="mt-4" style={{backgroundColor:'#808080'}}/>
 
         <div className="form-group">
-            <label htmlFor="x_case" className="font-weight-semibold">X Case</label>
+            <label htmlFor="x_case" className="font-weight-bold">X Case</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Specify x-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
@@ -161,7 +161,7 @@ export function InputForm({
         </div>
 
         <div className="form-group">
-            <label htmlFor="y_case" className="font-weight-semibold">Y Case</label>
+            <label htmlFor="y_case" className="font-weight-bold">Y Case</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Specify y-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
@@ -177,7 +177,7 @@ export function InputForm({
         </div>
 
         {params.samp_control === 'MVN' && <div className="form-group">
-            <label htmlFor="x_control" className="font-weight-semibold">X Control</label>
+            <label htmlFor="x_control" className="font-weight-bold">X Control</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Specify x-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
@@ -193,7 +193,7 @@ export function InputForm({
         </div>}
 
         {params.samp_control === 'MVN' && <div className="form-group">
-            <label htmlFor="y_control" className="font-weight-semibold">Y Control</label>
+            <label htmlFor="y_control" className="font-weight-bold">Y Control</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Specify y-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
@@ -209,7 +209,7 @@ export function InputForm({
         </div>}
 
         {params.samp_case !== 'MVN' && <div className="form-group">
-            <label htmlFor="r_case" className="font-weight-semibold">R Case</label>
+            <label htmlFor="r_case" className="font-weight-bold">R Case</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Optional. Specify the radius (radii) of case cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
@@ -224,7 +224,7 @@ export function InputForm({
         </div>}
 
         {params.samp_case === 'MVN' && <div className="form-group">
-            <label htmlFor="s_case" className="font-weight-semibold">S Case</label>
+            <label htmlFor="s_case" className="font-weight-bold">S Case</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for case locations in the units of win as a numeric value or vector.</Tooltip>}>
@@ -240,7 +240,7 @@ export function InputForm({
         </div>}
 
         {params.samp_control === 'MVN' && <div className="form-group">
-            <label htmlFor="s_control" className="font-weight-semibold">S Control</label>
+            <label htmlFor="s_control" className="font-weight-bold">S Control</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for control locations in the units of win as a numeric value or vector.</Tooltip>}>
@@ -258,7 +258,7 @@ export function InputForm({
         <hr class="mt-4" style={{backgroundColor:'#808080'}}/>
 
         <div className="form-group">
-            <label htmlFor="n_case" className="font-weight-semibold">N Case</label>
+            <label htmlFor="n_case" className="font-weight-bold">N Case</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Specify the sample size for case locations in each cluster as a numeric value or vector.</Tooltip>}>
@@ -274,7 +274,7 @@ export function InputForm({
 
 
         <div className="form-group">
-            <label htmlFor="n_control" className="font-weight-semibold">N Control</label>
+            <label htmlFor="n_control" className="font-weight-bold">N Control</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Specify the sample size for control locations in each cluster as a numeric value or vector.</Tooltip>}>
@@ -291,7 +291,7 @@ export function InputForm({
 
 
         <div className="form-group">
-            <label htmlFor="lower_tail" className="font-weight-semibold">Lower Tail</label>
+            <label htmlFor="lower_tail" className="font-weight-bold">Lower Tail</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Optional. Specify a numeric value for the lower p-value threshold (default=0.025).</Tooltip>}>
@@ -322,7 +322,7 @@ export function InputForm({
         </div>
 
         {params.cascon && <div className="form-group">
-            <label htmlFor="upper_tail" className="font-weight-semibold">Upper Tail</label>
+            <label htmlFor="upper_tail" className="font-weight-bold">Upper Tail</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Optional. Specify a numeric value for the upper p-value threshold (default=0.975).</Tooltip>}>
@@ -338,7 +338,7 @@ export function InputForm({
         </div>}
 
         <div className="form-group">
-            <label htmlFor="p_thresh" className="font-weight-semibold">Power Threshold</label>
+            <label htmlFor="p_thresh" className="font-weight-bold">Power Threshold</label>
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="samp_case_tooltip">Specify a numeric value between 0 and 1 (default = 0.8) for the power threshold.</Tooltip>}>
@@ -391,7 +391,7 @@ export function InputForm({
         {<div className="form-group">
             <label
                 htmlFor="email"
-                className="font-weight-semibold">
+                className="font-weight-bold">
                 Email
             </label>
             <OverlayTrigger
