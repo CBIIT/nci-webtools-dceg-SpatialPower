@@ -52,20 +52,25 @@ export function InputForm({
         }
 
         // set default parameters
-        if(name === 'samp_case'){
+        if (name === 'samp_case') {
             newParams.x_case = 0.5
             newParams.y_case = 0.5
 
-            if(value === 'MVN')
+            if (value === 'MVN')
                 newParams.s_case = 0.33
             else
-                newParams.r_case = 1
+                newParams.r_case = 0.5
         }
 
-        if(value === 'MVN' && name === 'samp_control'){
+        if (name === 'samp_control' && value !== 'systematic') {
             newParams.x_control = 0.5
             newParams.y_control = 0.5
-            newParams.s_control = 0.33
+
+            if (value === 'MVN') 
+                newParams.s_control = 0.33
+            
+            if (value === 'CSR')
+                newParams.r_control = 0.5
         }
 
         mergeParams(newParams);
@@ -142,7 +147,22 @@ export function InputForm({
             </OverlayTrigger>
         </div>
 
-        <hr class="mt-4" style={{borderTop:'2px solid #c3c4c9'}}/>
+        <div className="form-group">
+            <label htmlFor="rand_seed" className="font-weight-bold">Random Seed</label>
+            <OverlayTrigger
+                placement="right"
+                overlay={<Tooltip id="sim_total_tooltip">Specify a random seed</Tooltip>}>
+                <input
+                    type="number"
+                    id="rand_seed"
+                    name="rand_seed"
+                    className="form-control"
+                    value={params.rand_seed || ''}
+                    onChange={handleChange} />
+            </OverlayTrigger>
+        </div>
+
+        <hr class="mt-4" style={{ borderTop: '2px solid #c3c4c9' }} />
 
         <div className="form-group">
             <label htmlFor="x_case" className="font-weight-bold">X Case</label>
@@ -176,7 +196,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>
 
-        {params.samp_control === 'MVN' && <div className="form-group">
+        {params.samp_control !== 'systematic' && <div className="form-group">
             <label htmlFor="x_control" className="font-weight-bold">X Control</label>
             <OverlayTrigger
                 placement="right"
@@ -192,7 +212,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        {params.samp_control === 'MVN' && <div className="form-group">
+        {params.samp_control !== 'systematic' && <div className="form-group">
             <label htmlFor="y_control" className="font-weight-bold">Y Control</label>
             <OverlayTrigger
                 placement="right"
@@ -219,6 +239,21 @@ export function InputForm({
                     name="r_case"
                     className="form-control"
                     value={params.r_case}
+                    onChange={handleChange} />
+            </OverlayTrigger>
+        </div>}
+
+        {params.samp_control === 'CSR' && <div className="form-group">
+            <label htmlFor="r_control" className="font-weight-bold">R Control</label>
+            <OverlayTrigger
+                placement="right"
+                overlay={<Tooltip id="samp_case_tooltip">Optional. Specify the radius (radii) of control cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
+                <input
+                    type="number"
+                    id="r_control"
+                    name="r_control"
+                    className="form-control"
+                    value={params.r_control}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>}
@@ -255,7 +290,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        <hr class="mt-4" style={{borderTop:'2px solid #c3c4c9'}}/>
+        <hr class="mt-4" style={{ borderTop: '2px solid #c3c4c9' }} />
 
         <div className="form-group">
             <label htmlFor="n_case" className="font-weight-bold">N Case</label>
@@ -267,7 +302,7 @@ export function InputForm({
                     id="n_case"
                     name="n_case"
                     className="form-control"
-                    value={params.n_case ? params.n_case : ''}
+                    value={params.n_case || ''}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
@@ -283,7 +318,7 @@ export function InputForm({
                     id="n_control"
                     name="n_control"
                     className="form-control"
-                    value={params.n_control ? params.n_control : ''}
+                    value={params.n_control || ''}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
@@ -367,7 +402,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>
 
-        <hr class="mt-4" style={{borderTop:'2px solid #c3c4c9'}}/>
+        <hr class="mt-4" style={{ borderTop: '2px solid #c3c4c9' }} />
 
         <div className="form-group custom-control custom-checkbox">
             <input
