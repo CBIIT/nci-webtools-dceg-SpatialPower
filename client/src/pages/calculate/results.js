@@ -21,9 +21,9 @@ export function Results({ results }) {
     ];
 
     const plotNames = [
-        'Simulated Case Control Clusters',
-        'Local Power',
-        'Local Power Above Threshold'
+        'Simulated Data (First Iteration)',
+        'Local Power (Continuous Scale)',
+        'Local Power (Above Threshold)'
     ]
 
     return <>
