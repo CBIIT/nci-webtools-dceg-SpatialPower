@@ -5,10 +5,13 @@ calculate <- function(params) {
     setwd(params$workingDirectory)
 
     # todo: allow users to create custom windows
-    unit.circle <- spatstat::disc(radius = 0.5, centre = c(0.5, 0.5))
+    if(params$win == "unit_circle")
+        window <- spatstat::disc(radius = 0.5, centre = c(0.5, 0.5))
+    if(params$win == "unit_square")
+        window <- spatstat::unit.square()
 
     output <- sparrpowR::spatial_power(
-        win = unit.circle,
+        win = window,
         sim_total = params$sim_total,
         x_case = params$x_case,
         y_case = params$y_case,

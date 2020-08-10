@@ -66,9 +66,9 @@ export function InputForm({
             newParams.x_control = 0.5
             newParams.y_control = 0.5
 
-            if (value === 'MVN') 
+            if (value === 'MVN')
                 newParams.s_control = 0.33
-            
+
             if (value === 'CSR')
                 newParams.r_control = 0.5
         }
@@ -93,6 +93,25 @@ export function InputForm({
     }
 
     return <form className={className}>
+
+        <div className="form-group">
+            <label htmlFor="win" className="font-weight-bold">Window</label>
+            <OverlayTrigger
+                placement="right"
+                overlay={<Tooltip id="win_tooltip">Specify the shape of the window</Tooltip>}>
+                <select
+                    id="win"
+                    name="win"
+                    className="custom-select"
+                    value={params.win}
+                    onChange={handleChange}>
+                    <option selected value="" hidden>(select option)</option>
+                    <option value="unit_circle">Unit Circle</option>
+                    <option value="unit_square">Unit Square</option>
+                </select>
+            </OverlayTrigger>
+        </div>
+
         <div className="form-group">
             <label htmlFor="samp_case" className="font-weight-bold">Sample Case</label>
             <OverlayTrigger
@@ -235,6 +254,7 @@ export function InputForm({
                 overlay={<Tooltip id="samp_case_tooltip">Optional. Specify the radius (radii) of case cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
+                    step="any"
                     id="r_case"
                     name="r_case"
                     className="form-control"
@@ -250,6 +270,7 @@ export function InputForm({
                 overlay={<Tooltip id="samp_case_tooltip">Optional. Specify the radius (radii) of control cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
+                    step="any"
                     id="r_control"
                     name="r_control"
                     className="form-control"

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { mergeObject } from './utils';
 
 export const getInitialState = () => ({
-    win: 'unit.circle',
+    win: '',
     sim_total: 2,
     x_case: '',
     y_case: '',
