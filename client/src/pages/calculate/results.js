@@ -16,8 +16,8 @@ export function Results({ results }) {
         { title: 'Control locations', mean: results.summary.mean_n_con, standardDeviation: results.summary.sd_n_con, },
         { title: 'Case locations', mean: results.summary.mean_n_cas, standardDeviation: results.summary.sd_n_cas, },
         { title: 'Numerator bandwidth', mean: results.summary.mean_bandw, standardDeviation: results.summary.sd_bandw, },
-        { title: 'Global S statistic length', mean: results.summary.mean_s_obs, standardDeviation: results.summary.sd_s_obs, },
-        { title: 'Global T statistic length', mean: results.summary.mean_t_obs, standardDeviation: results.summary.sd_t_obs, },
+        { title: 'Global S statistic length', testStat: results.summary.s_test_stat, pValue: results.summary.s_pval, },
+        { title: 'Global T statistic length', testStat: results.summary.t_test_stat, pValue: results.summary.t_pval, },
     ];
 
     const plotNames = [
@@ -32,8 +32,8 @@ export function Results({ results }) {
                 <div className="card-body">
                     <b>Summary Statistic</b>
                     <small> (Number of Simulations: {params.sim_total})</small>
-                    <hr style={{borderTop:'2px solid #DEE2E6'}}></hr>
-                    <table className="table" style={{ marginBottom: '0px'}}>
+                    <hr style={{ borderTop: '2px solid #c3c4c9' }}></hr>
+                    <table className="table" style={{ marginBottom: '0px' }}>
                         <thead>
                             <tr>
                                 <th></th>
@@ -43,11 +43,27 @@ export function Results({ results }) {
                         </thead>
                         <tbody>
 
-                            {summary.map(({ title, mean, standardDeviation }, i) =>
+                            {summary.slice(0, 3).map(({ title, mean, standardDeviation }, i) =>
                                 <tr key={`results-summary-item-${i}`}>
                                     <td>{title}</td>
                                     <td>{mean}</td>
                                     <td>{standardDeviation}</td>
+                                </tr>)}
+                        </tbody>
+                        <td colSpan='3'><hr style={{ borderTop: '2px solid #c3c4c9' }}></hr></td>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Test Statistic</th>
+                                <th>P-Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {summary.slice(3, 5).map(({ title, testStat, pValue }, i) =>
+                                <tr key={`results-summary-item-${i+3}`}>
+                                    <td>{title}</td>
+                                    <td>{testStat}</td>
+                                    <td>{pValue}</td>
                                 </tr>)}
                         </tbody>
                     </table>

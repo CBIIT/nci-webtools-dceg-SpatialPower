@@ -54,17 +54,19 @@ calculate <- function(params) {
     files <- list.files(".")
     output$id <- params$id
     output$plots <- files[grep("png", files)]
+    s_stat <- t.test(output$s_obs, mu = 1, alternative = "two.sided")
+    t_stat <- t.test(output$t_obs, mu = 0, alternative = "two.sided") 
     output$summary <- list(
         mean_n_con = mean(output$n_con),
         mean_n_cas = mean(output$n_cas),
         mean_bandw = mean(output$bandw),
-        mean_s_obs = mean(output$s_obs),
-        mean_t_obs = mean(output$t_obs),
         sd_n_con = sd(output$n_con),
         sd_n_cas = sd(output$n_cas),
         sd_bandw = sd(output$bandw),
-        sd_s_obs = sd(output$s_obs),
-        sd_t_obs = sd(output$t_obs)
+        s_test_stat = s_stat$statistic,
+        t_test_stat = t_stat$statistic,
+        s_pval = s_stat$p.value,
+        t_pval = t_stat$p.value
     )
 
     output
