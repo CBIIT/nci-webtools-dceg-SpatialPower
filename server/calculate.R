@@ -47,6 +47,7 @@ calculate <- function(params) {
             chars = c(4,5),
             sizes = c(0.6,0.3),
             plot_pts = params$plot_pts,
+            plot_title = FALSE, 
             cols = c("blue", "green", "red", "purple", "orange"))
     dev.off()
 
@@ -56,6 +57,7 @@ calculate <- function(params) {
     output$plots <- files[grep("png", files)]
     s_stat <- t.test(output$s_obs, mu = 1, alternative = "two.sided")
     t_stat <- t.test(output$t_obs, mu = 0, alternative = "two.sided") 
+
     output$summary <- list(
         mean_n_con = mean(output$n_con),
         mean_n_cas = mean(output$n_cas),
