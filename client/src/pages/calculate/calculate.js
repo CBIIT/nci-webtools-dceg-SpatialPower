@@ -9,6 +9,7 @@ import { Results } from './results';
 import { fetchJSON, postJSON } from '../../services/query';
 import { PlotOptions } from './plot-options';
 const actions = { ...resultsActions, ...messagesActions };
+const crypto = require('crypto');
 
 export function Calculate({ match }) {
     const dispatch = useDispatch();
@@ -47,7 +48,8 @@ export function Calculate({ match }) {
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
-            mergeResults({loading: false, submitted: true, timestamp: Date.now()});
+            const urlKey = crypto.randomBytes(16).toString('hex');
+            mergeResults({loading: false, submitted: true, urlKey: urlKey});
         }
     }
 
@@ -62,14 +64,13 @@ export function Calculate({ match }) {
             mergeResults({ loading: true });
             const response = await postJSON('replot', params);
 
-            //TODO Update state of plot to rerender
-            mergeResults({ plots: ''})
             mergeResults(response);
 
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
-            mergeResults({ loading: false, submitted: true});
+            const urlKey = crypto.randomBytes(16).toString('hex');
+            mergeResults({ loading: false, submitted: true,urlKey: urlKey});
         }
     }
 

@@ -76,7 +76,7 @@ export function Results() {
                     {results.plots.map((plot, i) =>
                         <Tab key={`results-plot-${i}`} eventKey={plotNames[i]} title={plotNames[i]}>
                             <div className="text-center">
-                                <img className="img-fluid" src={`results/${results.id}/${plot}`} alt={`Plot ${i + 1}`} />
+                                <img className="img-fluid" src={`results/${results.id}/${plot}?key=${results.urlKey}`} alt={`Plot ${i + 1}`} />
                             </div>
                         </Tab>
                     )}
