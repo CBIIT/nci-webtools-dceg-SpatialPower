@@ -44,7 +44,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
 
     return (
         <>
-            <div className="form-group">
+            <div className="form-group d-flex flex-column">
                 <label htmlFor="p_thresh" className="font-weight-bold">Power Threshold</label>
                 <OverlayTrigger
                     placement="right"
@@ -59,13 +59,189 @@ export function PlotOptions({ onSubmit = e => { } }) {
                         onChange={handleChange} />
                 </OverlayTrigger>
             </div>
+            <hr style={{ borderTop: '2px solid #c3c4c9' }}></hr>
+            <b style={{ fontSize: '120%' }}>Color Options</b>
+            <div className="d-flex flex-row" style={{ gap: '7px' }}>
+                <div className="form-group d-flex flex-column flex-fill">
+                    <label htmlFor="suff_color" className="font-weight-bold">Sufficiently Powered</label>
+                    <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip id="suff_color_tooltip">Select the color of sufficiently powered regions</Tooltip>}>
+                        <select
+                            id="suff_color"
+                            name="suff_color"
+                            className="custom-select"
+                            value={params.suff_color}
+                            onChange={handleChange}>
+                            <option selected value="" hidden>(select option)</option>
+                            <option value="red">Red</option>
+                            <option value="orange">Orange</option>
+                            <option value="yellow">Yellow</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                            <option value="purple">Purple</option>
+                            <option value="black">Black</option>
+                            <option value="white">White</option>
+                            <option value="grey">Grey</option>
+                        </select>
+                    </OverlayTrigger>
+                </div>
+                <div className="form-group d-flex flex-column flex-fill">
+                    <label htmlFor="mid_color" className="font-weight-bold">Mid-point Color</label>
+                    <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip id="mid_color_tooltip">Select the color of the mid-point</Tooltip>}>
+                        <select
+                            id="mid_color"
+                            name="mid_color"
+                            className="custom-select"
+                            value={params.mid_color}
+                            onChange={handleChange}>
+                            <option selected value="" hidden>(select option)</option>
+                            <option value="red">Red</option>
+                            <option value="orange">Orange</option>
+                            <option value="yellow">Yellow</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                            <option value="purple">Purple</option>
+                            <option value="black">Black</option>
+                            <option value="white">White</option>
+                            <option value="grey">Grey</option>
+                        </select>
+                    </OverlayTrigger>
+                </div>
+                <div className="form-group d-flex flex-column flex-fill">
+                    <label htmlFor="insuff_color" className="font-weight-bold">Insufficiently Powered</label>
+                    <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip id="insuff_color_tooltip">Select the color of insufficiently powered regions</Tooltip>}>
+                        <select
+                            id="insuff_color"
+                            name="insuff_color"
+                            className="custom-select"
+                            value={params.insuff_color}
+                            onChange={handleChange}>
+                            <option selected value="" hidden>(select option)</option>
+                            <option value="red">Red</option>
+                            <option value="orange">Orange</option>
+                            <option value="yellow">Yellow</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                            <option value="purple">Purple</option>
+                            <option value="black">Black</option>
+                            <option value="white">White</option>
+                            <option value="grey">Grey</option>
+                        </select>
+                    </OverlayTrigger>
+                </div>
+                <div className="form-group d-flex flex-column flex-fill">
+                    <label htmlFor="case_color" className="font-weight-bold">Case Location Color</label>
+                    <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip id="case_color_tooltip">Select the color of case symbols</Tooltip>}>
+                        <select
+                            id="case_color"
+                            name="case_color"
+                            className="custom-select"
+                            value={params.case_color}
+                            onChange={handleChange}>
+                            <option selected value="" hidden>(select option)</option>
+                            <option value="red">Red</option>
+                            <option value="orange">Orange</option>
+                            <option value="yellow">Yellow</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                            <option value="purple">Purple</option>
+                            <option value="black">Black</option>
+                            <option value="white">White</option>
+                            <option value="grey">Grey</option>
+                        </select>
+                    </OverlayTrigger>
+                </div>
+                <div className="form-group d-flex flex-column flex-fill">
+                    <label htmlFor="control_color" className="font-weight-bold">Control Location Color</label>
+                    <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip id="control_color_tooltip">Select the color of control symbols</Tooltip>}>
+                        <select
+                            id="control_color"
+                            name="control_color"
+                            className="custom-select"
+                            value={params.control_color}
+                            onChange={handleChange}>
+                            <option selected value="" hidden>(select option)</option>
+                            <option value="red">Red</option>
+                            <option value="orange">Orange</option>
+                            <option value="yellow">Yellow</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                            <option value="purple">Purple</option>
+                            <option value="black">Black</option>
+                            <option value="white">White</option>
+                            <option value="grey">Grey</option>
+                        </select>
+                    </OverlayTrigger>
+                </div>
+            </div>
+            
+            <hr style={{ borderTop: '2px solid #c3c4c9' }}></hr>
+            <b style={{ fontSize: '120%' }}>Color Options</b>
+            
+            <div className="d-flex flex-row" style={{ gap: '7px' }}>
+                <div className="form-group d-flex flex-column flex-fill">
+                    <label htmlFor="case_symbol" className="font-weight-bold">Case Symbol</label>
+                    <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip id="case_symbol_tooltip">Select the case symbol</Tooltip>}>
+                        <select
+                            id="case_symbol"
+                            name="case_symbol"
+                            className="custom-select"
+                            type="number"
+                            value={params.case_symbol}
+                            onChange={handleChange}>
+                            <option selected value="" hidden>(select option)</option>
+                            <option value="16">Closed Circle</option>
+                            <option value="1">Open Circle</option>
+                            <option value="0">Open Square</option>
+                            <option value="3">Plus Sign</option>
+                            <option value="8">Star</option>
+                            <option value="4">X</option>
+                        </select>
+                    </OverlayTrigger>
+                </div>
+                <div className="form-group d-flex flex-column flex-fill">
+                    <label htmlFor="control_symbol" className="font-weight-bold">Control Symbol</label>
+                    <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip id="control_symbol_tooltip">Select the control symbol</Tooltip>}>
+                        <select
+                            id="control_symbol"
+                            name="control_symbol"
+                            className="custom-select"
+                            type="number"
+                            value={params.control_symbol}
+                            onChange={handleChange}>
+                            <option selected value="" hidden>(select option)</option>
+                            <option value="16">Closed Circle</option>
+                            <option value="1">Open Circle</option>
+                            <option value="0">Open Square</option>
+                            <option value="3">Plus Sign</option>
+                            <option value="8">Star</option>
+                            <option value="4">X</option>
+                        </select>
+                    </OverlayTrigger>
+                </div>
+            </div>
+
+
             <div className="text-right">
                 <button
                     type="submit"
                     className="btn btn-primary"
                     onClick={handleSubmit}>
                     Submit
-            </button>
+                </button>
             </div>
         </>
     )

@@ -22,6 +22,13 @@ export const getInitialState = () => ({
     cascon: false,
     p_thresh: 0.8,
     plot_pts: true,
+    suff_color: 'green',
+    mid_color: 'grey',
+    insuff_color: 'blue',
+    case_color: 'purple',
+    control_color: 'orange',
+    case_symbol: 0,
+    control_symbol: 1,
     queue: false,
     email: '',
 });

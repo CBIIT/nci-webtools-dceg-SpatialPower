@@ -44,7 +44,7 @@ calculate <- function(params) {
     png("plot-%d.png")
     sparrpowR::spatial_plots(output,
             p_thresh = params$p_thresh,
-            chars = c(4,5),
+            chars = c(0,1),
             sizes = c(0.6,0.3),
             plot_pts = params$plot_pts,
             plot_title = FALSE, 
@@ -89,7 +89,7 @@ replot <- function(params) {
             chars = c(4,5),
             sizes = c(0.6,0.3),
             plot_pts = params$plot_pts,
-            cols = c("green", "blue", "red", "purple", "orange"))
+            cols = c(params$insuff_color, params$suff_color, params$mid_color, params$case_color, params$control_color))
     dev.off()
 
     # add generated plots
