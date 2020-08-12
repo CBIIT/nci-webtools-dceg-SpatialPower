@@ -64,14 +64,12 @@ export function Calculate({ match }) {
 
             //TODO Update state of plot to rerender
             mergeResults({ plots: ''})
-            console.log(results)
             mergeResults(response);
 
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
             mergeResults({ loading: false, submitted: true});
-            console.log(results)
         }
     }
 

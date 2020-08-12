@@ -71,7 +71,6 @@ export function Results() {
         </div>
 
         <div className="card shadow-sm h-100">
-            {console.log('hi')}
             <div className="card-body">
                 <Tabs id="results-plots">
                     {results.plots.map((plot, i) =>
