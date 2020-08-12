@@ -3,8 +3,9 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import { useSelector } from 'react-redux';
 
-export function Results({ results }) {
+export function Results() {
     const params = useSelector(state => state.params);
+    const results = useSelector(state => state.results);
 
     if (!results.plots || !results.summary)
         return null;
@@ -27,60 +28,60 @@ export function Results({ results }) {
     ]
 
     return <>
-        <div class="d-flex flex-column">
-            <div className="card shadow-sm h-100 mb-3">
-                <div className="card-body">
-                    <b>Summary Statistic</b>
-                    <small> (Number of Simulations: {params.sim_total})</small>
-                    <hr style={{ borderTop: '2px solid #c3c4c9' }}></hr>
-                    <table className="table" style={{ marginBottom: '0px' }}>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Mean</th>
-                                <th>Standard Deviation</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+        <div className="card shadow-sm h-100 mb-3">
+            <div className="card-body">
+                <b>Summary Statistic</b>
+                <small> (Number of Simulations: {params.sim_total})</small>
+                <hr style={{ borderTop: '2px solid #c3c4c9' }}></hr>
+                <table className="table" style={{ marginBottom: '0px' }}>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Mean</th>
+                            <th>Standard Deviation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                            {summary.slice(0, 3).map(({ title, mean, standardDeviation }, i) =>
-                                <tr key={`results-summary-item-${i}`}>
-                                    <td>{title}</td>
-                                    <td>{mean}</td>
-                                    <td>{standardDeviation}</td>
-                                </tr>)}
-                        </tbody>
-                        <td colSpan='3'><hr style={{ borderTop: '2px solid #c3c4c9' }}></hr></td>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Test Statistic</th>
-                                <th>P-Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {summary.slice(3, 5).map(({ title, testStat, pValue }, i) =>
-                                <tr key={`results-summary-item-${i+3}`}>
-                                    <td>{title}</td>
-                                    <td>{testStat}</td>
-                                    <td>{pValue}</td>
-                                </tr>)}
-                        </tbody>
-                    </table>
-                </div>
+                        {summary.slice(0, 3).map(({ title, mean, standardDeviation }, i) =>
+                            <tr key={`results-summary-item-${i}`}>
+                                <td>{title}</td>
+                                <td>{mean}</td>
+                                <td>{standardDeviation}</td>
+                            </tr>)}
+                    </tbody>
+                    <td colSpan='3'><hr style={{ borderTop: '2px solid #c3c4c9' }}></hr></td>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Test Statistic</th>
+                            <th>P-Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {summary.slice(3, 5).map(({ title, testStat, pValue }, i) =>
+                            <tr key={`results-summary-item-${i + 3}`}>
+                                <td>{title}</td>
+                                <td>{testStat}</td>
+                                <td>{pValue}</td>
+                            </tr>)}
+                    </tbody>
+                </table>
             </div>
-            <div className="card shadow-sm h-100">
-                <div className="card-body">
-                    <Tabs id="results-plots">
-                        {results.plots.map((plot, i) =>
-                            <Tab key={`results-plot-${i}`} eventKey={plotNames[i]} title={plotNames[i]}>
-                                <div className="text-center">
-                                    <img className="img-fluid" src={`results/${results.id}/${plot}`} alt={`Plot ${i + 1}`} />
-                                </div>
-                            </Tab>
-                        )}
-                    </Tabs>
-                </div>
+        </div>
+
+        <div className="card shadow-sm h-100">
+            {console.log('hi')}
+            <div className="card-body">
+                <Tabs id="results-plots">
+                    {results.plots.map((plot, i) =>
+                        <Tab key={`results-plot-${i}`} eventKey={plotNames[i]} title={plotNames[i]}>
+                            <div className="text-center">
+                                <img className="img-fluid" src={`results/${results.id}/${plot}`} alt={`Plot ${i + 1}`} />
+                            </div>
+                        </Tab>
+                    )}
+                </Tabs>
             </div>
         </div>
     </>

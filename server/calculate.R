@@ -89,11 +89,11 @@ replot <- function(params) {
             chars = c(4,5),
             sizes = c(0.6,0.3),
             plot_pts = params$plot_pts,
-            cols = params$cols)
+            cols = c("green", "blue", "red", "purple", "orange"))
     dev.off()
 
     # add generated plots
     files <- list.files(".")
     output$plots <- files[grep("png", files)]
-    plots
+    output
 }

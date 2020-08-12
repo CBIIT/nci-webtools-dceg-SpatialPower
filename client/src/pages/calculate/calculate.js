@@ -7,6 +7,7 @@ import { actions as messagesActions } from '../../services/store/messages';
 import { InputForm } from './input-form';
 import { Results } from './results';
 import { fetchJSON, postJSON } from '../../services/query';
+import { PlotOptions } from './plot-options';
 const actions = { ...resultsActions, ...messagesActions };
 
 export function Calculate({ match }) {
@@ -27,29 +28,50 @@ export function Calculate({ match }) {
 
     async function handleSubmit(params) {
         console.log(params);
-        
 
         resetResults();
         resetMessages();
 
-        mergeResults({ submitted: true })
-
         try {
             mergeResults({ loading: true });
-            const results = await postJSON('submit', params);
+            const response = await postJSON('submit', params);
 
             if (params.queue) {
                 // if the request was enqueued, notify the user
                 mergeMessages([{ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` }]);
             } else {
                 // otherwise, show results
-                mergeResults(results);
+                mergeResults(response);
             }
 
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
-            mergeResults({ loading: false });
+            mergeResults({loading: false, submitted: true, timestamp: Date.now()});
+        }
+    }
+
+    async function handleReplot(params) {
+
+        mergeResults({ submitted: false })
+
+        resetMessages();
+        params = { ...params, ["id"]: results.id }
+
+        try {
+            mergeResults({ loading: true });
+            const response = await postJSON('replot', params);
+
+            //TODO Update state of plot to rerender
+            mergeResults({ plots: ''})
+            console.log(results)
+            mergeResults(response);
+
+        } catch (error) {
+            mergeMessages([{ type: 'danger', text: error }]);
+        } finally {
+            mergeResults({ loading: false, submitted: true});
+            console.log(results)
         }
     }
 
@@ -100,7 +122,14 @@ export function Calculate({ match }) {
                         onClose={e => removeMessageByIndex(i)}>
                         {message.text}
                     </Alert>)}
-                {<Results results={results} />}
+                <div class="d-flex flex-column">
+                    {results.submitted && <Results results={results} />}
+                    {results.submitted && <div className="card shadow-sm h-100 mb-3">
+                        <div className="card-body">
+                            <PlotOptions onSubmit={handleReplot} />
+                        </div>
+                    </div>}
+                </div>
             </div>
         </div>
     </div>
