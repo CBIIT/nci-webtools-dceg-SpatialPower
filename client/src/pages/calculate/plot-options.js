@@ -44,7 +44,9 @@ export function PlotOptions({ onSubmit = e => { } }) {
 
     return (
         <>
-            <div className="form-group d-flex flex-column">
+            <b style={{ fontSize: '120%' }}>Plot Options</b>
+            <div className="form-group d-flex flex-column" style={{gap: '7px'}}>
+                
                 <label htmlFor="p_thresh" className="font-weight-bold">Power Threshold</label>
                 <OverlayTrigger
                     placement="right"
@@ -58,9 +60,46 @@ export function PlotOptions({ onSubmit = e => { } }) {
                         value={params.p_thresh}
                         onChange={handleChange} />
                 </OverlayTrigger>
+
+                <div className="d-flex flex-row" style={{ gap: '20px' }}>
+                    <div className="form-group custom-control custom-checkbox">
+                        <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            id="plot_pts"
+                            name="plot_pts"
+                            checked={params.plot_pts}
+                            onChange={handleChange} />
+
+                        <OverlayTrigger
+                            placement="right"
+                            overlay={<Tooltip id="title_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
+                            <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
+                        </OverlayTrigger>
+                    </div>
+
+                    <div className="form-group custom-control custom-checkbox">
+                        <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            id="title"
+                            name="title"
+                            checked={params.title}
+                            onChange={handleChange} />
+
+                        <OverlayTrigger
+                            placement="right"
+                            overlay={<Tooltip id="title_tooltip">If checked, display title of plots</Tooltip>}>
+                            <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
+                        </OverlayTrigger>
+                    </div>
+
+                </div>
             </div>
+
             <hr style={{ borderTop: '2px solid #c3c4c9' }}></hr>
             <b style={{ fontSize: '120%' }}>Color Options</b>
+
             <div className="d-flex flex-row" style={{ gap: '7px' }}>
                 <div className="form-group d-flex flex-column flex-fill">
                     <label htmlFor="suff_color" className="font-weight-bold">Sufficiently Powered</label>
@@ -183,10 +222,10 @@ export function PlotOptions({ onSubmit = e => { } }) {
                     </OverlayTrigger>
                 </div>
             </div>
-            
+
             <hr style={{ borderTop: '2px solid #c3c4c9' }}></hr>
-            <b style={{ fontSize: '120%' }}>Color Options</b>
-            
+            <b style={{ fontSize: '120%' }}>Symbol Options</b>
+
             <div className="d-flex flex-row" style={{ gap: '7px' }}>
                 <div className="form-group d-flex flex-column flex-fill">
                     <label htmlFor="case_symbol" className="font-weight-bold">Case Symbol</label>
@@ -234,13 +273,49 @@ export function PlotOptions({ onSubmit = e => { } }) {
                 </div>
             </div>
 
+            <hr style={{ borderTop: '2px solid #c3c4c9' }}></hr>
+            <b style={{ fontSize: '120%' }}>Symbol Size</b>
+
+            <div className="d-flex flex-row" style={{ gap: '7px' }}>
+                <div className="form-group d-flex flex-column flex-fill">
+                    <label htmlFor="case_size" className="font-weight-bold">Case Symbol Size</label>
+                    <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip id="case_size_tooltip">Specify a numeric value for the size of case symbols</Tooltip>}>
+                        <input
+                            type="number"
+                            step="any"
+                            id="case_size"
+                            name="case_size"
+                            className="form-control"
+                            value={params.case_size}
+                            onChange={handleChange} />
+                    </OverlayTrigger>
+                </div>
+                <div className="form-group d-flex flex-column flex-fill">
+                    <label htmlFor="control_size" className="font-weight-bold">Control Symbol Size</label>
+                    <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip id="control_size_tooltip">Specify a numeric value for the size of control symbols</Tooltip>}>
+                        <input
+                            type="number"
+                            step="any"
+                            id="control_size"
+                            name="control_size"
+                            className="form-control"
+                            value={params.control_size}
+                            onChange={handleChange} />
+                    </OverlayTrigger>
+                </div>
+            </div>
+
 
             <div className="text-right">
                 <button
                     type="submit"
                     className="btn btn-primary"
                     onClick={handleSubmit}>
-                    Submit
+                    Re-Plot
                 </button>
             </div>
         </>

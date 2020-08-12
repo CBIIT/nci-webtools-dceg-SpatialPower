@@ -45,9 +45,9 @@ calculate <- function(params) {
     sparrpowR::spatial_plots(output,
             p_thresh = params$p_thresh,
             chars = c(0,1),
-            sizes = c(0.6,0.3),
+            sizes = c(1,1),
             plot_pts = params$plot_pts,
-            plot_title = FALSE, 
+            plot_title = params$title, 
             cols = c("blue", "green", "red", "purple", "orange"))
     dev.off()
 
@@ -86,9 +86,10 @@ replot <- function(params) {
     sparrpowR::spatial_plots(
             output,
             p_thresh = params$p_thresh,
-            chars = c(4,5),
-            sizes = c(0.6,0.3),
+            chars = c(as.numeric(params$case_symbol),as.numeric(params$control_symbol)),
+            sizes = c(params$case_size,params$control_size),
             plot_pts = params$plot_pts,
+            plot_title = params$title,
             cols = c(params$insuff_color, params$suff_color, params$mid_color, params$case_color, params$control_color))
     dev.off()
 

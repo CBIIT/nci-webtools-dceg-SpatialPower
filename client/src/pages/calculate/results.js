@@ -70,7 +70,7 @@ export function Results() {
             </div>
         </div>
 
-        <div className="card shadow-sm h-100">
+        <div className="card shadow-sm h-100 mb-3">
             <div className="card-body">
                 <Tabs id="results-plots">
                     {results.plots.map((plot, i) =>

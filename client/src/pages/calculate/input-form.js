@@ -406,21 +406,38 @@ export function InputForm({
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
+        <div className="d-flex flex-row" style={{ gap: '20px' }}>
+            <div className="form-group custom-control custom-checkbox">
+                <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="plot_pts"
+                    name="plot_pts"
+                    checked={params.plot_pts}
+                    onChange={handleChange} />
 
-        <div className="form-group custom-control custom-checkbox">
-            <input
-                type="checkbox"
-                className="custom-control-input"
-                id="plot_pts"
-                name="plot_pts"
-                checked={params.plot_pts}
-                onChange={handleChange} />
+                <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="plot_pts_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
+                    <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
+                </OverlayTrigger>
+            </div>
 
-            <OverlayTrigger
-                placement="right"
-                overlay={<Tooltip id="samp_case_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
-                <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
-            </OverlayTrigger>
+            <div className="form-group custom-control custom-checkbox">
+                <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="title"
+                    name="title"
+                    checked={params.title}
+                    onChange={handleChange} />
+
+                <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="title_tooltip">If checked, display title of plots</Tooltip>}>
+                    <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
+                </OverlayTrigger>
+            </div>
         </div>
 
         <hr class="mt-4" style={{ borderTop: '2px solid #c3c4c9' }} />
