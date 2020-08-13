@@ -5,7 +5,7 @@ import { LoadingOverlay } from '@cbiitss/react-components';
 import { actions as resultsActions } from '../../services/store/results';
 import { actions as messagesActions } from '../../services/store/messages';
 import { InputForm } from './input-form';
-import { Results } from './results';
+import { Plots } from './plots';
 import { Summary } from './summary';
 import { fetchJSON, postJSON } from '../../services/query';
 import { PlotOptions } from './plot-options';
@@ -124,7 +124,7 @@ export function Calculate({ match }) {
                     </Alert>)}
                 <div class="d-flex flex-column">
                     {results.submitted && results.summary && <Summary/>}
-                    {results.submitted && <Results results={results} />}
+                    {results.submitted && <Plots/>}
                     {results.submitted && <div className="card shadow-sm h-100 mb-3">
                         <div className="card-body">
                             <PlotOptions onSubmit={handleReplot} />

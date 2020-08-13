@@ -3,7 +3,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import { useSelector } from 'react-redux';
 
-export function Results() {
+export function Plots() {
     const results = useSelector(state => state.results);
 
     if (!results.plots) {
