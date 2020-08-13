@@ -6,6 +6,7 @@ import { actions as resultsActions } from '../../services/store/results';
 import { actions as messagesActions } from '../../services/store/messages';
 import { InputForm } from './input-form';
 import { Results } from './results';
+import { Summary } from './summary';
 import { fetchJSON, postJSON } from '../../services/query';
 const actions = { ...resultsActions, ...messagesActions };
 
@@ -43,13 +44,37 @@ export function Calculate({ match }) {
                 mergeMessages([{ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` }]);
             } else {
                 // otherwise, show results
-                mergeResults(results);
+                mergeResults(response);
+                
             }
 
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
-            mergeResults({ loading: false });
+            const urlKey = crypto.randomBytes(16).toString('hex');
+            mergeResults({loading: false, submitted: true, urlKey: urlKey});
+            
+        }
+    }
+
+    async function handleReplot(params) {
+
+        mergeResults({ submitted: false })
+
+        resetMessages();
+        params = { ...params, ["id"]: results.id }
+
+        try {
+            mergeResults({ loading: true });
+            const response = await postJSON('replot', params);
+
+            mergeResults(response);
+
+        } catch (error) {
+            mergeMessages([{ type: 'danger', text: error }]);
+        } finally {
+            const urlKey = crypto.randomBytes(16).toString('hex');
+            mergeResults({ loading: false, submitted: true,urlKey: urlKey});
         }
     }
 
@@ -100,7 +125,15 @@ export function Calculate({ match }) {
                         onClose={e => removeMessageByIndex(i)}>
                         {message.text}
                     </Alert>)}
-                {<Results results={results} />}
+                <div class="d-flex flex-column">
+                    {results.submitted && results.summary && <Summary/>}
+                    {results.submitted && <Results results={results} />}
+                    {results.submitted && <div className="card shadow-sm h-100 mb-3">
+                        <div className="card-body">
+                            <PlotOptions onSubmit={handleReplot} />
+                        </div>
+                    </div>}
+                </div>
             </div>
         </div>
     </div>
