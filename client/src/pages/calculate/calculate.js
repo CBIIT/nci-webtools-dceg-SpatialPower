@@ -8,7 +8,9 @@ import { InputForm } from './input-form';
 import { Results } from './results';
 import { Summary } from './summary';
 import { fetchJSON, postJSON } from '../../services/query';
+import { PlotOptions } from './plot-options';
 const actions = { ...resultsActions, ...messagesActions };
+const crypto = require('crypto');
 
 export function Calculate({ match }) {
     const dispatch = useDispatch();
@@ -28,16 +30,13 @@ export function Calculate({ match }) {
 
     async function handleSubmit(params) {
         console.log(params);
-        
 
         resetResults();
         resetMessages();
 
-        mergeResults({ submitted: true })
-
         try {
             mergeResults({ loading: true });
-            const results = await postJSON('submit', params);
+            const response = await postJSON('submit', params);
 
             if (params.queue) {
                 // if the request was enqueued, notify the user
@@ -45,7 +44,6 @@ export function Calculate({ match }) {
             } else {
                 // otherwise, show results
                 mergeResults(response);
-                
             }
 
         } catch (error) {
@@ -53,7 +51,6 @@ export function Calculate({ match }) {
         } finally {
             const urlKey = crypto.randomBytes(16).toString('hex');
             mergeResults({loading: false, submitted: true, urlKey: urlKey});
-            
         }
     }
 
