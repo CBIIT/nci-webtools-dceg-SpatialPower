@@ -52,20 +52,25 @@ export function InputForm({
         }
 
         // set default parameters
-        if(name === 'samp_case'){
+        if (name === 'samp_case') {
             newParams.x_case = 0.5
             newParams.y_case = 0.5
 
-            if(value === 'MVN')
+            if (value === 'MVN')
                 newParams.s_case = 0.33
             else
-                newParams.r_case = 1
+                newParams.r_case = 0.5
         }
 
-        if(value === 'MVN' && name === 'samp_control'){
+        if (name === 'samp_control' && value !== 'systematic') {
             newParams.x_control = 0.5
             newParams.y_control = 0.5
-            newParams.s_control = 0.33
+
+            if (value === 'MVN')
+                newParams.s_control = 0.33
+
+            if (value === 'CSR')
+                newParams.r_control = 0.5
         }
 
         mergeParams(newParams);
@@ -88,6 +93,25 @@ export function InputForm({
     }
 
     return <form className={className}>
+
+        <div className="form-group">
+            <label htmlFor="win" className="font-weight-bold">Window</label>
+            <OverlayTrigger
+                placement="right"
+                overlay={<Tooltip id="win_tooltip">Specify the shape of the window</Tooltip>}>
+                <select
+                    id="win"
+                    name="win"
+                    className="custom-select"
+                    value={params.win}
+                    onChange={handleChange}>
+                    <option selected value="" hidden>(select option)</option>
+                    <option value="unit_circle">Unit Circle</option>
+                    <option value="unit_square">Unit Square</option>
+                </select>
+            </OverlayTrigger>
+        </div>
+
         <div className="form-group">
             <label htmlFor="samp_case" className="font-weight-bold">Sample Case</label>
             <OverlayTrigger
@@ -142,7 +166,22 @@ export function InputForm({
             </OverlayTrigger>
         </div>
 
-        <hr class="mt-4" style={{backgroundColor:'#808080'}}/>
+        <div className="form-group">
+            <label htmlFor="rand_seed" className="font-weight-bold">Random Seed</label>
+            <OverlayTrigger
+                placement="right"
+                overlay={<Tooltip id="sim_total_tooltip">Specify a random seed</Tooltip>}>
+                <input
+                    type="number"
+                    id="rand_seed"
+                    name="rand_seed"
+                    className="form-control"
+                    value={params.rand_seed || ''}
+                    onChange={handleChange} />
+            </OverlayTrigger>
+        </div>
+
+        <hr class="mt-4" style={{ borderTop: '2px solid #c3c4c9' }} />
 
         <div className="form-group">
             <label htmlFor="x_case" className="font-weight-bold">X Case</label>
@@ -176,7 +215,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>
 
-        {params.samp_control === 'MVN' && <div className="form-group">
+        {params.samp_control !== 'systematic' && <div className="form-group">
             <label htmlFor="x_control" className="font-weight-bold">X Control</label>
             <OverlayTrigger
                 placement="right"
@@ -192,7 +231,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        {params.samp_control === 'MVN' && <div className="form-group">
+        {params.samp_control !== 'systematic' && <div className="form-group">
             <label htmlFor="y_control" className="font-weight-bold">Y Control</label>
             <OverlayTrigger
                 placement="right"
@@ -215,10 +254,27 @@ export function InputForm({
                 overlay={<Tooltip id="samp_case_tooltip">Optional. Specify the radius (radii) of case cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
+                    step="any"
                     id="r_case"
                     name="r_case"
                     className="form-control"
                     value={params.r_case}
+                    onChange={handleChange} />
+            </OverlayTrigger>
+        </div>}
+
+        {params.samp_control === 'CSR' && <div className="form-group">
+            <label htmlFor="r_control" className="font-weight-bold">R Control</label>
+            <OverlayTrigger
+                placement="right"
+                overlay={<Tooltip id="samp_case_tooltip">Optional. Specify the radius (radii) of control cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
+                <input
+                    type="number"
+                    step="any"
+                    id="r_control"
+                    name="r_control"
+                    className="form-control"
+                    value={params.r_control}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>}
@@ -255,7 +311,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        <hr class="mt-4" style={{backgroundColor:'#808080'}}/>
+        <hr class="mt-4" style={{ borderTop: '2px solid #c3c4c9' }} />
 
         <div className="form-group">
             <label htmlFor="n_case" className="font-weight-bold">N Case</label>
@@ -267,7 +323,7 @@ export function InputForm({
                     id="n_case"
                     name="n_case"
                     className="form-control"
-                    value={params.n_case ? params.n_case : ''}
+                    value={params.n_case || ''}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
@@ -283,12 +339,10 @@ export function InputForm({
                     id="n_control"
                     name="n_control"
                     className="form-control"
-                    value={params.n_control ? params.n_control : ''}
+                    value={params.n_control || ''}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
-
-
 
         <div className="form-group">
             <label htmlFor="lower_tail" className="font-weight-bold">Lower Tail</label>
@@ -352,24 +406,41 @@ export function InputForm({
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
+        <div className="d-flex flex-row" style={{ gap: '20px' }}>
+            <div className="form-group custom-control custom-checkbox">
+                <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="plot_pts"
+                    name="plot_pts"
+                    checked={params.plot_pts}
+                    onChange={handleChange} />
 
-        <div className="form-group custom-control custom-checkbox">
-            <input
-                type="checkbox"
-                className="custom-control-input"
-                id="plot_pts"
-                name="plot_pts"
-                checked={params.plot_pts}
-                onChange={handleChange} />
+                <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="plot_pts_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
+                    <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
+                </OverlayTrigger>
+            </div>
 
-            <OverlayTrigger
-                placement="right"
-                overlay={<Tooltip id="samp_case_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
-                <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
-            </OverlayTrigger>
+            <div className="form-group custom-control custom-checkbox">
+                <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="title"
+                    name="title"
+                    checked={params.title}
+                    onChange={handleChange} />
+
+                <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="title_tooltip">If checked, display title of plots</Tooltip>}>
+                    <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
+                </OverlayTrigger>
+            </div>
         </div>
 
-        <hr class="mt-4" style={{backgroundColor:'#808080'}}/>
+        <hr class="mt-4" style={{ borderTop: '2px solid #c3c4c9' }} />
 
         <div className="form-group custom-control custom-checkbox">
             <input

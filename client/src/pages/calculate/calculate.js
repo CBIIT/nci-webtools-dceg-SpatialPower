@@ -5,9 +5,12 @@ import { LoadingOverlay } from '@cbiitss/react-components';
 import { actions as resultsActions } from '../../services/store/results';
 import { actions as messagesActions } from '../../services/store/messages';
 import { InputForm } from './input-form';
-import { Results } from './results';
+import { Plots } from './plots';
+import { Summary } from './summary';
 import { fetchJSON, postJSON } from '../../services/query';
+import { PlotOptions } from './plot-options';
 const actions = { ...resultsActions, ...messagesActions };
+const crypto = require('crypto');
 
 export function Calculate({ match }) {
     const dispatch = useDispatch();
@@ -33,20 +36,42 @@ export function Calculate({ match }) {
 
         try {
             mergeResults({ loading: true });
-            const results = await postJSON('submit', params);
+            const response = await postJSON('submit', params);
 
             if (params.queue) {
                 // if the request was enqueued, notify the user
                 mergeMessages([{ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` }]);
             } else {
                 // otherwise, show results
-                mergeResults(results);
+                mergeResults(response);
             }
 
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
-            mergeResults({ loading: false });
+            const urlKey = crypto.randomBytes(16).toString('hex');
+            mergeResults({loading: false, submitted: true, urlKey: urlKey});
+        }
+    }
+
+    async function handleReplot(params) {
+
+        mergeResults({ submitted: false })
+
+        resetMessages();
+        params = { ...params, ["id"]: results.id }
+
+        try {
+            mergeResults({ loading: true });
+            const response = await postJSON('replot', params);
+
+            mergeResults(response);
+
+        } catch (error) {
+            mergeMessages([{ type: 'danger', text: error }]);
+        } finally {
+            const urlKey = crypto.randomBytes(16).toString('hex');
+            mergeResults({ loading: false, submitted: true,urlKey: urlKey});
         }
     }
 
@@ -84,6 +109,11 @@ export function Calculate({ match }) {
                 </div>
             </div>
             <div className="col-md-8">
+                {results.submitted === false && <div className="card shadow-sm h-100 mb-3">
+                    <div className="card-body">
+                        Specify the sample case and control and provide simulation configuration on the left panel. The results will be displayed here once you click on the Submit button.
+                    </div>
+                </div>}
                 {messages.map((message, i) =>
                     <Alert
                         key={`results-alert-${i}`}
@@ -92,7 +122,15 @@ export function Calculate({ match }) {
                         onClose={e => removeMessageByIndex(i)}>
                         {message.text}
                     </Alert>)}
-                {<Results results={results} />}
+                <div class="d-flex flex-column">
+                    {results.submitted && results.summary && <Summary/>}
+                    {results.submitted && <Plots/>}
+                    {results.submitted && <div className="card shadow-sm h-100 mb-3">
+                        <div className="card-body">
+                            <PlotOptions onSubmit={handleReplot} />
+                        </div>
+                    </div>}
+                </div>
             </div>
         </div>
     </div>

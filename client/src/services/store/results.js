@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { mergeObject } from './utils';
 
-export const getInitialState = () => ({loading: false});
+export const getInitialState = () => ({loading: false, submitted: false});
 
 export const { actions, reducer } = createSlice({
     name: 'results',
