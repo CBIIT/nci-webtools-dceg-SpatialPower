@@ -35,29 +35,6 @@ calculate <- function(params) {
             cascon = params$cascon,
             n_core = 4)
 
-        # save output file
-        saveRDS(output, "output.RData")
-
-        #svg file sizes are rather large compared to png (too many paths)
-        #svg("plot-%d.svg")
-
-        # specifying width and height above default makes plotting area collide with legend
-        png("plot-%d.png")
-        sparrpowR::spatial_plots(output,
-                p_thresh = params$p_thresh,
-                chars = c(0,1),
-                sizes = c(1,1),
-                plot_pts = params$plot_pts,
-                plot_title = params$title, 
-                cols = c("blue", "green", "red", "purple", "orange"))
-        dev.off()
-
-        # add generated plots
-        files <- list.files(".")
-        output$id <- params$id
-        output$plots <- files[grep("png", files)]
-
-
         s_stat <- t.test(output$s_obs, mu = 1, alternative = "two.sided")
         t_stat <- t.test(output$t_obs, mu = 0, alternative = "two.sided") 
 
@@ -95,26 +72,29 @@ calculate <- function(params) {
             l_case = params$l_case,
             l_control = params$l_control,
             e_control = params$e_control,)
-
-        # save output file
-        saveRDS(output, "output.RData")
-
-        # specifying width and height above default makes plotting area collide with legend
-        png("plot-%d.png")
-        sparrpowR::spatial_plots(output,
-                p_thresh = params$p_thresh,
-                chars = c(0,1),
-                sizes = c(1,1),
-                plot_pts = params$plot_pts,
-                plot_title = params$title, 
-                cols = c("blue", "green", "red", "purple", "orange"))
-        dev.off()
-
-        # add generated plots
-        files <- list.files(".")
-        output$id <- params$id
-        output$plots <- files[grep("png", files)]
     }
+
+    # save output file
+    saveRDS(output, "output.RData")
+
+    #svg file sizes are rather large compared to png (too many paths)
+    #svg("plot-%d.svg")
+
+    # specifying width and height above default makes plotting area collide with legend
+    png("plot-%d.png")
+    sparrpowR::spatial_plots(output,
+            p_thresh = params$p_thresh,
+            chars = c(0,1),
+            sizes = c(1,1),
+            plot_pts = params$plot_pts,
+            plot_title = params$title, 
+            cols = c("blue", "green", "red", "purple", "orange"))
+    dev.off()
+
+    # add generated plots
+    files <- list.files(".")
+    output$id <- params$id
+    output$plots <- files[grep("png", files)]
 
     output
 }
