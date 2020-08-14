@@ -88,7 +88,7 @@ async function processMessage(params) {
         // specify email template variables
         const templateData = {
             originalTimestamp: params.timestamp,
-            resultsUrl: `${config.email.baseUrl}#calculate/${params.id}`
+            resultsUrl: `${config.email.baseUrl}/#/SparrpowR/${params.id}`
         };
 
         // send user success email
@@ -96,7 +96,7 @@ async function processMessage(params) {
         const userEmailResults = await email.sendMail({
             from: config.email.sender,
             to: params.email,
-            subject: 'Conversion Results',
+            subject: 'SparrpowR Results',
             html: await readTemplate(__dirname + '/templates/user-success-email.html', templateData),
         });
 
@@ -121,7 +121,7 @@ async function processMessage(params) {
         const adminEmailResults = await email.sendMail({
             from: config.email.sender,
             to: config.email.admin,
-            subject: `Conversion Error: ${params.id}`, // searchable calculation error subject
+            subject: `SparrpowR Error: ${params.id}`, // searchable calculation error subject
             html: await readTemplate(__dirname + '/templates/admin-failure-email.html', templateData),
         });
 
@@ -131,7 +131,7 @@ async function processMessage(params) {
             const userEmailResults = await email.sendMail({
                 from: config.email.sender,
                 to: params.email,
-                subject: 'Conversion Error',
+                subject: 'SparrpowR Error',
                 html: await readTemplate(__dirname + '/templates/user-failure-email.html', templateData),
             });
         }

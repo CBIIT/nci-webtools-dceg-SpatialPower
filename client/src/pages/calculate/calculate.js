@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import Alert from 'react-bootstrap/Alert';
+import Card from 'react-bootstrap/Card';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingOverlay } from '@cbiitss/react-components';
+import { actions as paramsActions } from '../../services/store/params';
 import { actions as resultsActions } from '../../services/store/results';
 import { actions as messagesActions } from '../../services/store/messages';
 import { InputForm } from './input-form';
@@ -9,8 +11,7 @@ import { Plots } from './plots';
 import { Summary } from './summary';
 import { fetchJSON, postJSON } from '../../services/query';
 import { PlotOptions } from './plot-options';
-const actions = { ...resultsActions, ...messagesActions };
-const crypto = require('crypto');
+const actions = { ...paramsActions, ...resultsActions, ...messagesActions };
 
 export function Calculate({ match }) {
     const dispatch = useDispatch();
@@ -18,16 +19,23 @@ export function Calculate({ match }) {
     const messages = useSelector(state => state.messages);
     const mergeResults = results => dispatch(actions.mergeResults(results));
     const mergeMessages = messages => dispatch(actions.mergeMessages(messages));
+    const resetParams = _ => dispatch(actions.resetParams());
     const resetResults = _ => dispatch(actions.resetResults());
     const resetMessages = _ => dispatch(actions.resetMessages());
     const removeMessageByIndex = index => dispatch(actions.removeMessageByIndex(index));
 
-    // run once
+    /**
+     * Loads results from an id, which is specified as a React Router url parameter.
+     */
     useEffect(() => {
         const { id } = match.params;
         if (id) loadResults(id);
-    }, []);
+    });
 
+    /**
+     * Posts calculation parameters to the 'submit' endpoint and saves results to the store
+     * @param {object} params 
+     */
     async function handleSubmit(params) {
         console.log(params);
 
@@ -38,65 +46,63 @@ export function Calculate({ match }) {
             mergeResults({ loading: true });
             const response = await postJSON('submit', params);
 
-            if (params.queue) {
-                // if the request was enqueued, notify the user
-                mergeMessages([{ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` }]);
-            } else {
-                // otherwise, show results
-                mergeResults(response);
-            }
-
+            // If the request was enqueued, notify the user. Otherwise, save results to the store
+            params.queue
+                ? mergeMessages([{ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` }])
+                : mergeResults(response);
+                
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
-            const urlKey = crypto.randomBytes(16).toString('hex');
-            mergeResults({loading: false, submitted: true, urlKey: urlKey});
+            const urlKey = new Date().getTime();
+            mergeResults({loading: false, submitted: true, urlKey});
         }
     }
 
+    /**
+     * Replots existing results plots by calling the 'replot' endpoint and updating the cache key
+     * @param {object} params 
+     */
     async function handleReplot(params) {
-
-        mergeResults({ submitted: false })
-
         resetMessages();
-        params = { ...params, ["id"]: results.id }
 
         try {
-            mergeResults({ loading: true });
-            const response = await postJSON('replot', params);
-
-            mergeResults(response);
-
+            const { id } = results;
+            mergeResults({ loading: true, submitted: false });
+            mergeResults(await postJSON('replot', {...params, id}));
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
-            const urlKey = crypto.randomBytes(16).toString('hex');
-            mergeResults({ loading: false, submitted: true,urlKey: urlKey});
+            const urlKey = new Date().getTime();
+            mergeResults({ loading: false, submitted: true, urlKey});
         }
     }
 
+    /**
+     * Resets calculation parameters, results, and messages to their initial state
+     */
     function handleReset() {
-        // do not call resetParams, as it initiates handleReset
+        resetParams();
         resetResults();
         resetMessages();
     }
 
+    /**
+     * Loads calculation results into the store using the specified id.
+     * @param {string} id 
+     */
     async function loadResults(id) {
         resetResults();
         resetMessages();
 
         try {
             mergeResults({ loading: true });
-            const results = await fetchJSON(`fetch-results/?id=${id}`);
-            if (results) {
-                mergeResults(results);
-            } else {
-                mergeMessages([{ type: 'danger', text: `No results could be found for the specified id.` }]);
-            }
+            mergeResults(await fetchJSON(`fetch-results/?id=${id}`));
         } catch (error) {
-            mergeMessages([{ type: 'danger', text: error }]);
+            mergeMessages([{ type: 'danger', text: `No results could be found for the specified id.` }]);
         } finally {
-            mergeResults({ loading: false });
+            const urlKey = new Date().getTime();
+            mergeResults({ loading: false, submitted: true, urlKey });
         }
     }
 
@@ -104,16 +110,13 @@ export function Calculate({ match }) {
         <LoadingOverlay active={results.loading} />
         <div className="row">
             <div className="col-md-4">
-                <div className="card shadow-sm h-100">
-                    <InputForm className="card-body" onSubmit={handleSubmit} onReset={handleReset} />
-                </div>
+                <Card className="shadow-sm h-100">
+                    <Card.Body>
+                        <InputForm onSubmit={handleSubmit} onReset={handleReset} />
+                    </Card.Body>
+                </Card>
             </div>
             <div className="col-md-8">
-                {results.submitted === false && <div className="card shadow-sm h-100 mb-3">
-                    <div className="card-body">
-                        Specify the sample case and control and provide simulation configuration on the left panel. The results will be displayed here once you click on the Submit button.
-                    </div>
-                </div>}
                 {messages.map((message, i) =>
                     <Alert
                         key={`results-alert-${i}`}
@@ -122,15 +125,17 @@ export function Calculate({ match }) {
                         onClose={e => removeMessageByIndex(i)}>
                         {message.text}
                     </Alert>)}
-                <div class="d-flex flex-column">
-                    {results.submitted && results.summary && <Summary/>}
-                    {results.submitted && <Plots/>}
-                    {results.submitted && <div className="card shadow-sm h-100 mb-3">
-                        <div className="card-body">
-                            <PlotOptions onSubmit={handleReplot} />
-                        </div>
-                    </div>}
-                </div>
+
+                {!results.submitted ? 
+                    <Card className="shadow-sm h-100">
+                        <Card.Body>
+                            <Card.Text>Specify the sample case and control and provide simulation configuration on the left panel. The results will be displayed here once you click on the Submit button.</Card.Text>
+                        </Card.Body>
+                    </Card> : <>
+                        <Summary />
+                        <Plots />
+                        <PlotOptions onSubmit={handleReplot} />
+                    </>}
             </div>
         </div>
     </div>
