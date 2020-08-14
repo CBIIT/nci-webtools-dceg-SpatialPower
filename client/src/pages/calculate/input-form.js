@@ -391,55 +391,6 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        <div className="form-group">
-            <label htmlFor="p_thresh" className="font-weight-bold">Power Threshold</label>
-            <OverlayTrigger
-                placement="right"
-                overlay={<Tooltip id="samp_case_tooltip">Specify a numeric value between 0 and 1 (default = 0.8) for the power threshold.</Tooltip>}>
-                <input
-                    type="number"
-                    step="any"
-                    id="p_thresh"
-                    name="p_thresh"
-                    className="form-control"
-                    value={params.p_thresh}
-                    onChange={handleChange} />
-            </OverlayTrigger>
-        </div>
-        <div className="d-flex flex-row" style={{ gap: '20px' }}>
-            <div className="form-group custom-control custom-checkbox">
-                <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="plot_pts"
-                    name="plot_pts"
-                    checked={params.plot_pts}
-                    onChange={handleChange} />
-
-                <OverlayTrigger
-                    placement="right"
-                    overlay={<Tooltip id="plot_pts_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
-                    <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
-                </OverlayTrigger>
-            </div>
-
-            <div className="form-group custom-control custom-checkbox">
-                <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="title"
-                    name="title"
-                    checked={params.title}
-                    onChange={handleChange} />
-
-                <OverlayTrigger
-                    placement="right"
-                    overlay={<Tooltip id="title_tooltip">If checked, display title of plots</Tooltip>}>
-                    <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
-                </OverlayTrigger>
-            </div>
-        </div>
-
         <hr class="mt-4" style={{ borderTop: '2px solid #c3c4c9' }} />
 
         <div className="form-group custom-control custom-checkbox">
