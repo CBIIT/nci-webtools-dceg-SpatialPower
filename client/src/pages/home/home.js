@@ -1,20 +1,20 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom'
-import Card from 'react-bootstrap/Card'
+// import Card from 'react-bootstrap/Card'
 import './home.css';
 
 export function Home() {
 
-    const cards = [
-        /*{
+    /*const cards = [
+        {
             title: 'Spatial Power',
             body: 'Compute the statistical power of a spatial relative risk function using randomly generated data.',
             action: {
                 route: 'calculate',
                 text: 'Run Estimate',
             }
-        },*/
-    ];
+        },
+    ];*/
 
     return <>
         <div className="jumbotron jumbotron-fluid text-dark ">
