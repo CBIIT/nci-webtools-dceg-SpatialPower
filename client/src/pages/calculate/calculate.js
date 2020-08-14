@@ -50,12 +50,12 @@ export function Calculate({ match }) {
             params.queue
                 ? mergeMessages([{ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` }])
                 : mergeResults(response);
-                
+
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
             const urlKey = new Date().getTime();
-            mergeResults({loading: false, submitted: true, urlKey});
+            mergeResults({ loading: false, submitted: true, urlKey });
         }
     }
 
@@ -69,12 +69,12 @@ export function Calculate({ match }) {
         try {
             const { id } = results;
             mergeResults({ loading: true, submitted: false });
-            mergeResults(await postJSON('replot', {...params, id}));
+            mergeResults(await postJSON('replot', { ...params, id }));
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
             const urlKey = new Date().getTime();
-            mergeResults({ loading: false, submitted: true, urlKey});
+            mergeResults({ loading: false, submitted: true, urlKey });
         }
     }
 
@@ -126,15 +126,17 @@ export function Calculate({ match }) {
                         {message.text}
                     </Alert>)}
 
-                {!results.submitted ? 
+                {!results.submitted ?
                     <Card className="shadow-sm h-100">
                         <Card.Body>
                             <Card.Text>Specify the sample case and control and provide simulation configuration on the left panel. The results will be displayed here once you click on the Submit button.</Card.Text>
                         </Card.Body>
                     </Card> : <>
                         <Summary />
+                        <div className="accordion md-accordion" id="plotAccordion" aria-multiselectable="true">
+                            <PlotOptions onSubmit={handleReplot} />
+                        </div>
                         <Plots />
-                        <PlotOptions onSubmit={handleReplot} />
                     </>}
             </div>
         </div>

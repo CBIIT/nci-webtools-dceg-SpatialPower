@@ -20,7 +20,7 @@ export function Plots() {
             <Card.Header className="bg-white">
                 <Nav variant="tabs">
                     {plots.map((plot, i) => <Nav.Item>
-                        <Nav.Link eventKey={`plot-${i}`}>{plotNames[i]}</Nav.Link>
+                        <Nav.Link eventKey={`plot-${i}`} style={{fontWeight: 'bold'}}>{plotNames[i]}</Nav.Link>
                     </Nav.Item>)}
                 </Nav>
             </Card.Header>
