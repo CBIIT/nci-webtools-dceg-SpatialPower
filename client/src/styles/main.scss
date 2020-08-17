@@ -1,18 +1,33 @@
 @import './bootstrap-variables.scss';
 @import '~bootstrap/scss/bootstrap';
+// @import '~bootstrap/scss/mixins/_breakpoints.scss';
 @import '~react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 @import './overrides.scss';
 @import './utils.scss';
 
-@media (min-width: 1600px) {
-    .container, .container-lg, .container-md, .container-sm, .container-xl {
-        max-width: 1500px;
+/** Responsive utilities */
+@each $breakpoint in map-keys($grid-breakpoints) {
+    @include media-breakpoint-up($breakpoint) {
+      $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+  
+      .border#{$infix}-top {      border-top: $border-width solid $border-color ; }
+      .border#{$infix}-right {    border-right: $border-width solid $border-color ; }
+      .border#{$infix}-bottom {   border-bottom: $border-width solid $border-color ; }
+      .border#{$infix}-left {     border-left: $border-width solid $border-color ; }
+  
+      .border#{$infix}-top-0 {    border-top: 0 !important; }
+      .border#{$infix}-right-0 {  border-right: 0 !important; }
+      .border#{$infix}-bottom-0 { border-bottom: 0 !important; }
+      .border#{$infix}-left-0 {   border-left: 0 !important; }
+  
+      .border#{$infix}-x {
+        border-left: $border-width solid $border-color ;
+        border-right: $border-width solid $border-color ;
+      }
+  
+      .border#{$infix}-y {
+        border-top: $border-width solid $border-color ;
+        border-bottom: $border-width solid $border-color ;
+      }
     }
-}
-
-@media (min-width: 1920px) {
-    .container, .container-lg, .container-md, .container-sm, .container-xl {
-        max-width: 1800px;
-    }
-}
-
+  }
