@@ -367,7 +367,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        <hr class="mt-4" style={{ borderTop: '2px solid #c3c4c9' }} />
+        <hr class="mt-4" />
 
         <div className="form-group custom-control custom-checkbox">
             <input
@@ -382,7 +382,7 @@ export function InputForm({
             <OverlayTrigger
                 placement="right"
                 overlay={<Tooltip id="queue_tooltip">If checked, submit this job to a processing queue and receive results via email. This option will always be selected if more than {simQueueCutoff} simulations will be run.</Tooltip>}>
-                <label className="custom-control-label" htmlFor="queue">Submit job to queue</label>
+                <label className="custom-control-label" htmlFor="queue">Submit Job to Queue</label>
             </OverlayTrigger>
         </div>
 
