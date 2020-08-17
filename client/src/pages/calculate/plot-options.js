@@ -8,10 +8,11 @@ import { getInputEventValue } from './utils';
 import { actions } from '../../services/store/params';
 
 export function PlotOptions({ onSubmit = e => { } }) {
-
     const dispatch = useDispatch();
     const params = useSelector(state => state.params);
+    const { plots } = useSelector(state => state.results);
     const mergeParams = value => dispatch(actions.mergeParams(value));
+    if (!plots || !plots.length) return null;
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -28,8 +29,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
 
     return <Accordion>
         <Card className="shadow-sm mb-3">
-            <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
-                <b>Customize Plot Settings</b>
+            <Accordion.Toggle as={Card.Header} variant="link" eventKey="0" role="button" className="bg-white">
+                <h2 className="h6 my-1">Customize Plot Settings</h2>
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
                 <Card.Body>
