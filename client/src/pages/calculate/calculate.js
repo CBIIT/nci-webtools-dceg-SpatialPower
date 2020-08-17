@@ -109,16 +109,17 @@ export function Calculate({ match }) {
     return <div className="container py-4">
         <LoadingOverlay active={results.loading} />
         <div className="row">
-            <div className="col-md-4">
+            <div className="col-lg-4">
                 <Card className="shadow-sm h-100">
                     <Card.Body>
                         <InputForm onSubmit={handleSubmit} onReset={handleReset} />
                     </Card.Body>
                 </Card>
             </div>
-            <div className="col-md-8">
+            <div className="col-lg-8">
                 {messages.map((message, i) =>
                     <Alert
+                        className="white-space-pre-wrap"
                         key={`results-alert-${i}`}
                         variant={message.type}
                         dismissible
@@ -133,9 +134,7 @@ export function Calculate({ match }) {
                         </Card.Body>
                     </Card> : <>
                         <Summary />
-                        <div className="accordion md-accordion" id="plotAccordion" aria-multiselectable="true">
-                            <PlotOptions onSubmit={handleReplot} />
-                        </div>
+                        <PlotOptions onSubmit={handleReplot} />
                         <Plots />
                     </>}
             </div>
