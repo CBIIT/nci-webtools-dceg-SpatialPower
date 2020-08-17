@@ -10,10 +10,12 @@ export async function fetchJSON(url, params) {
         },
     });
 
+    const output = await response.json();
+
     if (response.ok) {
-        return await response.json()
+        return output;
     } else {
-        throw(await response.text());
+        throw(output);
     }
 }
 

@@ -19,14 +19,14 @@ export function Plots() {
         <Card className="shadow-sm mb-3">
             <Card.Header className="bg-white">
                 <Nav variant="tabs">
-                    {plots.map((plot, i) => <Nav.Item>
-                        <Nav.Link eventKey={`plot-${i}`} style={{fontWeight: 'bold'}}>{plotNames[i]}</Nav.Link>
+                    {plots.map((plot, i) => <Nav.Item key={`plot-tab-${i}`}>
+                        <Nav.Link eventKey={`plot-${i}`} className="font-weight-bold">{plotNames[i]}</Nav.Link>
                     </Nav.Item>)}
                 </Nav>
             </Card.Header>
             <Card.Body>
                 <Tab.Content className="text-center">
-                    {plots.map((plot, i) => <Tab.Pane eventKey={`plot-${i}`}>
+                    {plots.map((plot, i) => <Tab.Pane key={`plot-tab-container-${i}`} eventKey={`plot-${i}`}>
                         <img className="img-fluid" src={`results/${id}/${plot}?key=${urlKey}`} alt={`Plot ${i + 1}`} />
                     </Tab.Pane>)}
                 </Tab.Content>
