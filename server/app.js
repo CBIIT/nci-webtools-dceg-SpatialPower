@@ -56,8 +56,9 @@ app.post('/submit', async (request, response) => {
             response.json(results);
         }
     } catch(error) {
-        logger.error(error);
-        response.status(500).json(error.toString());
+        const errorText = String(error.stderr || error);
+        logger.error(errorText);
+        response.status(500).json(errorText);
     }
 });
 
@@ -77,8 +78,9 @@ app.post('/replot', async (request, response) => {
         response.json(results);
 
     } catch(error) {
-        logger.error(error);
-        response.status(500).json(error.toString());
+        const errorText = String(error.stderr || error);
+        logger.error(errorText);
+        response.status(500).json(errorText);
     }
 });
 
