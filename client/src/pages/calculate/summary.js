@@ -17,47 +17,53 @@ export function Summary() {
 
     return <Card className="shadow-sm mb-3">
         <Card.Header className="bg-white">
-            <h2 className="h6 d-inline-block mr-1 my-1" style={{fontWeight: 'bold'}}>Summary Statistics</h2>
+            <h2 className="h6 d-inline-block mr-1 my-1">Summary Statistics</h2>
             <small>(Number of Simulations: {params.sim_total})</small>
         </Card.Header>
 
         <Card.Body>
-            <div className="d-flex flex-row">
-                <table className="table mb-0 mr-2" style={{borderRight: '2px solid #c3c4c9'}}>
-                    <thead>
-                        <tr>
-                            <th className="w-25"><span className="sr-only">Title</span></th>
-                            <th className="w-25">Mean</th>
-                            <th className="w-25">Standard Deviation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {summary.slice(0, 3).map(({ title, mean, standardDeviation }, i) =>
-                            <tr key={`results-summary-item-${i}`}>
-                                <td>{title}</td>
-                                <td>{mean}</td>
-                                <td>{standardDeviation}</td>
-                            </tr>)}
-                    </tbody>
-                </table>
+            <div className="row">
+                <div className="col-lg">
+                    <table className="table table-borderless table-sm border-lg-right">
+                        <thead>
+                            <tr>
+                                <th className="w-33"><span className="sr-only">Title</span></th>
+                                <th className="w-33">Mean</th>
+                                <th className="w-33">Standard Deviation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {summary.slice(0, 3).map(({ title, mean, standardDeviation }, i) =>
+                                <tr key={`results-summary-item-${i}`}>
+                                    <td>{title}</td>
+                                    <td>{mean}</td>
+                                    <td>{standardDeviation}</td>
+                                </tr>)}
+                        </tbody>
+                    </table>
 
-                <table className="table mb-0 ml-2">
-                    <thead>
-                        <tr>
-                            <th className="w-25"><span className="sr-only">Title</span></th>
-                            <th className="w-25">Test Statistic</th>
-                            <th className="w-25">P-Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {summary.slice(3, 5).map(({ title, testStat, pValue }, i) =>
-                            <tr key={`results-summary-item-${i + 3}`}>
-                                <td>{title}</td>
-                                <td>{testStat}</td>
-                                <td>{pValue}</td>
-                            </tr>)}
-                    </tbody>
-                </table>
+                    <hr className="d-block d-lg-none" />
+                </div>
+
+                <div className="col-lg">
+                    <table className="table table-borderless table-sm">
+                        <thead>
+                            <tr>
+                                <th className="w-33"><span className="sr-only">Title</span></th>
+                                <th className="w-33">Test Statistic</th>
+                                <th className="w-33">P-Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {summary.slice(3, 5).map(({ title, testStat, pValue }, i) =>
+                                <tr key={`results-summary-item-${i + 3}`}>
+                                    <td>{title}</td>
+                                    <td>{testStat}</td>
+                                    <td>{pValue}</td>
+                                </tr>)}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </Card.Body>
     </Card>
