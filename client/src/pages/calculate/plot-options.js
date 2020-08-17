@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Card from 'react-bootstrap/Card';
+import Accordion from 'react-bootstrap/Accordion';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
@@ -25,16 +26,12 @@ export function PlotOptions({ onSubmit = e => { } }) {
         mergeParams({ [name]: value });
     }
 
-    return <div class="accordion md-accordion" id="accordionEx">
+    return <Accordion>
         <Card className="shadow-sm mb-3">
-            <Card.Header id="plotHeader">
-                <h2 className="mb-0">
-                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        <b>Customize Plot Settings</b>
-                    </button>
-                </h2>
-            </Card.Header>
-            <div id="collapseOne" class="collapse show" data-parent="#accordionEx" aria-labelledby="plotHeader">
+            <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
+                <b>Customize Plot Settings</b>
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey="0">
                 <Card.Body>
                     <form>
                         <div className="d-flex flex-row">
@@ -293,7 +290,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="d-flex flex-column mx-5">
+                            <div className="d-flex flex-column mx-3">
                                 <label htmlFor="replot"><span>&nbsp;</span></label>
                                 <button
                                     type="submit"
@@ -307,7 +304,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
 
                     </form>
                 </Card.Body>
-            </div>
+            </Accordion.Collapse>
         </Card>
-    </div>
+    </Accordion>
 }
