@@ -6,11 +6,31 @@ calculate <- function(params) {
     # working directory should be a unique, empty folder
     setwd(params$workingDirectory)
 
+    x1 <- params$x_origin
+    x2 <- x1 + params$width
+    y1 <- params$y_origin
+    y2 <- y1 + params$height
+
     # todo: allow users to create custom windows
     if(params$win == "unit_circle")
         window <- spatstat::disc(radius = 0.5, centre = c(0.5, 0.5))
     if(params$win == "unit_square")
         window <- spatstat::unit.square()
+    if(params$win == "rectangle"){
+        x1 <- params$x_origin
+        x2 <- x1 + params$width
+        y1 <- params$y_origin
+        y2 <- y1 + params$height
+
+        window <- spatstat::owin(c(x1,x2),c(y1,y2))
+    }
+
+    if(params$win == "circle"){
+        x <- params$x_origin
+        y <- params$y_origin
+
+        window <- spatstat::disc(radius = params$radius, centre = c(x,y))
+    }
 
     if(params$sim_total > 1) {
         results <- sparrpowR::spatial_power(

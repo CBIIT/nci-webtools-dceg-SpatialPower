@@ -84,9 +84,130 @@ export function InputForm({
                     <option selected value="" hidden>(select option)</option>
                     <option value="unit_circle">Unit Circle</option>
                     <option value="unit_square">Unit Square</option>
+                    <option value="rectangle">Rectangle</option>
+                    <option value="circle">Circle</option>
                 </select>
             </OverlayTrigger>
         </div>
+
+        {params.win === "rectangle" && <div className="d-flex flex-row">
+            <div className="form-group pr-1">
+                <label htmlFor="x_origin" className="font-weight-bold">X Origin</label>
+                <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the lower left corner</Tooltip>}>
+                    <input
+                        type="number"
+                        id="x_origin"
+                        name="x_origin"
+                        step="any"
+                        className="form-control"
+                        value={params.x_origin}
+                        onChange={handleChange} />
+                </OverlayTrigger>
+            </div>
+
+            <div className="form-group">
+                <label htmlFor="y_origin" className="font-weight-bold">Y Origin</label>
+                <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the lower left corner</Tooltip>}>
+                    <input
+                        type="number"
+                        id="y_origin"
+                        name="y_origin"
+                        step="any"
+                        className="form-control"
+                        value={params.y_origin}
+                        onChange={handleChange} />
+                </OverlayTrigger>
+            </div>
+        </div>}
+
+        {params.win === "rectangle" && <div className="d-flex flex-row">
+            <div className="form-group pr-1">
+                <label htmlFor="width" className="font-weight-bold">Width</label>
+                <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="width_tooltip">Enter the width of the rectangle</Tooltip>}>
+                    <input
+                        type="number"
+                        id="width"
+                        name="width"
+                        step="any"
+                        className="form-control"
+                        value={params.width || ''}
+                        onChange={handleChange} />
+                </OverlayTrigger>
+            </div>
+
+            <div className="form-group">
+                <label htmlFor="height" className="font-weight-bold">Height</label>
+                <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="height_tooltip">Enter the height of the rectangle</Tooltip>}>
+                    <input
+                        type="number"
+                        id="height"
+                        name="height"
+                        step="any"
+                        className="form-control"
+                        value={params.height || ''}
+                        onChange={handleChange} />
+                </OverlayTrigger>
+            </div>
+        </div>}
+
+        {params.win === "circle" && <div className="d-flex flex-row">
+            <div className="form-group pr-1">
+                <label htmlFor="x_origin" className="font-weight-bold">X Origin</label>
+                <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the center of the circle</Tooltip>}>
+                    <input
+                        type="number"
+                        id="x_origin"
+                        name="x_origin"
+                        step="any"
+                        className="form-control"
+                        value={params.x_origin}
+                        onChange={handleChange} />
+                </OverlayTrigger>
+            </div>
+
+            <div className="form-group pr-1">
+                <label htmlFor="y_origin" className="font-weight-bold">Y Origin</label>
+                <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the center of the circle</Tooltip>}>
+                    <input
+                        type="number"
+                        id="y_origin"
+                        name="y_origin"
+                        step="any"
+                        className="form-control"
+                        value={params.y_origin}
+                        onChange={handleChange} />
+                </OverlayTrigger>
+            </div>
+
+            <div className="form-group">
+                <label htmlFor="radius" className="font-weight-bold">Radius</label>
+                <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="radius_tooltip">Enter the radius of the circle</Tooltip>}>
+                    <input
+                        type="number"
+                        id="radius"
+                        name="radius"
+                        step="any"
+                        className="form-control"
+                        value={params.radius || ''}
+                        onChange={handleChange} />
+                </OverlayTrigger>
+            </div>
+
+        </div>}
 
         <div className="form-group">
             <label htmlFor="samp_case" className="font-weight-bold">Sample Case</label>
