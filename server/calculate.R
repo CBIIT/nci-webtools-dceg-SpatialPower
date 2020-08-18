@@ -5,6 +5,7 @@ calculate <- function(params) {
 
     # working directory should be a unique, empty folder
     setwd(params$workingDirectory)
+    set.seed(params$rand_seed))
 
     x1 <- params$x_origin
     x2 <- x1 + params$width
