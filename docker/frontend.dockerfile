@@ -1,11 +1,5 @@
 # Stage 0 - Build Client
-FROM centos:latest
-
-RUN dnf -y update \
- && dnf -y install glibc-langpack-en \
- && dnf -y module enable nodejs:12 \
- && dnf -y install nodejs \
- && dnf clean all
+FROM node:latest
 
 COPY client /client
 
