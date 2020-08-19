@@ -12,11 +12,11 @@ const app = express();
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-// serve public folder
+// serve public folder during local development
 if (process.env.NODE_ENV !== 'production')
     app.use(express.static(config.server.static));
 
-// serve results folder
+// serve results under /api/results
 apiRouter.use('/results', express.static(config.results.folder));
 
 // parse json requests
@@ -24,6 +24,9 @@ apiRouter.use(express.json());
 
 // compress all responses
 apiRouter.use(compression());
+
+// healthcheck route
+apiRouter.use('/ping', (request, response) => response.json(true));
 
 // handle calculation submission
 apiRouter.post('/submit', async (request, response) => {
