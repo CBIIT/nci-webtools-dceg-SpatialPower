@@ -2,9 +2,13 @@ ARG BASE_IMAGE=spatial-power:base
 
 FROM ${BASE_IMAGE}
 
-ARG UPDATE_SPARRPOWR
+ARG SPARRPOWR_TAG
 
-RUN [[ "$UPDATE_SPARRPOWR" = "true" ]] && Rscript -e "remotes::install_github(c('spatstat/spatstat.core', 'machiela-lab/sparrpowR'))" || true
+# always install latest version of spatstat.core
+RUN Rscript -e "remotes::install_github('spatstat/spatstat.core')"
+
+# install version of sparrpowR specified by tag
+RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='$SPARRPOWR_TAG')"
 
 COPY . /deploy
 
