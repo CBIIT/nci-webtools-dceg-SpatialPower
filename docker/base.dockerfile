@@ -12,6 +12,6 @@ RUN dnf -y update \
     R \
  && dnf clean all
 
-RUN Rscript -e "install.packages('remotes', lib = .Library, repos='https://cloud.r-project.org')"
+RUN Rscript -e "install.packages(c('jsonlite', 'remotes'), lib = .Library, repos='https://cloud.r-project.org')"
 
 RUN Rscript -e "remotes::install_github(c('spatstat/spatstat.core', 'machiela-lab/sparrpowR'))"

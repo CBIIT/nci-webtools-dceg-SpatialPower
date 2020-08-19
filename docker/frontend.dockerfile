@@ -15,16 +15,16 @@ RUN dnf -y --setopt=tsflags=nodocs update && \
     dnf -y --setopt=tsflags=nodocs install httpd && \
     dnf clean all
 
-COPY --from=0 /client/build /var/www/html/spatial-power
-
-RUN chmod 755 -R /var/www/html/spatial-power
-
 # Simple startup script to avoid some issues observed with container restart
 RUN echo -e '#!/bin/bash\nrm -rf /run/httpd/* /tmp/httpd* && exec /usr/sbin/apachectl -DFOREGROUND' > /run-httpd.sh
 RUN chmod +x /run-httpd.sh
 
 # Add custom httpd configuration
 ADD docker/frontend.conf /etc/httpd/conf.d/frontend.conf
+
+COPY --from=0 /client/build /var/www/html/spatial-power
+
+RUN chmod 755 -R /var/www/html/spatial-power
 
 EXPOSE 80
 EXPOSE 443
