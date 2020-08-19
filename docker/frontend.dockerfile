@@ -26,9 +26,7 @@ COPY --from=0 /client/build /var/www/html/spatial-power
 RUN chmod 644 -R /var/www/html/spatial-power
 
 # Simple startup script to avoid some issues observed with container restart
-RUN echo -e '#!/bin/bash \n\
-rm -rf /run/httpd/* /tmp/httpd* \n\
-exec /usr/sbin/apachectl -DFOREGROUND' > /run-httpd.sh
+RUN echo -e '#!/bin/bash\nrm -rf /run/httpd/* /tmp/httpd* && exec /usr/sbin/apachectl -DFOREGROUND' > /run-httpd.sh
 RUN chmod +x /run-httpd.sh
 
 # Add custom httpd configuration
