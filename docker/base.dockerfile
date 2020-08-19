@@ -5,38 +5,13 @@ RUN dnf -y update \
     dnf-plugins-core \
     epel-release \
     glibc-langpack-en \
- && dnf config-manager --enable PowerTools \
+&& dnf config-manager --enable PowerTools \
  && dnf -y module enable nodejs:12 \
  && dnf -y install \
     nodejs \
     R \
  && dnf clean all
 
-RUN Rscript -e "install.packages( \
-    c( \
-        'abind', \
-        'deldir', \
-        'doParallel', \
-        'dotCall64', \
-        'fields', \
-        'foreach', \
-        'goftest', \
-        'iterators', \
-        'jsonlite', \
-        'maps', \
-        'misc3d', \
-        'polyclip', \
-        'raster', \
-        'Rcpp', \
-        'sp', \
-        'spam', \
-        'sparr', \
-        'sparrpowR', \
-        'spatstat', \
-        'spatstat.data', \
-        'spatstat.utils', \
-        'tensor' \
-    ), \
-    lib = .Library, \
-    repos='https://cloud.r-project.org/' \
-)"
+RUN Rscript -e "install.packages('remotes', lib = .Library, repos='https://cloud.r-project.org')"
+
+RUN Rscript -e "remotes::install_github(c('spatstat/spatstat.core', 'machiela-lab/sparrpowR'))"
