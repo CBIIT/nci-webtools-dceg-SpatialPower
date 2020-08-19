@@ -9,21 +9,24 @@ const config = require('./config.json');
 const logger = require('./utils/logger');
 
 const app = express();
+const apiRouter = express.Router();
+app.use('/api', apiRouter);
 
 // serve public folder
-app.use(express.static(config.server.static));
+if (process.env.NODE_ENV !== 'production')
+    app.use(express.static(config.server.static));
 
 // serve results folder
-app.use('/results', express.static(config.results.folder));
+apiRouter.use('/results', express.static(config.results.folder));
 
 // parse json requests
-app.use(express.json());
+apiRouter.use(express.json());
 
 // compress all responses
-app.use(compression());
+apiRouter.use(compression());
 
 // handle calculation submission
-app.post('/submit', async (request, response) => {
+apiRouter.post('/submit', async (request, response) => {
     try {
         // generate unique id for response
         const id = crypto.randomBytes(16).toString('hex');
@@ -64,7 +67,7 @@ app.post('/submit', async (request, response) => {
 
 
 // handle replotting
-app.post('/replot', async (request, response) => {
+apiRouter.post('/replot', async (request, response) => {
     try {
         let { body } = request;
 
@@ -87,7 +90,7 @@ app.post('/replot', async (request, response) => {
 
 // download plots to results folder and return results from s3 when visiting 
 // the application from a queue-generated url
-app.get('/fetch-results', async (request, response) => {
+apiRouter.get('/fetch-results', async (request, response) => {
     try {
         const s3 = new AWS.S3();
         const { id } = request.query; 

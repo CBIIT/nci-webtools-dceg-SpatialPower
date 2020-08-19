@@ -27,7 +27,7 @@ export function Plots() {
             <Card.Body>
                 <Tab.Content className="text-center">
                     {plots.map((plot, i) => <Tab.Pane key={`plot-tab-container-${i}`} eventKey={`plot-${i}`}>
-                        <img className="img-fluid" src={`results/${id}/${plot}?key=${urlKey}`} alt={`Plot ${i + 1}`} />
+                        <img className="img-fluid" src={`api/results/${id}/${plot}?key=${urlKey}`} alt={`Plot ${i + 1}`} />
                     </Tab.Pane>)}
                 </Tab.Content>
             </Card.Body>

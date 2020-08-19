@@ -44,7 +44,7 @@ export function Calculate({ match }) {
 
         try {
             mergeResults({ loading: true });
-            const response = await postJSON('submit', params);
+            const response = await postJSON('api/submit', params);
 
             // If the request was enqueued, notify the user. Otherwise, save results to the store
             params.queue
@@ -69,7 +69,7 @@ export function Calculate({ match }) {
         try {
             const { id } = results;
             mergeResults({ loading: true, submitted: false });
-            mergeResults(await postJSON('replot', { ...params, id }));
+            mergeResults(await postJSON('api/replot', { ...params, id }));
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
@@ -97,7 +97,7 @@ export function Calculate({ match }) {
 
         try {
             mergeResults({ loading: true });
-            mergeResults(await fetchJSON(`fetch-results/?id=${id}`));
+            mergeResults(await fetchJSON(`api/fetch-results/?id=${id}`));
         } catch (error) {
             mergeMessages([{ type: 'danger', text: `No results could be found for the specified id.` }]);
         } finally {
