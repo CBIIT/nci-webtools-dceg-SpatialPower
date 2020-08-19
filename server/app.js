@@ -100,7 +100,6 @@ apiRouter.get('/fetch-results', async (request, response) => {
 
         // validate id format
         if (!/^[a-z0-9]+$/i.test(id)) {
-            console.log(id);
             return response.json(false);
         }
 

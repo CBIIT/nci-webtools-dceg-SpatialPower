@@ -102,8 +102,6 @@ async function processMessage(params) {
 
         return true;
     } catch (e) {
-        console.log(e);
-        // catch exceptions related to conversion (assume s3/ses configuration is valid)
         logger.error(e);
 
         // template variables
