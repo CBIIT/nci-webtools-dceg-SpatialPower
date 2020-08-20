@@ -6,10 +6,6 @@ hr {
     border-top: 1px solid #dee2e6;
 }
 
-.bg-primary {
-    background-color: $primary !important;
-}
-
 .bg-primary-darker {
     background-color: $primary-darker !important;
 }
@@ -37,7 +33,7 @@ hr {
     &.active, &:hover {
         color: #2e2e2e;
         border-bottom-color: #14819B;
-        background-color: $light;
+        background-color: white;
     }
 }
 
@@ -54,8 +50,4 @@ hr {
 .custom-checkbox .custom-control-input:disabled:checked ~ .custom-control-label::before,
 .custom-checkbox .custom-control-input[readonly]:checked ~ .custom-control-label::before {
     background-color: rgba(24, 83, 148, 0.5);
-}
-
-.form-group {
-    min-width: 19%;
 }
