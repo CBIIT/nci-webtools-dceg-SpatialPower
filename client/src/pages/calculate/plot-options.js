@@ -13,7 +13,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
     const params = useSelector(state => state.params);
     const { plots } = useSelector(state => state.results);
     const mergeParams = value => dispatch(actions.mergeParams(value));
-    const [selected, setSelected] = useState(null);
+    const [selectedAccordionPanel, setSelectedAccordionPanel] = useState(null);
     if (!plots || !plots.length) return null;
 
     function handleSubmit(event) {
@@ -29,11 +29,11 @@ export function PlotOptions({ onSubmit = e => { } }) {
         mergeParams({ [name]: value });
     }
 
-    return <Accordion onSelect={setSelected}>
+    return <Accordion onSelect={setSelectedAccordionPanel}>
         <Card className="shadow-sm mb-3">
             <Accordion.Toggle as={Card.Header} eventKey="0" role="button">
                 <h2 className="h6 my-1 mr-2 d-inline-block">Customize Plot Settings</h2> 
-                <img src={`assets/icons/${selected === '0' ? 'angle-up' : 'angle-down'}.svg`} width="14" alt="icon" />
+                <img src={`assets/icons/${selectedAccordionPanel === '0' ? 'angle-up' : 'angle-down'}.svg`} width="14" alt="icon" />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
                 <Card.Body>
@@ -105,7 +105,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         className="custom-select"
                                         value={params.suff_color}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="red">Red</option>
                                         <option value="orange">Orange</option>
                                         <option value="yellow">Yellow</option>
@@ -129,7 +129,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         className="custom-select"
                                         value={params.mid_color}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="red">Red</option>
                                         <option value="orange">Orange</option>
                                         <option value="yellow">Yellow</option>
@@ -153,7 +153,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         className="custom-select"
                                         value={params.insuff_color}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="red">Red</option>
                                         <option value="orange">Orange</option>
                                         <option value="yellow">Yellow</option>
@@ -177,7 +177,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         className="custom-select"
                                         value={params.case_color}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="red">Red</option>
                                         <option value="orange">Orange</option>
                                         <option value="yellow">Yellow</option>
@@ -201,7 +201,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         className="custom-select"
                                         value={params.control_color}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="red">Red</option>
                                         <option value="orange">Orange</option>
                                         <option value="yellow">Yellow</option>
@@ -229,7 +229,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         type="number"
                                         value={params.case_symbol}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="16">Closed Circle</option>
                                         <option value="1">Open Circle</option>
                                         <option value="0">Open Square</option>
@@ -251,7 +251,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         type="number"
                                         value={params.control_symbol}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="16">Closed Circle</option>
                                         <option value="1">Open Circle</option>
                                         <option value="0">Open Square</option>
