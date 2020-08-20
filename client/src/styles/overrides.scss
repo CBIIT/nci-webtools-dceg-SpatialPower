@@ -65,3 +65,17 @@ hr {
 .w-33 {
     width: 33%;
 }
+
+.form-group{
+    min-width: 19%;
+}
+
+.flex-fill{
+    flex: 0 1 auto !important;
+}
+
+.accordion-toggle:after{
+    font-family: 'FontAwesome';
+    content: "\f078";    
+    float: right; 
+}

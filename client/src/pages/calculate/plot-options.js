@@ -259,7 +259,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="form-group d-flex flex-column flex-fill">
+                            <div className="form-group d-flex flex-column flex-fill" style={{maxWidth: '19%'}}>
                                 <label htmlFor="case_size" className="font-weight-bold">Case Symbol Size</label>
                                 <OverlayTrigger
                                     placement="right"
@@ -275,7 +275,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="form-group d-flex flex-column flex-fill">
+                            <div className="form-group d-flex flex-column flex-fill" style={{maxWidth:'19%'}}>
                                 <label htmlFor="control_size" className="font-weight-bold">Control Symbol Size</label>
                                 <OverlayTrigger
                                     placement="right"
@@ -291,14 +291,16 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="d-flex flex-column mx-3">
+                            <div className="d-flex flex-column flex-fill">
                                 <label htmlFor="replot"><span>&nbsp;</span></label>
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary"
-                                    onClick={handleSubmit}>
-                                    Re-Plot
-                        </button>
+                                <div className="d-flex justify-content-center">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                        onClick={handleSubmit}>
+                                        Re-Plot
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
