@@ -107,14 +107,14 @@ export function Calculate({ match }) {
     return <div className="container py-4">
         <LoadingOverlay active={results.loading} />
         <div className="row">
-            <div className="col-lg-4">
+            <div className="col-lg-4 mb-3">
                 <Card className="shadow-sm h-100">
                     <Card.Body>
                         <InputForm onSubmit={handleSubmit} onReset={handleReset} />
                     </Card.Body>
                 </Card>
             </div>
-            <div className="col-lg-8">
+            <div className="col-lg-8 mb-3">
                 {messages.map((message, i) =>
                     <Alert
                         className="white-space-pre-wrap"
