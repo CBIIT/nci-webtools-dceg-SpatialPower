@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import Accordion from 'react-bootstrap/Accordion';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Icon from '@cbiitss/react-components';
 import { getInputEventValue } from './utils';
 import { actions } from '../../services/store/params';
 
@@ -12,6 +13,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
     const params = useSelector(state => state.params);
     const { plots } = useSelector(state => state.results);
     const mergeParams = value => dispatch(actions.mergeParams(value));
+    const [selected, setSelected] = useState(null);
     if (!plots || !plots.length) return null;
 
     function handleSubmit(event) {
@@ -27,10 +29,11 @@ export function PlotOptions({ onSubmit = e => { } }) {
         mergeParams({ [name]: value });
     }
 
-    return <Accordion>
+    return <Accordion onSelect={setSelected}>
         <Card className="shadow-sm mb-3">
-            <Accordion.Toggle as={Card.Header} variant="link" eventKey="0" role="button">
-                <h2 className="h6 my-1">Customize Plot Settings</h2>
+            <Accordion.Toggle as={Card.Header} eventKey="0" role="button">
+                <h2 className="h6 my-1 mr-2 d-inline-block">Customize Plot Settings</h2> 
+                <img src={`assets/icons/${selected === '0' ? 'angle-up' : 'angle-down'}.svg`} width="14" alt="icon" />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
                 <Card.Body>
