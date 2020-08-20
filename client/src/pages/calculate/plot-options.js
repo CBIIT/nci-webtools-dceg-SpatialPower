@@ -33,14 +33,13 @@ export function PlotOptions({ onSubmit = e => { } }) {
         <Card className="shadow-sm mb-3">
             <Accordion.Toggle as={Card.Header} eventKey="0" role="button">
                 <h2 className="h6 my-1 mr-2 d-inline-block">Customize Plot Settings</h2> 
-                <img src={`assets/icons/${selectedAccordionPanel === '0' ? 'angle-up' : 'angle-down'}.svg`} width="14" alt="icon" />
+                <img src={`assets/icons/${selectedAccordionPanel === '0' ? 'angle-up' : 'angle-down'}.svg`} width="12" alt="toggle-icon" />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
                 <Card.Body>
                     <form>
                         <div className="d-flex flex-row">
                             <div className="form-group d-flex flex-column">
-
                                 <label htmlFor="p_thresh" className="font-weight-bold">Power Threshold</label>
                                 <OverlayTrigger
                                     placement="right"
