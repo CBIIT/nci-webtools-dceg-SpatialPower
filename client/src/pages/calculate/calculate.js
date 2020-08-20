@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Alert from 'react-bootstrap/Alert';
 import Card from 'react-bootstrap/Card';
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,13 +24,10 @@ export function Calculate({ match }) {
     const resetMessages = _ => dispatch(actions.resetMessages());
     const removeMessageByIndex = index => dispatch(actions.removeMessageByIndex(index));
 
-    /**
-     * Loads results from an id, which is specified as a React Router url parameter.
-     */
-    useEffect(() => {
-        const { id } = match.params;
-        if (id) loadResults(id);
-    });
+    /** Load results when match.params change */
+    const { id } = match.params;
+    const _loadResults = useCallback(loadResults, [id])
+    useEffect(_ => {_loadResults(id)}, [id, _loadResults]);
 
     /**
      * Posts calculation parameters to the 'submit' endpoint and saves results to the store
@@ -92,12 +89,13 @@ export function Calculate({ match }) {
      * @param {string} id 
      */
     async function loadResults(id) {
+        if (!id) return;
         resetResults();
         resetMessages();
-
+    
         try {
             mergeResults({ loading: true });
-            mergeResults(await fetchJSON(`api/fetch-results/?id=${id}`));
+            mergeResults(await fetchJSON(`api/fetch-results/${id}`));
         } catch (error) {
             mergeMessages([{ type: 'danger', text: `No results could be found for the specified id.` }]);
         } finally {
