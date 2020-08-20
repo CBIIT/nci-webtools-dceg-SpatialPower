@@ -29,7 +29,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
 
     return <Accordion>
         <Card className="shadow-sm mb-3">
-            <Accordion.Toggle as={Card.Header} variant="link" eventKey="0" role="button" className="bg-white">
+            <Accordion.Toggle as={Card.Header} variant="link" eventKey="0" role="button">
                 <h2 className="h6 my-1">Customize Plot Settings</h2>
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
