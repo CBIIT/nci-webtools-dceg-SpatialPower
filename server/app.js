@@ -93,14 +93,14 @@ apiRouter.post('/replot', async (request, response) => {
 
 // download plots to results folder and return results from s3 when visiting 
 // the application from a queue-generated url
-apiRouter.get('/fetch-results', async (request, response) => {
+apiRouter.get('/fetch-results/:id', async (request, response) => {
     try {
         const s3 = new AWS.S3();
-        const { id } = request.query; 
+        const { id } = request.params;
 
         // validate id format
         if (!/^[a-z0-9]+$/i.test(id)) {
-            return response.json(false);
+            throw("Invalid ID");
         }
 
         // ensure output directory exists
@@ -131,8 +131,8 @@ apiRouter.get('/fetch-results', async (request, response) => {
         if (fs.existsSync(resultsFile))
             response.sendFile(resultsFile);
         else
-            response.json(false);
-
+            throw("Invalid ID");
+            
     } catch(error) {
         logger.error(error);
         response.status(500).json(error.toString());
