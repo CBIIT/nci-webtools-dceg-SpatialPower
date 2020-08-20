@@ -16,7 +16,7 @@ export function Summary() {
     ];
 
     return <Card className="shadow-sm mb-3">
-        <Card.Header className="bg-white">
+        <Card.Header>
             <h2 className="h6 d-inline-block mr-1 my-1">Summary Statistics</h2>
             <small>(Number of Simulations: {params.sim_total})</small>
         </Card.Header>

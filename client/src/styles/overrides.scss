@@ -21,6 +21,10 @@ hr {
     padding: 0 .25rem;
 }
 
+.card-header{
+    background-color: #ededed;
+}
+
 .btn {
     font-weight: 500;
 }
@@ -33,12 +37,12 @@ hr {
 
 .nav-link.active {
     border-bottom-color: #14819B;
-    background-color: white !important;
+    background-color: #ededed !important;
     color: #2e2e2e !important;
 }
 
 .nav-link:hover{
-    background-color: white !important;
+    background-color: #ededed !important;
     color: #2e2e2e !important;
 }
 
@@ -64,4 +68,18 @@ hr {
 
 .w-33 {
     width: 33%;
+}
+
+.form-group{
+    min-width: 19%;
+}
+
+.flex-fill{
+    flex: 0 1 auto !important;
+}
+
+.accordion-toggle:after{
+    font-family: 'FontAwesome';
+    content: "\f078";    
+    float: right; 
 }
