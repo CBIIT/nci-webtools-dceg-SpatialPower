@@ -291,7 +291,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="d-flex flex-column flex-fill">
+                            <div className="d-flex flex-column flex-fill ml-5">
                                 <label htmlFor="replot"><span>&nbsp;</span></label>
                                 <div className="d-flex justify-content-center">
                                     <button
