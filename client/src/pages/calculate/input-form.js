@@ -81,7 +81,7 @@ export function InputForm({
                     className="custom-select"
                     value={params.win}
                     onChange={handleChange}>
-                    <option selected value="" hidden>(select option)</option>
+                    <option value="" hidden>(select option)</option>
                     <option value="unit_circle">Unit Circle</option>
                     <option value="unit_square">Unit Square</option>
                     <option value="rectangle">Rectangle</option>
@@ -220,7 +220,7 @@ export function InputForm({
                     className="custom-select"
                     value={params.samp_case}
                     onChange={handleChange}>
-                    <option selected value="" hidden>(select option)</option>
+                    <option value="" hidden>(select option)</option>
                     <option value="uniform">Uniform</option>
                     <option value="MVN">Multivariate Normal (MVN)</option>
                     <option value="CSR">Complete Spatial Randomness (CSR)</option>
@@ -239,7 +239,7 @@ export function InputForm({
                     className="custom-select"
                     value={params.samp_control}
                     onChange={handleChange}>
-                    <option selected value="" hidden>(select option)</option>
+                    <option value="" hidden>(select option)</option>
                     <option value="uniform">Uniform</option>
                     <option value="systematic">Systematic</option>
                     <option value="MVN">Multivariate Normal (MVN)</option>
@@ -488,7 +488,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        <hr class="mt-4" />
+        <hr className="mt-4" />
 
         <div className="form-group custom-control custom-checkbox">
             <input
