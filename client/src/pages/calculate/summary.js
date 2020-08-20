@@ -27,9 +27,9 @@ export function Summary() {
                     <table className="table table-borderless table-sm border-lg-right">
                         <thead>
                             <tr>
-                                <th className="w-33"><span className="sr-only">Title</span></th>
-                                <th className="w-33">Mean</th>
-                                <th className="w-33">Standard Deviation</th>
+                                <th><span className="sr-only">Title</span></th>
+                                <th>Mean</th>
+                                <th>Standard Deviation</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,9 +49,9 @@ export function Summary() {
                     <table className="table table-borderless table-sm">
                         <thead>
                             <tr>
-                                <th className="w-33"><span className="sr-only">Title</span></th>
-                                <th className="w-33">Test Statistic</th>
-                                <th className="w-33">P-Value</th>
+                                <th><span className="sr-only">Title</span></th>
+                                <th>Test Statistic</th>
+                                <th>P-Value</th>
                             </tr>
                         </thead>
                         <tbody>
