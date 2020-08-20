@@ -32,7 +32,8 @@ export function App() {
         url="https://dceg.cancer.gov/"
       />    
       <Navbar 
-        className="bg-primary py-0 shadow-sm"
+        className="py-0 shadow-sm"
+        bg="dark"
         innerClassName="container"
         links={links}
         renderer={link => 
@@ -40,9 +41,9 @@ export function App() {
               key={`navlink-${link.index}`}
               exact
               activeClassName="active"
-              className="nav-link text-white px-3 text-uppercase"
-              to={link.route} >
-              <b>{link.title}</b>
+              className="nav-link px-3 text-uppercase font-weight-bold"
+              to={link.route}>
+              {link.title}
           </NavLink>}
       />
       <Route path="/" exact={true} component={Home} />
