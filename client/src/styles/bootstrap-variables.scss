@@ -34,3 +34,7 @@ $container-max-widths: (
   xxxl: 1500px,
   xxxxl: 1800px,  
 ) !default;
+
+/** Gutters */
+$grid-columns: 12 !default;
+$grid-gutter-width: 24px !default;
