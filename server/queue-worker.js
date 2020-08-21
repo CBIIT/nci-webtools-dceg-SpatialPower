@@ -64,7 +64,7 @@ async function processMessage(params) {
     try {
         // get calculation results
         params.workingDirectory = path.resolve(config.results.folder, params.id);
-        const sourcePath = path.resolve(__dirname, 'calculate.R');
+        const sourcePath = path.resolve(__dirname, 'app.R');
         await fs.promises.mkdir(params.workingDirectory, {recursive: true});
         const results = r(sourcePath, 'calculate', [params]);
 
