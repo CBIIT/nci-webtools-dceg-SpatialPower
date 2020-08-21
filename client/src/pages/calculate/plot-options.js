@@ -7,7 +7,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
 import { actions } from '../../services/store/params';
 
-export function PlotOptions({ onSubmit = e => { } }) {
+export function PlotOptions({ onSubmit = e => { }, onExport = e => { } }) {
     const dispatch = useDispatch();
     const params = useSelector(state => state.params);
     const { plots } = useSelector(state => state.results);
@@ -19,6 +19,14 @@ export function PlotOptions({ onSubmit = e => { } }) {
         event.preventDefault();
         if (onSubmit) {
             onSubmit(params);
+        }
+        return false;
+    }
+
+    function handleExport(event) {
+        event.preventDefault();
+        if (onExport) {
+            onExport(params);
         }
         return false;
     }
@@ -264,15 +272,25 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="col-md form-group text-center">
-                                <label for="replot" className="d-block">&nbsp;</label>
-                                <button
-                                    id="replot"
-                                    type="submit"
-                                    className="btn btn-primary"
-                                    onClick={handleSubmit}>
-                                    Re-Plot
-                                </button>
+                            <div className="col-md form-group">
+                                <label htmlFor="replot" className="d-block">&nbsp;</label>
+                                <div className="text-center">
+                                    <button
+                                        id="replot"
+                                        type="submit"
+                                        className="btn btn-primary mr-1"
+                                        onClick={handleSubmit}>
+                                        Re-Plot
+                                    </button>
+
+                                    <button
+                                        id="export"
+                                        className="btn btn-outline-primary"
+                                        onClick={handleExport}>
+                                        Export
+                                    </button>
+
+                                </div>
                             </div>
                         </div>
                     </form>
