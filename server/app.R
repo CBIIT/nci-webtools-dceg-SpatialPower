@@ -94,7 +94,9 @@ replot <- function(params) {
     if (!'plot_format' %in% names(params)) params$plot_format <- "png"
     if (!'plot_width' %in% names(params)) params$plot_width <- 480
     if (!'plot_height' %in% names(params)) params$plot_height <- 480
-    params$cols <- c(params$suff_color, params$mid_color, params$insuff_color, params$case_color, params$control_color)
+
+    # Note: cols[3] is only used when plot_text == TRUE. cols[1:3] do not match the order of colors present in the documentation (eg: mid_color is not used at all for legends)
+    params$cols <- c(params$insuff_color, params$suff_color, params$mid_color, params$insuff_color, params$case_color, params$control_color)
     params$chars <- c(as.integer(params$case_symbol), as.integer(params$control_symbol))
     params$sizes <- c(as.integer(params$case_size), as.integer(params$control_size))
 
