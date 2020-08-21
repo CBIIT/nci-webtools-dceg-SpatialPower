@@ -37,6 +37,9 @@ export const getInitialState = () => ({
     control_symbol: 1,
     case_size: 1,
     control_size: 1,
+    plot_format: 'png',
+    plot_width: 480,
+    plot_height: 480,
     queue: false,
     email: '',
 });
