@@ -6,6 +6,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
 import { actions } from '../../services/store/params';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronRight , faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 export function PlotOptions({ onSubmit = e => { }, onExport = e => { } }) {
     const dispatch = useDispatch();
