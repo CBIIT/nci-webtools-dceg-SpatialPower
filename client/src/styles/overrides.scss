@@ -6,9 +6,6 @@ hr {
     border-top: 1px solid #dee2e6;
 }
 
-.bg-primary {
-    background-color: #2e2e2e !important;
-}
 .bg-primary-darker {
     background-color: $primary-darker !important;
 }
@@ -21,10 +18,6 @@ hr {
     padding: 0 .25rem;
 }
 
-.card-header{
-    background-color: #ededed;
-}
-
 .btn {
     font-weight: 500;
 }
@@ -35,50 +28,26 @@ hr {
     border-top: 4px solid transparent;
 }
 
-.nav-link.active {
-    border-bottom-color: #14819B;
-    background-color: #ededed !important;
-    color: #2e2e2e !important;
+.navbar-dark .navbar-nav .nav-link {
+    color: white;
+    &.active, &:hover {
+        color: #2e2e2e;
+        border-bottom-color: #14819B;
+        background-color: white;
+    }
 }
 
-.nav-link:hover{
-    background-color: #ededed !important;
-    color: #2e2e2e !important;
-}
-
-.nav-tabs .nav-item .nav-link {
-    border-bottom: 2px solid transparent;
-}
-
-.nav-tabs .nav-item.show .nav-link, 
-.nav-tabs .nav-link.active {
-    border-color: transparent;
-    border-bottom-color: steelblue;
+.card-header-tabs.nav-tabs .nav-item .nav-link {
     border-bottom-width: 2px;
-}
-
-.nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
-    border-color: transparent transparent steelblue;
+    border-color: transparent;
+    &:hover, &:focus, &.active {
+        color: black;
+        background-color: $card-cap-bg;
+        border-bottom-color: $primary;
+    }
 }
 
 .custom-checkbox .custom-control-input:disabled:checked ~ .custom-control-label::before,
 .custom-checkbox .custom-control-input[readonly]:checked ~ .custom-control-label::before {
     background-color: rgba(24, 83, 148, 0.5);
-}
-
-.form-group{
-    min-width: 19%;
-}
-
-.option-flex{
-    flex: 0 1 auto !important;
-}
-
-.fa-chevron-down{
-    margin-top: 7px;
-    margin-right: 5px;
-}
-
-.collapse.show .fa-chevron-down{
-    display: none;
 }

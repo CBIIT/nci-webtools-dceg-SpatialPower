@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const express = require('express');
-const compression = require('compression')
+const compression = require('compression');
+const archiver = require('archiver');
 const AWS = require('aws-sdk');
 const r = require('r-wrapper');
 const config = require('./config.json');
@@ -53,11 +54,11 @@ apiRouter.post('/submit', async (request, response) => {
             response.json({id});
         } else {
             // ensure working directory exists
-            body.workingDirectory = path.resolve(config.results.folder, id);
-            await fs.promises.mkdir(body.workingDirectory, {recursive: true});
+            body.directory = path.resolve(config.results.folder, id);
+            await fs.promises.mkdir(body.directory, {recursive: true});
 
             // perform calculation and return results
-            const sourcePath = path.resolve(__dirname, 'calculate.R');
+            const sourcePath = path.resolve(__dirname, 'app.R');
             const results = r(sourcePath, 'calculate', [body]);
             response.json(results);
         }
@@ -73,16 +74,17 @@ apiRouter.post('/submit', async (request, response) => {
 apiRouter.post('/replot', async (request, response) => {
     try {
         let { body } = request;
+        
+        // validate id format
+        if (!/^[a-z0-9]+$/i.test(body.id)) {
+            throw("Invalid ID");
+        }
 
-        // ensure working directory exists
-        body.workingDirectory = path.resolve(config.results.folder, body.id);
-        await fs.promises.mkdir(body.workingDirectory, {recursive: true});
-
-        // replot
-        const sourcePath = path.resolve(__dirname, 'calculate.R');
+        body.directory = path.resolve(config.results.folder, body.id);
+        body.rds_file = 'results.rds';
+        const sourcePath = path.resolve(__dirname, 'app.R');
         const results = r(sourcePath, 'replot', [body]);
         response.json(results);
-
     } catch(error) {
         const errorText = String(error.stderr || error);
         logger.error(errorText);
@@ -90,6 +92,57 @@ apiRouter.post('/replot', async (request, response) => {
     }
 });
 
+// generates a zip file containing exported plots
+apiRouter.post('/export-plots', async (request, response) => {
+    try {
+        let body = {
+            plot_format: 'png',
+            plot_width: 600,
+            plot_height: 600,
+            ...request.body
+        };
+
+        // validate id format
+        if (!/^[a-z0-9]+$/i.test(body.id)) {
+            throw('Invalid id');
+        }
+
+        // validate image format
+        if (!['bmp', 'jpeg', 'png', 'tiff'].includes(body.plot_format))
+            throw('Invalid format')        
+
+        // create temporary directory
+        body.rds = path.resolve(config.results.folder, body.id, 'results.rds');
+        body.directory = await fs.promises.mkdtemp(
+            path.resolve(config.results.folder, `${body.id}-export-`)
+        );
+
+        // clamp dimensions between 100 x 100 and 10,000 x 10,000
+        const [min, max] = [100, 10000];
+        body.plot_width = Math.max(min, Math.min(max, body.plot_width));
+        body.plot_height = Math.max(min, Math.min(max, body.plot_height));
+
+        // generate plots
+        const sourcePath = path.resolve(__dirname, 'app.R');
+        let results = r(sourcePath, 'replot', [body]);
+        if (!Array.isArray(results)) results = [results];
+
+        // zip exported plots
+        const zipFileName = `${body.directory}.zip`;
+        const output = fs.createWriteStream(zipFileName);
+        const archive = archiver('zip');
+
+        // send generated zip file
+        output.on('close', () => response.json(path.basename(zipFileName)));
+        archive.on('error', err => {throw err});
+        archive.pipe(output);
+        archive.directory(body.directory, false);
+        archive.finalize();
+    } catch(error) {
+        logger.error(error);
+        response.status(500).json(error.toString());
+    }
+});
 
 // download plots to results folder and return results from s3 when visiting 
 // the application from a queue-generated url
@@ -132,7 +185,7 @@ apiRouter.get('/fetch-results/:id', async (request, response) => {
             response.sendFile(resultsFile);
         else
             throw("Invalid ID");
-            
+
     } catch(error) {
         logger.error(error);
         response.status(500).json(error.toString());

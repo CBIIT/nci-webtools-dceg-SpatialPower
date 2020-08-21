@@ -66,7 +66,7 @@ export function Calculate({ match }) {
         try {
             const { id } = results;
             mergeResults({ loading: true, submitted: false });
-            mergeResults(await postJSON('api/replot', { ...params, id }));
+            mergeResults(await postJSON(`api/replot`, { ...params, id }));
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
         } finally {
@@ -74,6 +74,24 @@ export function Calculate({ match }) {
             mergeResults({ loading: false, submitted: true, urlKey });
         }
     }
+
+    /**
+     * Generates and downloads an archive containing exported plots
+     * @param {object} params 
+     */
+    async function handleExportPlots(params) {
+        try {
+            const { id } = results;
+            mergeResults({ loading: true });
+            const filename = await postJSON('api/export-plots', { ...params, id });
+            const exportUrl = `${process.env.REACT_APP_API_ROOT}api/results/${filename}`;
+            window.location.href = exportUrl;
+        } catch (error) {
+            mergeMessages([{ type: 'danger', text: error }]);
+        } finally {
+            mergeResults({ loading: false });
+        }
+    }    
 
     /**
      * Resets calculation parameters, results, and messages to their initial state
@@ -107,14 +125,14 @@ export function Calculate({ match }) {
     return <div className="container py-4">
         <LoadingOverlay active={results.loading} />
         <div className="row">
-            <div className="col-lg-4">
+            <div className="col-lg-4 mb-3">
                 <Card className="shadow-sm h-100">
                     <Card.Body>
                         <InputForm onSubmit={handleSubmit} onReset={handleReset} />
                     </Card.Body>
                 </Card>
             </div>
-            <div className="col-lg-8">
+            <div className="col-lg-8 mb-3">
                 {messages.map((message, i) =>
                     <Alert
                         className="white-space-pre-wrap"
@@ -132,7 +150,7 @@ export function Calculate({ match }) {
                         </Card.Body>
                     </Card> : <>
                         <Summary />
-                        <PlotOptions onSubmit={handleReplot} />
+                        <PlotOptions onSubmit={handleReplot} onExport={handleExportPlots} />
                         <Plots />
                     </>}
             </div>

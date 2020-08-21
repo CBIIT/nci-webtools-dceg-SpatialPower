@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import Accordion from 'react-bootstrap/Accordion';
@@ -9,13 +9,12 @@ import { actions } from '../../services/store/params';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight , faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
-export function PlotOptions({ onSubmit = e => { } }) {
+export function PlotOptions({ onSubmit = e => { }, onExport = e => { } }) {
     const dispatch = useDispatch();
     const params = useSelector(state => state.params);
     const { plots } = useSelector(state => state.results);
     const mergeParams = value => dispatch(actions.mergeParams(value));
-
-
+    const [selectedAccordionPanel, setSelectedAccordionPanel] = useState(null);
     if (!plots || !plots.length) return null;
 
     function handleSubmit(event) {
@@ -26,30 +25,32 @@ export function PlotOptions({ onSubmit = e => { } }) {
         return false;
     }
 
+    function handleExport(event) {
+        event.preventDefault();
+        if (onExport) {
+            onExport(params);
+        }
+        return false;
+    }
+
     function handleChange(event) {
         const { name, value } = getInputEventValue(event);
         mergeParams({ [name]: value });
     }
 
-    return <Accordion>
+    return <Accordion onSelect={setSelectedAccordionPanel}>
         <Card className="shadow-sm mb-3">
-            <Accordion.Toggle as={Card.Header} variant="link" eventKey="0" role="button">
-                <div className="d-flex flex-row">
-                    <FontAwesomeIcon icon={faChevronRight}/>
-                    <FontAwesomeIcon icon={faChevronDown}/>
-                    <h2 className="h6 my-1">Customize Plot Settings</h2>
-                </div>
+            <Accordion.Toggle as={Card.Header} eventKey="0" role="button">
+                <h2 className="h6 my-1 mr-2 d-inline-block">Customize Plot Settings</h2>
+                <img src={`assets/icons/${selectedAccordionPanel === '0' ? 'angle-up' : 'angle-down'}.svg`} width="12" alt="toggle icon" />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
                 <Card.Body>
                     <form>
-                        <div className="d-flex flex-row">
-                            <div className="form-group d-flex flex-column">
-
+                        <div className="row">
+                            <div className="col-md-4 form-group">
                                 <label htmlFor="p_thresh" className="font-weight-bold">Power Threshold</label>
-                                <OverlayTrigger
-                                    placement="right"
-                                    overlay={<Tooltip id="samp_case_tooltip">Specify a numeric value between 0 and 1 (default = 0.8) for the power threshold.</Tooltip>}>
+                                <OverlayTrigger overlay={<Tooltip id="samp_case_tooltip">Specify a numeric value between 0 and 1 (default = 0.8) for the power threshold.</Tooltip>}>
                                     <input
                                         type="number"
                                         step="any"
@@ -60,57 +61,47 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         onChange={handleChange} />
                                 </OverlayTrigger>
                             </div>
-                            <div className="d-flex flex-column ml-4 pt-2">
-                                <label htmlFor="replot"><span>&nbsp;</span></label>
-                                <div className="d-flex flex-row" style={{ gap: '20px' }}>
-                                    <div className="form-group custom-control custom-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            className="custom-control-input"
-                                            id="plot_pts"
-                                            name="plot_pts"
-                                            checked={params.plot_pts}
-                                            onChange={handleChange} />
+                            <div className="col-md form-inline mt-md-3 mb-md-0 mb-3">
+                                <div className="form-group custom-control custom-checkbox mr-3">
+                                    <input
+                                        type="checkbox"
+                                        className="custom-control-input"
+                                        id="plot_pts"
+                                        name="plot_pts"
+                                        checked={params.plot_pts}
+                                        onChange={handleChange} />
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
+                                        <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
+                                    </OverlayTrigger>
+                                </div>
 
-                                        <OverlayTrigger
-                                            placement="right"
-                                            overlay={<Tooltip id="title_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
-                                            <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
-                                        </OverlayTrigger>
-                                    </div>
+                                <div className="form-group custom-control custom-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        className="custom-control-input"
+                                        id="title"
+                                        name="title"
+                                        checked={params.title}
+                                        onChange={handleChange} />
 
-                                    <div className="form-group custom-control custom-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            className="custom-control-input"
-                                            id="title"
-                                            name="title"
-                                            checked={params.title}
-                                            onChange={handleChange} />
-
-                                        <OverlayTrigger
-                                            placement="right"
-                                            overlay={<Tooltip id="title_tooltip">If checked, display title of plots</Tooltip>}>
-                                            <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
-                                        </OverlayTrigger>
-                                    </div>
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display title of plots</Tooltip>}>
+                                        <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
+                                    </OverlayTrigger>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="d-flex flex-row" style={{ gap: '7px' }}>
-                            <div className="form-group d-flex flex-column option-flex">
+                        <div className="row">
+                            <div className="col-md form-group">
                                 <label htmlFor="suff_color" className="font-weight-bold">Sufficiently Powered</label>
-                                <OverlayTrigger
-                                    placement="right"
-                                    overlay={<Tooltip id="suff_color_tooltip">Select the color of sufficiently powered regions</Tooltip>}>
+                                <OverlayTrigger overlay={<Tooltip id="suff_color_tooltip">Select the color of sufficiently powered regions</Tooltip>}>
                                     <select
                                         id="suff_color"
                                         name="suff_color"
                                         className="custom-select"
                                         value={params.suff_color}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="red">Red</option>
                                         <option value="orange">Orange</option>
                                         <option value="yellow">Yellow</option>
@@ -123,18 +114,16 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="form-group d-flex flex-column option-flex">
+                            <div className="col-md form-group">
                                 <label htmlFor="mid_color" className="font-weight-bold">Mid-point Color</label>
-                                <OverlayTrigger
-                                    placement="right"
-                                    overlay={<Tooltip id="mid_color_tooltip">Select the color of the mid-point</Tooltip>}>
+                                <OverlayTrigger overlay={<Tooltip id="mid_color_tooltip">Select the color of the mid-point</Tooltip>}>
                                     <select
                                         id="mid_color"
                                         name="mid_color"
                                         className="custom-select"
                                         value={params.mid_color}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="red">Red</option>
                                         <option value="orange">Orange</option>
                                         <option value="yellow">Yellow</option>
@@ -147,18 +136,16 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="form-group d-flex flex-column option-flex">
+                            <div className="col-md form-group">
                                 <label htmlFor="insuff_color" className="font-weight-bold">Insufficiently Powered</label>
-                                <OverlayTrigger
-                                    placement="right"
-                                    overlay={<Tooltip id="insuff_color_tooltip">Select the color of insufficiently powered regions</Tooltip>}>
+                                <OverlayTrigger overlay={<Tooltip id="insuff_color_tooltip">Select the color of insufficiently powered regions</Tooltip>}>
                                     <select
                                         id="insuff_color"
                                         name="insuff_color"
                                         className="custom-select"
                                         value={params.insuff_color}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="red">Red</option>
                                         <option value="orange">Orange</option>
                                         <option value="yellow">Yellow</option>
@@ -171,18 +158,16 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="form-group d-flex flex-column option-flex">
+                            <div className="col-md form-group">
                                 <label htmlFor="case_color" className="font-weight-bold">Case Location Color</label>
-                                <OverlayTrigger
-                                    placement="right"
-                                    overlay={<Tooltip id="case_color_tooltip">Select the color of case symbols</Tooltip>}>
+                                <OverlayTrigger overlay={<Tooltip id="case_color_tooltip">Select the color of case symbols</Tooltip>}>
                                     <select
                                         id="case_color"
                                         name="case_color"
                                         className="custom-select"
                                         value={params.case_color}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="red">Red</option>
                                         <option value="orange">Orange</option>
                                         <option value="yellow">Yellow</option>
@@ -195,18 +180,16 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="form-group d-flex flex-column option-flex">
+                            <div className="col-md form-group">
                                 <label htmlFor="control_color" className="font-weight-bold">Control Location Color</label>
-                                <OverlayTrigger
-                                    placement="right"
-                                    overlay={<Tooltip id="control_color_tooltip">Select the color of control symbols</Tooltip>}>
+                                <OverlayTrigger overlay={<Tooltip id="control_color_tooltip">Select the color of control symbols</Tooltip>}>
                                     <select
                                         id="control_color"
                                         name="control_color"
                                         className="custom-select"
                                         value={params.control_color}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="red">Red</option>
                                         <option value="orange">Orange</option>
                                         <option value="yellow">Yellow</option>
@@ -218,15 +201,13 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         <option value="grey">Grey</option>
                                     </select>
                                 </OverlayTrigger>
-                            </div>
+                            </div>                        
                         </div>
 
-                        <div className="d-flex flex-row" style={{ gap: '7px' }}>
-                            <div className="form-group d-flex flex-column option-flex">
+                        <div className="row">
+                            <div className="col-md form-group">
                                 <label htmlFor="case_symbol" className="font-weight-bold">Case Symbol</label>
-                                <OverlayTrigger
-                                    placement="right"
-                                    overlay={<Tooltip id="case_symbol_tooltip">Select the case symbol</Tooltip>}>
+                                <OverlayTrigger overlay={<Tooltip id="case_symbol_tooltip">Select the case symbol</Tooltip>}>
                                     <select
                                         id="case_symbol"
                                         name="case_symbol"
@@ -234,7 +215,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         type="number"
                                         value={params.case_symbol}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="16">Closed Circle</option>
                                         <option value="1">Open Circle</option>
                                         <option value="0">Open Square</option>
@@ -244,11 +225,9 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="form-group d-flex flex-column option-flex">
+                            <div className="col-md form-group">
                                 <label htmlFor="control_symbol" className="font-weight-bold">Control Symbol</label>
-                                <OverlayTrigger
-                                    placement="right"
-                                    overlay={<Tooltip id="control_symbol_tooltip">Select the control symbol</Tooltip>}>
+                                <OverlayTrigger overlay={<Tooltip id="control_symbol_tooltip">Select the control symbol</Tooltip>}>
                                     <select
                                         id="control_symbol"
                                         name="control_symbol"
@@ -256,7 +235,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         type="number"
                                         value={params.control_symbol}
                                         onChange={handleChange}>
-                                        <option selected value="" hidden>(select option)</option>
+                                        <option value="" hidden>(select option)</option>
                                         <option value="16">Closed Circle</option>
                                         <option value="1">Open Circle</option>
                                         <option value="0">Open Square</option>
@@ -267,11 +246,9 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="form-group d-flex flex-column option-flex" style={{maxWidth: '19%'}}>
+                            <div className="col-md form-group">
                                 <label htmlFor="case_size" className="font-weight-bold">Case Symbol Size</label>
-                                <OverlayTrigger
-                                    placement="right"
-                                    overlay={<Tooltip id="case_size_tooltip">Specify a numeric value for the size of case symbols</Tooltip>}>
+                                <OverlayTrigger overlay={<Tooltip id="case_size_tooltip">Specify a numeric value for the size of case symbols</Tooltip>}>
                                     <input
                                         type="number"
                                         step="any"
@@ -283,11 +260,9 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="form-group d-flex flex-column option-flex" style={{maxWidth:'19%'}}>
+                            <div className="col-md form-group">
                                 <label htmlFor="control_size" className="font-weight-bold">Control Symbol Size</label>
-                                <OverlayTrigger
-                                    placement="right"
-                                    overlay={<Tooltip id="control_size_tooltip">Specify a numeric value for the size of control symbols</Tooltip>}>
+                                <OverlayTrigger overlay={<Tooltip id="control_size_tooltip">Specify a numeric value for the size of control symbols</Tooltip>}>
                                     <input
                                         type="number"
                                         step="any"
@@ -299,20 +274,27 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="d-flex flex-column option-flex ml-5">
-                                <label htmlFor="replot"><span>&nbsp;</span></label>
-                                <div className="d-flex justify-content-center">
+                            <div className="col-md form-group">
+                                <label htmlFor="replot" className="d-block">&nbsp;</label>
+                                <div className="text-center">
                                     <button
+                                        id="replot"
                                         type="submit"
-                                        className="btn btn-primary"
+                                        className="btn btn-primary mr-1"
                                         onClick={handleSubmit}>
                                         Re-Plot
                                     </button>
+
+                                    <button
+                                        id="export"
+                                        className="btn btn-outline-primary"
+                                        onClick={handleExport}>
+                                        Export
+                                    </button>
+
                                 </div>
                             </div>
                         </div>
-
-
                     </form>
                 </Card.Body>
             </Accordion.Collapse>
