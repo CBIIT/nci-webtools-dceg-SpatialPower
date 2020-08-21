@@ -77,7 +77,7 @@ apiRouter.post('/replot', async (request, response) => {
         
         // validate id format
         if (!/^[a-z0-9]+$/i.test(body.id)) {
-            throw("Invalid ID");
+            throw(`Invalid id`);
         }
 
         body.directory = path.resolve(config.results.folder, body.id);
@@ -109,12 +109,13 @@ apiRouter.post('/export-plots', async (request, response) => {
 
         // validate image format
         if (!['bmp', 'jpeg', 'png', 'tiff'].includes(body.plot_format))
-            throw('Invalid format')        
+            throw('Invalid format')
 
         // create temporary directory
-        body.rds = path.resolve(config.results.folder, body.id, 'results.rds');
+        const basePath = path.resolve(config.results.folder, body.id);
+        body.rds = path.resolve(basePath, 'results.rds');
         body.directory = await fs.promises.mkdtemp(
-            path.resolve(config.results.folder, `${body.id}-export-`)
+            path.resolve(basePath, `export-`)
         );
 
         // clamp dimensions between 100 x 100 and 10,000 x 10,000
@@ -128,12 +129,12 @@ apiRouter.post('/export-plots', async (request, response) => {
         if (!Array.isArray(results)) results = [results];
 
         // zip exported plots
-        const zipFileName = `${body.directory}.zip`;
-        const output = fs.createWriteStream(zipFileName);
+        const zipFilePath = `${body.directory}.zip`;
+        const output = fs.createWriteStream(zipFilePath);
         const archive = archiver('zip');
 
         // send generated zip file
-        output.on('close', () => response.json(path.basename(zipFileName)));
+        output.on('close', () => response.json(path.basename(zipFilePath)));
         archive.on('error', err => {throw err});
         archive.pipe(output);
         archive.directory(body.directory, false);
@@ -153,7 +154,7 @@ apiRouter.get('/fetch-results/:id', async (request, response) => {
 
         // validate id format
         if (!/^[a-z0-9]+$/i.test(id)) {
-            throw("Invalid ID");
+            throw(`Invalid id`);
         }
 
         // ensure output directory exists
@@ -184,7 +185,7 @@ apiRouter.get('/fetch-results/:id', async (request, response) => {
         if (fs.existsSync(resultsFile))
             response.sendFile(resultsFile);
         else
-            throw("Invalid ID");
+            throw(`Invalid id`);
 
     } catch(error) {
         logger.error(error);

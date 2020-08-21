@@ -84,7 +84,7 @@ export function Calculate({ match }) {
             const { id } = results;
             mergeResults({ loading: true });
             const filename = await postJSON('api/export-plots', { ...params, id });
-            const exportUrl = `${process.env.REACT_APP_API_ROOT}api/results/${filename}`;
+            const exportUrl = `${process.env.REACT_APP_API_ROOT}api/results/${id}/${filename}`;
             window.location.href = exportUrl;
         } catch (error) {
             mergeMessages([{ type: 'danger', text: error }]);
