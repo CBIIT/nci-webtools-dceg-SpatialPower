@@ -6,12 +6,16 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
 import { actions } from '../../services/store/params';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronRight , faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 export function PlotOptions({ onSubmit = e => { } }) {
     const dispatch = useDispatch();
     const params = useSelector(state => state.params);
     const { plots } = useSelector(state => state.results);
     const mergeParams = value => dispatch(actions.mergeParams(value));
+
+
     if (!plots || !plots.length) return null;
 
     function handleSubmit(event) {
@@ -30,7 +34,11 @@ export function PlotOptions({ onSubmit = e => { } }) {
     return <Accordion>
         <Card className="shadow-sm mb-3">
             <Accordion.Toggle as={Card.Header} variant="link" eventKey="0" role="button">
-                <h2 className="h6 my-1">Customize Plot Settings</h2>
+                <div className="d-flex flex-row">
+                    <FontAwesomeIcon icon={faChevronRight}/>
+                    <FontAwesomeIcon icon={faChevronDown}/>
+                    <h2 className="h6 my-1">Customize Plot Settings</h2>
+                </div>
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
                 <Card.Body>
@@ -91,7 +99,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                         </div>
 
                         <div className="d-flex flex-row" style={{ gap: '7px' }}>
-                            <div className="form-group d-flex flex-column flex-fill">
+                            <div className="form-group d-flex flex-column option-flex">
                                 <label htmlFor="suff_color" className="font-weight-bold">Sufficiently Powered</label>
                                 <OverlayTrigger
                                     placement="right"
@@ -115,7 +123,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="form-group d-flex flex-column flex-fill">
+                            <div className="form-group d-flex flex-column option-flex">
                                 <label htmlFor="mid_color" className="font-weight-bold">Mid-point Color</label>
                                 <OverlayTrigger
                                     placement="right"
@@ -139,7 +147,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="form-group d-flex flex-column flex-fill">
+                            <div className="form-group d-flex flex-column option-flex">
                                 <label htmlFor="insuff_color" className="font-weight-bold">Insufficiently Powered</label>
                                 <OverlayTrigger
                                     placement="right"
@@ -163,7 +171,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="form-group d-flex flex-column flex-fill">
+                            <div className="form-group d-flex flex-column option-flex">
                                 <label htmlFor="case_color" className="font-weight-bold">Case Location Color</label>
                                 <OverlayTrigger
                                     placement="right"
@@ -187,7 +195,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="form-group d-flex flex-column flex-fill">
+                            <div className="form-group d-flex flex-column option-flex">
                                 <label htmlFor="control_color" className="font-weight-bold">Control Location Color</label>
                                 <OverlayTrigger
                                     placement="right"
@@ -214,7 +222,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                         </div>
 
                         <div className="d-flex flex-row" style={{ gap: '7px' }}>
-                            <div className="form-group d-flex flex-column flex-fill">
+                            <div className="form-group d-flex flex-column option-flex">
                                 <label htmlFor="case_symbol" className="font-weight-bold">Case Symbol</label>
                                 <OverlayTrigger
                                     placement="right"
@@ -236,7 +244,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="form-group d-flex flex-column flex-fill">
+                            <div className="form-group d-flex flex-column option-flex">
                                 <label htmlFor="control_symbol" className="font-weight-bold">Control Symbol</label>
                                 <OverlayTrigger
                                     placement="right"
@@ -259,7 +267,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="form-group d-flex flex-column flex-fill" style={{maxWidth: '19%'}}>
+                            <div className="form-group d-flex flex-column option-flex" style={{maxWidth: '19%'}}>
                                 <label htmlFor="case_size" className="font-weight-bold">Case Symbol Size</label>
                                 <OverlayTrigger
                                     placement="right"
@@ -275,7 +283,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="form-group d-flex flex-column flex-fill" style={{maxWidth:'19%'}}>
+                            <div className="form-group d-flex flex-column option-flex" style={{maxWidth:'19%'}}>
                                 <label htmlFor="control_size" className="font-weight-bold">Control Symbol Size</label>
                                 <OverlayTrigger
                                     placement="right"
@@ -291,7 +299,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="d-flex flex-column flex-fill ml-5">
+                            <div className="d-flex flex-column option-flex ml-5">
                                 <label htmlFor="replot"><span>&nbsp;</span></label>
                                 <div className="d-flex justify-content-center">
                                     <button

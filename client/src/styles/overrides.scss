@@ -70,12 +70,15 @@ hr {
     min-width: 19%;
 }
 
-.flex-fill{
+.option-flex{
     flex: 0 1 auto !important;
 }
 
-.accordion-toggle:after{
-    font-family: 'FontAwesome';
-    content: "\f078";    
-    float: right; 
+.fa-chevron-down{
+    margin-top: 7px;
+    margin-right: 5px;
+}
+
+.collapse.show .fa-chevron-down{
+    display: none;
 }

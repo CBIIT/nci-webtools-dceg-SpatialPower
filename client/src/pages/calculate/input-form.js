@@ -91,7 +91,7 @@ export function InputForm({
         </div>
 
         {params.win === "rectangle" && <div className="d-flex flex-row">
-            <div className="form-group pr-1">
+            <div className="form-group pr-1 d-flex flex-fill flex-column">
                 <label htmlFor="x_origin" className="font-weight-bold">X Origin</label>
                 <OverlayTrigger
                     placement="right"
@@ -107,7 +107,7 @@ export function InputForm({
                 </OverlayTrigger>
             </div>
 
-            <div className="form-group">
+            <div className="form-group d-flex flex-fill flex-column">
                 <label htmlFor="y_origin" className="font-weight-bold">Y Origin</label>
                 <OverlayTrigger
                     placement="right"
@@ -125,7 +125,7 @@ export function InputForm({
         </div>}
 
         {params.win === "rectangle" && <div className="d-flex flex-row">
-            <div className="form-group pr-1">
+            <div className="form-group pr-1 d-flex flex-column flex-fill">
                 <label htmlFor="width" className="font-weight-bold">Width</label>
                 <OverlayTrigger
                     placement="right"
@@ -141,7 +141,7 @@ export function InputForm({
                 </OverlayTrigger>
             </div>
 
-            <div className="form-group">
+            <div className="form-group d-flex flex-column flex-fill">
                 <label htmlFor="height" className="font-weight-bold">Height</label>
                 <OverlayTrigger
                     placement="right"
