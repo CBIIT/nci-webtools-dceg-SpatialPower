@@ -7,6 +7,7 @@ calculate <- function(params) {
     set.seed(params$rand_seed)
 
     if(params$win == "unit_circle") {
+        #  actual unit circle is spatstat::disc() # defaults: radius 1, center: 0, 0
         window <- spatstat::disc(radius = 0.5, centre = c(0.5, 0.5))
     } else if(params$win == "unit_square") {
         window <- spatstat::unit.square()
@@ -77,13 +78,6 @@ calculate <- function(params) {
     saveRDS(results, "results.rds")
 
     # generate plots and return output
-    params$cols <- c("blue", "green", "red", "purple", "orange")
-    params$chars <- c(0,1)
-    params$sizes <- c(1,1)
-    params$plot_format <- "png"
-    params$plot_width <- 480
-    params$plot_height <- 480
-
     output$plots <- plot_results(results, params)
     output$id <- params$id
     output
@@ -91,25 +85,24 @@ calculate <- function(params) {
 
 replot <- function(params) {
     setwd(params$directory)
-    if (!'plot_format' %in% names(params)) params$plot_format <- "png"
-    if (!'plot_width' %in% names(params)) params$plot_width <- 480
-    if (!'plot_height' %in% names(params)) params$plot_height <- 480
-
-    # Note: cols[3] (mid_color) is only used when plot_text == TRUE, and is not actually used for legends. 
-    # cols[1:3] do not match the order of colors in the documentation
-    params$cols <- c(params$insuff_color, params$suff_color, params$mid_color, params$case_color, params$control_color)
-    params$chars <- c(as.integer(params$case_symbol), as.integer(params$control_symbol))
-    params$sizes <- c(as.integer(params$case_size), as.integer(params$control_size))
-
     results <- readRDS(params$rds)
     list(plots = plot_results(results, params))
 }
 
 plot_results <- function(results, params) {
+    # cols[3] (mid_color) is only used when plot_text == TRUE, and is not actually used for legends. 
+    # cols[1:3] do not match the order of colors in the documentation
+    params$cols <- c(params$insuff_color, params$suff_color, params$mid_color, params$case_color, params$control_color)
+    params$chars <- as.integer(c(params$case_symbol, params$control_symbol))
+    params$sizes <- as.integer(c(params$case_size, params$control_size))
+
     # todo: specifying width and height above default makes plotting area collide with legend
-    
-    # note: svg files are rather large compared to other formats due to a large number of paths
-    # also, svg width/heights are specified in inches, not pixels
+    if (!'plot_format' %in% names(params)) params$plot_format <- "png"
+    if (!'plot_width' %in% names(params)) params$plot_width <- 480
+    if (!'plot_height' %in% names(params)) params$plot_height <- 480
+
+    # svg files are rather large compared to other formats due to a large number of paths
+    # svg width/heights are specified in inches, not pixels
 
     # set up graphics device
     do.call(params$plot_format, list(
