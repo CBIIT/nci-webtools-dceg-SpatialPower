@@ -21,47 +21,52 @@ export function Summary() {
             <small>(Number of Simulations: {params.sim_total})</small>
         </Card.Header>
 
-        <Card.Body>
+        <Card.Body style={{ padding: 0 }}>
             <div className="row">
                 <div className="col-lg">
-                    <table className="table table-borderless table-sm border-lg-right">
-                        <thead>
-                            <tr>
-                                <th><span className="sr-only">Title</span></th>
-                                <th>Mean</th>
-                                <th>Standard Deviation</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {summary.slice(0, 3).map(({ title, mean, standardDeviation }, i) =>
-                                <tr key={`results-summary-item-${i}`}>
-                                    <td>{title}</td>
-                                    <td>{mean}</td>
-                                    <td>{standardDeviation}</td>
-                                </tr>)}
-                        </tbody>
+                    <table className="table table-borderless table-sm border-lg-right ml-2" style={{ marginBottom: 0 }}>
+                        <div className="table-container">
+                            <thead>
+                                <tr>
+                                    <th><span className="sr-only">Title</span></th>
+                                    <th>Mean</th>
+                                    <th>Standard Deviation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {summary.slice(0, 3).map(({ title, mean, standardDeviation }, i) =>
+                                    <tr key={`results-summary-item-${i}`}>
+                                        <td>{title}</td>
+                                        <td>{mean}</td>
+                                        <td>{standardDeviation}</td>
+                                    </tr>)}
+                            </tbody>
+                        </div>
                     </table>
+
 
                     <hr className="d-block d-lg-none" />
                 </div>
 
                 <div className="col-lg">
                     <table className="table table-borderless table-sm">
-                        <thead>
-                            <tr>
-                                <th><span className="sr-only">Title</span></th>
-                                <th>Test Statistic</th>
-                                <th>P-Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {summary.slice(3, 5).map(({ title, testStat, pValue }, i) =>
-                                <tr key={`results-summary-item-${i + 3}`}>
-                                    <td>{title}</td>
-                                    <td>{testStat}</td>
-                                    <td>{pValue}</td>
-                                </tr>)}
-                        </tbody>
+                        <div className="table-container">
+                            <thead>
+                                <tr>
+                                    <th><span className="sr-only">Title</span></th>
+                                    <th>Test Statistic</th>
+                                    <th>P-Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {summary.slice(3, 5).map(({ title, testStat, pValue }, i) =>
+                                    <tr key={`results-summary-item-${i + 3}`}>
+                                        <td>{title}</td>
+                                        <td>{testStat}</td>
+                                        <td>{pValue}</td>
+                                    </tr>)}
+                            </tbody>
+                        </div>
                     </table>
                 </div>
             </div>
