@@ -478,6 +478,25 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
+        {<div className="form-group">
+            <label
+                htmlFor="email"
+                className="font-weight-bold">
+                Job Name
+            </label>
+            <OverlayTrigger overlay={<Tooltip id="job_name_tooltip">Enter the name of the job</Tooltip>}>
+                <input
+                    type="job"
+                    id="job_name"
+                    name="job_name"
+                    className="form-control"
+                    aria-describedby="job_name-help"
+                    value={params.job_name}
+                    disabled={!params.queue}
+                    onChange={handleChange} />
+            </OverlayTrigger>
+        </div>}
+
         <div className="text-right">
             <button
                 type="reset"

@@ -42,6 +42,7 @@ export const getInitialState = () => ({
     plot_height: 480,
     queue: false,
     email: '',
+    job_name: 'Spatial-Power',
 });
 
 export const { actions, reducer } = createSlice({
