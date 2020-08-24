@@ -45,8 +45,8 @@ export function PlotOptions({ onSubmit = e => { }, onExport = e => { } }) {
             <Accordion.Collapse eventKey="0">
                 <Card.Body>
                     <form>
-                        <div className="row mb-2">
-                            {params.sim_total > 1 && <div className="col-md-4 form-group">
+                        {params.sim_total > 1 && <div className="row mb-2">
+                            <div className="col-md-4 form-group">
                                 <label htmlFor="p_thresh" className="font-weight-bold">Power Threshold</label>
                                 <OverlayTrigger overlay={<Tooltip id="samp_case_tooltip">Specify a numeric value between 0 and 1 (default = 0.8) for the power threshold.</Tooltip>}>
                                     <input
@@ -58,7 +58,7 @@ export function PlotOptions({ onSubmit = e => { }, onExport = e => { } }) {
                                         value={params.p_thresh}
                                         onChange={handleChange} />
                                 </OverlayTrigger>
-                            </div>}
+                            </div>
                             <div className="col-md form-inline mt-md-3 mb-md-0 mb-3">
                                 <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
@@ -87,7 +87,7 @@ export function PlotOptions({ onSubmit = e => { }, onExport = e => { } }) {
                                     </OverlayTrigger>
                                 </div>
                             </div>
-                        </div>
+                        </div>}
 
                         <div className="row">
                             {params.sim_total > 1 && <div className="col-md form-group">
@@ -199,7 +199,36 @@ export function PlotOptions({ onSubmit = e => { }, onExport = e => { } }) {
                                         <option value="grey">Grey</option>
                                     </select>
                                 </OverlayTrigger>
-                            </div>                        
+                            </div>
+
+                            {params.sim_total === 1 && <div className="col-md form-group form-inline mt-md-3 mb-md-0 mb-3" style={{minWidth: '60%'}}>
+                                <div className="form-group custom-control custom-checkbox mr-3">
+                                    <input
+                                        type="checkbox"
+                                        className="custom-control-input"
+                                        id="plot_pts"
+                                        name="plot_pts"
+                                        checked={params.plot_pts}
+                                        onChange={handleChange} />
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
+                                        <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
+                                    </OverlayTrigger>
+                                </div>
+
+                                <div className="form-group custom-control custom-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        className="custom-control-input"
+                                        id="title"
+                                        name="title"
+                                        checked={params.title}
+                                        onChange={handleChange} />
+
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display title of plots</Tooltip>}>
+                                        <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
+                                    </OverlayTrigger>
+                                </div>
+                            </div>}
                         </div>
 
                         <div className="row">
