@@ -150,8 +150,8 @@ export function Calculate({ match }) {
                         </Card.Body>
                     </Card> : <>
                         <Summary />
-                        <PlotOptions onSubmit={handleReplot} onExport={handleExportPlots} />
-                        <Plots />
+                        <PlotOptions onSubmit={handleReplot} />
+                        <Plots onExport={handleExportPlots}/>
                     </>}
             </div>
         </div>

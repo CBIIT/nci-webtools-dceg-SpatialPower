@@ -4,10 +4,19 @@ import Nav from 'react-bootstrap/Nav';
 import Tab from 'react-bootstrap/Tab';
 import { useSelector } from 'react-redux';
 
-export function Plots() {
+export function Plots({ onExport = e => { } }) {
     let { id, plots, urlKey } = useSelector(state => state.results);
+    const params = useSelector(state => state.params);
     if (!plots) return null;
     if (!Array.isArray(plots)) plots = [plots];
+
+    function handleExport(event) {
+        event.preventDefault();
+        if (onExport) {
+            onExport(params);
+        }
+        return false;
+    }
 
     const plotNames = [
         'Simulated Data (First Iteration)',
@@ -18,11 +27,19 @@ export function Plots() {
     return <Tab.Container id="plots-container" defaultActiveKey="plot-0">
         <Card className="shadow-sm mb-3">
             <Card.Header className="bg-white">
-                <Nav variant="tabs">
-                    {plots.map((plot, i) => <Nav.Item key={`plot-tab-${i}`}>
-                        <Nav.Link eventKey={`plot-${i}`} className="font-weight-bold">{plotNames[i]}</Nav.Link>
-                    </Nav.Item>)}
-                </Nav>
+                <div className="d-flex">
+                    <Nav variant="tabs">
+                        {plots.map((plot, i) => <Nav.Item key={`plot-tab-${i}`}>
+                            <Nav.Link eventKey={`plot-${i}`} className="font-weight-bold">{plotNames[i]}</Nav.Link>
+                        </Nav.Item>)}
+                    </Nav>
+                    <button
+                        id="export"
+                        className="btn btn-outline-primary ml-auto"
+                        onClick={handleExport}>
+                        Export
+                    </button>
+                </div>
             </Card.Header>
             <Card.Body>
                 <Tab.Content className="text-center">

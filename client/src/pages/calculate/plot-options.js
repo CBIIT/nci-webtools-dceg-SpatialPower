@@ -7,7 +7,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
 import { actions } from '../../services/store/params';
 
-export function PlotOptions({ onSubmit = e => { }, onExport = e => { } }) {
+export function PlotOptions({ onSubmit = e => { } }) {
     const dispatch = useDispatch();
     const params = useSelector(state => state.params);
     const { plots } = useSelector(state => state.results);
@@ -19,14 +19,6 @@ export function PlotOptions({ onSubmit = e => { }, onExport = e => { } }) {
         event.preventDefault();
         if (onSubmit) {
             onSubmit(params);
-        }
-        return false;
-    }
-
-    function handleExport(event) {
-        event.preventDefault();
-        if (onExport) {
-            onExport(params);
         }
         return false;
     }
@@ -201,7 +193,7 @@ export function PlotOptions({ onSubmit = e => { }, onExport = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            {params.sim_total === 1 && <div className="col-md form-group form-inline mt-md-3 mb-md-0 mb-3" style={{minWidth: '60%'}}>
+                            {params.sim_total === 1 && <div className="col-md form-group form-inline mt-md-3 mb-md-0 mb-3" style={{ minWidth: '60%' }}>
                                 <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
                                         type="checkbox"
@@ -311,14 +303,6 @@ export function PlotOptions({ onSubmit = e => { }, onExport = e => { } }) {
                                         onClick={handleSubmit}>
                                         Re-Plot
                                     </button>
-
-                                    <button
-                                        id="export"
-                                        className="btn btn-outline-primary"
-                                        onClick={handleExport}>
-                                        Export
-                                    </button>
-
                                 </div>
                             </div>
                         </div>
