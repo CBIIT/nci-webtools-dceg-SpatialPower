@@ -28,7 +28,7 @@ export function Summary() {
                         <div className="table-container">
                             <thead>
                                 <tr>
-                                    <th><span className="sr-only">Title</span></th>
+                                    <th className="col-6"><span className="sr-only">Title</span></th>
                                     <th>Mean</th>
                                     <th>Standard Deviation</th>
                                 </tr>
@@ -53,7 +53,7 @@ export function Summary() {
                         <div className="table-container">
                             <thead>
                                 <tr>
-                                    <th><span className="sr-only">Title</span></th>
+                                    <th className="col-7"><span className="sr-only">Title</span></th>
                                     <th>Test Statistic</th>
                                     <th>P-Value</th>
                                 </tr>
