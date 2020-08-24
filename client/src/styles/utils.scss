@@ -30,3 +30,8 @@
 .flex-fill {
     flex: 0 1 auto !important;
 }
+
+.required:after{
+    content: ' *';
+    color: red;
+}

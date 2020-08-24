@@ -71,7 +71,7 @@ export function InputForm({
 
     return <form className={className}>
         <div className="form-group">
-            <label htmlFor="win" className="font-weight-bold">Spatial Window</label>
+            <label htmlFor="win" className="font-weight-bold required">Spatial Window</label>
             <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the shape of the window</Tooltip>}>
                 <select
                     id="win"
@@ -91,7 +91,7 @@ export function InputForm({
         {params.win === "rectangle" && <>
             <div className="row">
                 <div className="col-md-6 form-group">
-                    <label htmlFor="x_origin" className="font-weight-bold">X Origin</label>
+                    <label htmlFor="x_origin" className="font-weight-bold required">X Origin</label>
                     <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the lower left corner</Tooltip>}>
                         <input
                             type="number"
@@ -105,7 +105,7 @@ export function InputForm({
                 </div>
 
                 <div className="col-md-6 form-group">
-                    <label htmlFor="y_origin" className="font-weight-bold">Y Origin</label>
+                    <label htmlFor="y_origin" className="font-weight-bold required">Y Origin</label>
                     <OverlayTrigger overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the lower left corner</Tooltip>}>
                         <input
                             type="number"
@@ -121,7 +121,7 @@ export function InputForm({
 
             <div className="row">
                 <div className="col-md-6 form-group">
-                    <label htmlFor="width" className="font-weight-bold">Width</label>
+                    <label htmlFor="width" className="font-weight-bold required">Width</label>
                     <OverlayTrigger overlay={<Tooltip id="width_tooltip">Enter the width of the rectangle</Tooltip>}>
                         <input
                             type="number"
@@ -136,7 +136,7 @@ export function InputForm({
                 </div>
 
                 <div className="col-md-6 form-group">
-                    <label htmlFor="height" className="font-weight-bold">Height</label>
+                    <label htmlFor="height" className="font-weight-bold required">Height</label>
                     <OverlayTrigger overlay={<Tooltip id="height_tooltip">Enter the height of the rectangle</Tooltip>}>
                         <input
                             type="number"
@@ -154,7 +154,7 @@ export function InputForm({
 
         {params.win === "circle" && <div className="row">
             <div className="col-md-4 form-group">
-                <label htmlFor="x_origin" className="font-weight-bold">X Origin</label>
+                <label htmlFor="x_origin" className="font-weight-bold required">X Origin</label>
                 <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the center of the circle</Tooltip>}>
                     <input
                         type="number"
@@ -168,7 +168,7 @@ export function InputForm({
             </div>
 
             <div className="col-md-4 form-group">
-                <label htmlFor="y_origin" className="font-weight-bold">Y Origin</label>
+                <label htmlFor="y_origin" className="font-weight-bold required">Y Origin</label>
                 <OverlayTrigger overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the center of the circle</Tooltip>}>
                     <input
                         type="number"
@@ -182,7 +182,7 @@ export function InputForm({
             </div>
 
             <div className="col-md-4 form-group">
-                <label htmlFor="radius" className="font-weight-bold">Radius</label>
+                <label htmlFor="radius" className="font-weight-bold required">Radius</label>
                 <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Enter the radius of the circle</Tooltip>}>
                     <input
                         type="number"
@@ -198,7 +198,7 @@ export function InputForm({
         </div>}
 
         <div className="form-group">
-            <label htmlFor="samp_case" className="font-weight-bold">Sample Case</label>
+            <label htmlFor="samp_case" className="font-weight-bold required">Sample Case</label>
             <OverlayTrigger overlay={<Tooltip id="samp_case_tooltip">Specify how case locations are randomized.</Tooltip>}>
                 <select
                     id="samp_case"
@@ -215,7 +215,7 @@ export function InputForm({
         </div>
 
         <div className="form-group">
-            <label htmlFor="samp_control" className="font-weight-bold">Sample Control</label>
+            <label htmlFor="samp_control" className="font-weight-bold required">Sample Control</label>
             <OverlayTrigger overlay={<Tooltip id="samp_control_tooltip">Specify how control locations are randomized.</Tooltip>}>
                 <select
                     id="samp_control"
@@ -233,7 +233,7 @@ export function InputForm({
         </div>
 
         <div className="form-group">
-            <label htmlFor="sim_total" className="font-weight-bold">Number of Simulations</label>
+            <label htmlFor="sim_total" className="font-weight-bold required">Number of Simulations</label>
             <OverlayTrigger overlay={<Tooltip id="sim_total_tooltip">Specify the number of simulation iterations to perform.</Tooltip>}>
                 <input
                     type="number"
@@ -246,7 +246,7 @@ export function InputForm({
         </div>
 
         <div className="form-group">
-            <label htmlFor="rand_seed" className="font-weight-bold">Random Seed</label>
+            <label htmlFor="rand_seed" className="font-weight-bold required">Random Seed</label>
             <OverlayTrigger overlay={<Tooltip id="rand_seed_tooltip">Specify a random seed</Tooltip>}>
                 <input
                     type="number"
@@ -261,7 +261,7 @@ export function InputForm({
         <hr className="mt-4" />
 
         {params.samp_case !== '' && <div className="form-group">
-            <label htmlFor="x_case" className="font-weight-bold">X Case</label>
+            <label htmlFor="x_case" className="font-weight-bold required">X Case</label>
             <OverlayTrigger overlay={<Tooltip id="x_case_tooltip">Specify x-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
@@ -275,7 +275,7 @@ export function InputForm({
         </div>}
 
         {params.samp_case !== '' && <div className="form-group">
-            <label htmlFor="y_case" className="font-weight-bold">Y Case</label>
+            <label htmlFor="y_case" className="font-weight-bold required">Y Case</label>
             <OverlayTrigger overlay={<Tooltip id="y_case_tooltip">Specify y-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
@@ -289,7 +289,7 @@ export function InputForm({
         </div>}
 
         {params.samp_control !== 'systematic' && params.samp_control !== '' && <div className="form-group">
-            <label htmlFor="x_control" className="font-weight-bold">X Control</label>
+            <label htmlFor="x_control" className="font-weight-bold required">X Control</label>
             <OverlayTrigger overlay={<Tooltip id="x_control_tooltip">Specify x-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
@@ -303,7 +303,7 @@ export function InputForm({
         </div>}
 
         {params.samp_control !== 'systematic' && params.samp_control !== '' && <div className="form-group">
-            <label htmlFor="y_control" className="font-weight-bold">Y Control</label>
+            <label htmlFor="y_control" className="font-weight-bold required">Y Control</label>
             <OverlayTrigger overlay={<Tooltip id="y_control_tooltip">Specify y-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
@@ -317,7 +317,7 @@ export function InputForm({
         </div>}
 
         {params.samp_case !== 'MVN' && params.samp_case !== '' && <div className="form-group">
-            <label htmlFor="r_case" className="font-weight-bold">R Case</label>
+            <label htmlFor="r_case" className="font-weight-bold required">R Case</label>
             <OverlayTrigger overlay={<Tooltip id="r_case_tooltip">Optional. Specify the radius (radii) of case cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
@@ -331,7 +331,7 @@ export function InputForm({
         </div>}
 
         {params.samp_control === 'CSR' && params.samp_control !== '' && <div className="form-group">
-            <label htmlFor="r_control" className="font-weight-bold">R Control</label>
+            <label htmlFor="r_control" className="font-weight-bold required">R Control</label>
             <OverlayTrigger overlay={<Tooltip id="r_control_tooltip">Optional. Specify the radius (radii) of control cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
@@ -345,7 +345,7 @@ export function InputForm({
         </div>}
 
         {params.samp_case === 'MVN' && params.samp_case !== '' && <div className="form-group">
-            <label htmlFor="s_case" className="font-weight-bold">S Case</label>
+            <label htmlFor="s_case" className="font-weight-bold required">S Case</label>
             <OverlayTrigger overlay={<Tooltip id="s_case_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for case locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
@@ -359,7 +359,7 @@ export function InputForm({
         </div>}
 
         {params.samp_control === 'MVN' && params.samp_control !== '' && <div className="form-group">
-            <label htmlFor="s_control" className="font-weight-bold">S Control</label>
+            <label htmlFor="s_control" className="font-weight-bold required">S Control</label>
             <OverlayTrigger overlay={<Tooltip id="s_control_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for control locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
@@ -375,7 +375,7 @@ export function InputForm({
         {(params.samp_case !== '' || params.samp_control !== '') && <hr className="mt-4" />}
 
         <div className="form-group">
-            <label htmlFor="n_case" className="font-weight-bold">N Case</label>
+            <label htmlFor="n_case" className="font-weight-bold required">N Case</label>
             <OverlayTrigger overlay={<Tooltip id="n_case_tooltip">Specify the sample size for case locations in each cluster as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
@@ -389,7 +389,7 @@ export function InputForm({
 
 
         <div className="form-group">
-            <label htmlFor="n_control" className="font-weight-bold">N Control</label>
+            <label htmlFor="n_control" className="font-weight-bold required">N Control</label>
             <OverlayTrigger overlay={<Tooltip id="n_control_tooltip">Specify the sample size for control locations in each cluster as a numeric value or vector.</Tooltip>}>
                 <input
                     type="number"
@@ -402,7 +402,7 @@ export function InputForm({
         </div>
 
         <div className="form-group">
-            <label htmlFor="lower_tail" className="font-weight-bold">Lower Tail</label>
+            <label htmlFor="lower_tail" className="font-weight-bold required">Lower Tail</label>
             <OverlayTrigger overlay={<Tooltip id="lower_tail_tooltip">Optional. Specify a numeric value for the lower p-value threshold (default=0.025).</Tooltip>}>
                 <input
                     type="number"
@@ -429,7 +429,7 @@ export function InputForm({
         </div>
 
         {params.cascon && <div className="form-group">
-            <label htmlFor="upper_tail" className="font-weight-bold">Upper Tail</label>
+            <label htmlFor="upper_tail" className="font-weight-bold required">Upper Tail</label>
             <OverlayTrigger overlay={<Tooltip id="upper_tail_tooltip">Optional. Specify a numeric value for the upper p-value threshold (default=0.975).</Tooltip>}>
                 <input
                     type="number"
