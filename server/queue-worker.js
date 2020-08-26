@@ -88,7 +88,7 @@ async function processMessage(params) {
         // specify email template variables
         const templateData = {
             originalTimestamp: params.timestamp,
-            resultsUrl: `${config.email.baseUrl}/#/SparrpowR/${params.id}`
+            resultsUrl: `${config.email.baseUrl}/#/SparrpowR/${params.job_name}`
         };
 
         // send user success email
@@ -96,7 +96,7 @@ async function processMessage(params) {
         const userEmailResults = await email.sendMail({
             from: config.email.sender,
             to: params.email,
-            subject: 'SparrpowR Results',
+            subject: 'SparrpowR Results - Job:' + params.job_name,
             html: await readTemplate(__dirname + '/templates/user-success-email.html', templateData),
         });
 
