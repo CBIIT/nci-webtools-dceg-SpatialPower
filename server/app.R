@@ -4,7 +4,7 @@ calculate <- function(params) {
 
     # working directory should be a unique, empty folder
     setwd(params$directory)
-    set.seed(params$rand_seed)
+    set.seed(as.integer(params$rand_seed))
 
     if(params$win == "unit_circle") {
         #  actual unit circle is spatstat::disc() # defaults: radius 1, center: 0, 0
@@ -27,29 +27,24 @@ calculate <- function(params) {
 
     sp_params = list(
         win = window,
-        sim_total = params$sim_total,
-        x_case = unlist(params$x_case,use.names=FALSE),
-        y_case = unlist(params$y_case,use.names=FALSE),
+        sim_total = as.integer(params$sim_total),
+        x_case = as.double(unlist(params$x_case, use.names=FALSE)),
+        y_case = as.double(unlist(params$y_case, use.names=FALSE)),
         samp_case = params$samp_case,
         samp_control = params$samp_control,
-        x_control = unlist(params$x_control,use.names=FALSE),
-        y_control = unlist(params$y_control,use.names=FALSE),
-        n_case = unlist(params$n_case,use.names=FALSE),
-        n_control = unlist(params$n_control,use.names=FALSE),
-        npc_control = params$npc_control,
-        r_case = unlist(params$r_case,use.names=FALSE),
-        r_control = unlist(params$r_control,use.names=FALSE),
-        s_case = unlist(params$s_case,use.names=FALSE),
-        s_control = unlist(params$s_control,use.names=FALSE),
-        l_case = params$l_case,
-        l_control = params$l_control,
-        e_control = params$e_control,
-        lower_tail = params$lower_tail,
-        upper_tail = params$upper_tail,
-        cascon = params$cascon,
+        x_control = as.double(unlist(params$x_control, use.names=FALSE)),
+        y_control = as.double(unlist(params$y_control, use.names=FALSE)),
+        n_case = as.integer(unlist(params$n_case, use.names=FALSE)),
+        n_control = as.integer(unlist(params$n_control, use.names=FALSE)),
+        r_case = as.double(unlist(params$r_case, use.names=FALSE)),
+        r_control = as.double(unlist(params$r_control, use.names=FALSE)),
+        s_case = as.double(unlist(params$s_case, use.names=FALSE)),
+        s_control = as.double(unlist(params$s_control, use.names=FALSE)),
+        lower_tail = as.double(params$lower_tail),
+        upper_tail = as.double(params$upper_tail),
+        cascon = as.logical(params$cascon),
         n_core = 4
     )
-
 
     if(params$sim_total == 1) {
         # additional parameters for spatial_data are ignored
