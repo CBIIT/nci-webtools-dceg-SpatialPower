@@ -53,49 +53,21 @@ export function InputForm({
         mergeParams(newParams);
     }
 
-    function handleTextToVector(){
+    function handleBlur(event) {
+        const { name, value, dataset } = event.target;
+        const newParams = { ...params, [name]: value };
 
-        let value = '';
-        value = params.x_case.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
-        const newParams = {...params,x_case: value}
+        if (dataset.type === 'number-array')
+            newParams[name] = value.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
 
-        value = params.y_case.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
-        newParams.y_case = value
-
-        value = params.r_case.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
-        newParams.r_case = value
-
-        value = params.s_case.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
-        newParams.s_case = value
-
-        value = params.x_control.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
-        newParams.x_control = value
-
-        value = params.y_control.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
-        newParams.y_control = value
-
-        value = params.r_control.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
-        newParams.r_control = value
-
-        value = params.x_control.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
-        newParams.s_control = value
-
-        value = params.n_case.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
-        newParams.n_case = value
-
-        value = params.n_control.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
-        newParams.n_control = value
-
-        return newParams;
+        mergeParams(newParams);
     }
-
 
     function handleSubmit(event) {
         event.preventDefault();
         if (onSubmit) {
-            const paramCopy = handleTextToVector();
-            console.log(paramCopy)
-            onSubmit(paramCopy);
+            console.log(params);
+            onSubmit(params);
         }
     }
 
@@ -107,7 +79,7 @@ export function InputForm({
         }
     }
 
-    return <form className={className}>
+    return <form className={className} onSubmit={handleSubmit} onReset={handleReset}>
         <div className="form-group">
             <label htmlFor="win" className="font-weight-bold required">Spatial Window</label>
             <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the shape of the window</Tooltip>}>
@@ -303,12 +275,14 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="x_case_tooltip">Specify x-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
+                    data-type="number-array"
                     step="any"
                     id="x_case"
                     name="x_case"
                     className="form-control"
                     value={params.x_case}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
             </OverlayTrigger>
         </div>}
 
@@ -317,12 +291,14 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="y_case_tooltip">Specify y-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
+                    data-type="number-array"
                     step="any"
                     id="y_case"
                     name="y_case"
                     className="form-control"
                     value={params.y_case}
-                    onChange={handleChange} />
+                    onChange={handleChange} 
+                    onBlur={handleBlur} />
             </OverlayTrigger>
         </div>}
 
@@ -331,12 +307,14 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="x_control_tooltip">Specify x-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
+                    data-type="number-array"
                     step="any"
                     id="x_control"
                     name="x_control"
                     className="form-control"
                     value={params.x_control}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
             </OverlayTrigger>
         </div>}
 
@@ -345,12 +323,14 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="y_control_tooltip">Specify y-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
+                    data-type="number-array"
                     step="any"
                     id="y_control"
                     name="y_control"
                     className="form-control"
                     value={params.y_control}
-                    onChange={handleChange} />
+                    onChange={handleChange} 
+                    onBlur={handleBlur} />
             </OverlayTrigger>
         </div>}
 
@@ -359,12 +339,14 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="r_case_tooltip">Optional. Specify the radius (radii) of case cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
+                    data-type="number-array"
                     step="any"
                     id="r_case"
                     name="r_case"
                     className="form-control"
                     value={params.r_case}
-                    onChange={handleChange} />
+                    onChange={handleChange} 
+                    onBlur={handleBlur} />
             </OverlayTrigger>
         </div>}
 
@@ -373,12 +355,14 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="r_control_tooltip">Optional. Specify the radius (radii) of control cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
+                    data-type="number-array"
                     step="any"
                     id="r_control"
                     name="r_control"
                     className="form-control"
                     value={params.r_control}
-                    onChange={handleChange} />
+                    onChange={handleChange} 
+                    onBlur={handleBlur} />
             </OverlayTrigger>
         </div>}
 
@@ -387,12 +371,14 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="s_case_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for case locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
+                    data-type="number-array"
                     step="any"
                     id="s_case"
                     name="s_case"
                     className="form-control"
                     value={params.s_case}
-                    onChange={handleChange} />
+                    onChange={handleChange} 
+                    onBlur={handleBlur} />
             </OverlayTrigger>
         </div>}
 
@@ -401,12 +387,14 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="s_control_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for control locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
+                    data-type="number-array"
                     step="any"
                     id="s_control"
                     name="s_control"
                     className="form-control"
                     value={params.s_control}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
             </OverlayTrigger>
         </div>}
 
@@ -417,11 +405,13 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="n_case_tooltip">Specify the sample size for case locations in each cluster as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
+                    data-type="number-array"
                     id="n_case"
                     name="n_case"
                     className="form-control"
                     value={params.n_case || ''}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
             </OverlayTrigger>
         </div>
 
@@ -431,11 +421,13 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="n_control_tooltip">Specify the sample size for control locations in each cluster as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
+                    data-type="number-array"
                     id="n_control"
                     name="n_control"
                     className="form-control"
                     value={params.n_control || ''}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
             </OverlayTrigger>
         </div>
 
@@ -522,7 +514,7 @@ export function InputForm({
                 className="font-weight-bold">
                 Job Name
             </label>
-            <OverlayTrigger overlay={<Tooltip id="job_name_tooltip">Enter the name of the job</Tooltip>}>
+            <OverlayTrigger overlay={<Tooltip id="job_name_tooltip">Enter a name for the job.</Tooltip>}>
                 <input
                     type="job"
                     id="job_name"
@@ -536,17 +528,11 @@ export function InputForm({
         </div>}
 
         <div className="text-right">
-            <button
-                type="reset"
-                className="btn btn-outline-danger mx-1"
-                onClick={handleReset}>
+            <button type="reset" className="btn btn-outline-danger mx-1">
                 Reset
             </button>
 
-            <button
-                type="submit"
-                className="btn btn-primary"
-                onClick={handleSubmit}>
+            <button type="submit" className="btn btn-primary">
                 Submit
             </button>
         </div>
