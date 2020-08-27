@@ -31,7 +31,8 @@
     flex: 0 1 auto !important;
 }
 
-.required:after{
-    content: ' *';
+.required:after {
+    content: '*';
+    margin-left: 0.25rem;
     color: red;
 }
