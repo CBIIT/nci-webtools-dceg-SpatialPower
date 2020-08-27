@@ -17,8 +17,8 @@ export function Calculate({ match }) {
     const dispatch = useDispatch();
     const results = useSelector(state => state.results);
     const messages = useSelector(state => state.messages);
+    const addMessage = message => dispatch(actions.addMessage(message));
     const mergeResults = results => dispatch(actions.mergeResults(results));
-    const mergeMessages = messages => dispatch(actions.mergeMessages(messages));
     const resetParams = _ => dispatch(actions.resetParams());
     const resetResults = _ => dispatch(actions.resetResults());
     const resetMessages = _ => dispatch(actions.resetMessages());
@@ -45,11 +45,11 @@ export function Calculate({ match }) {
 
             // If the request was enqueued, notify the user. Otherwise, save results to the store
             params.queue
-                ? mergeMessages([{ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` }])
+                ? addMessage({ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` })
                 : mergeResults(response);
 
         } catch (error) {
-            mergeMessages([{ type: 'danger', text: error }]);
+            addMessage({ type: 'danger', text: error });
         } finally {
             const urlKey = new Date().getTime();
             mergeResults({ loading: false, submitted: true, urlKey });
@@ -68,7 +68,7 @@ export function Calculate({ match }) {
             mergeResults({ loading: true, submitted: false });
             mergeResults(await postJSON(`api/replot`, { ...params, id }));
         } catch (error) {
-            mergeMessages([{ type: 'danger', text: error }]);
+            addMessage({ type: 'danger', text: error });
         } finally {
             const urlKey = new Date().getTime();
             mergeResults({ loading: false, submitted: true, urlKey });
@@ -87,7 +87,7 @@ export function Calculate({ match }) {
             const exportUrl = `${process.env.REACT_APP_API_ROOT}/api/results/${id}/${filename}`;
             window.location.href = exportUrl;
         } catch (error) {
-            mergeMessages([{ type: 'danger', text: error }]);
+            addMessage({ type: 'danger', text: error });
         } finally {
             mergeResults({ loading: false });
         }
@@ -115,7 +115,7 @@ export function Calculate({ match }) {
             mergeResults({ loading: true });
             mergeResults(await fetchJSON(`api/fetch-results/${id}`));
         } catch (error) {
-            mergeMessages([{ type: 'danger', text: `No results could be found for the specified id.` }]);
+            addMessage({ type: 'danger', text: `No results could be found for the specified id.` });
         } finally {
             const urlKey = new Date().getTime();
             mergeResults({ loading: false, submitted: true, urlKey });
