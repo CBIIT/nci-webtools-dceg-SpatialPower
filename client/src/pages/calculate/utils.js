@@ -3,22 +3,13 @@
  * @param {InputEvent} event 
  */
 export function getInputEventValue(event) {
-    
-    const target = event.target;
-    const name = target.name;
-    const type = target.type;
-    let value = '';
-
+    let {checked, name, type, value} = event.target;
     switch (type) {
         case 'checkbox':
-            value = Boolean(target.checked);
-            break;
+            return {name, value: Boolean(checked)};
         case 'number':
-            value = Number(target.value);
-            break;
+            return {name, value: Number(value)};
         default:
-            value = target.value;
+            return {name, value};
     }
-
-    return { name, value };
 }
