@@ -3,9 +3,10 @@
  * @param {InputEvent} event 
  */
 export function getInputEventValue(event) {
+    
     const target = event.target;
     const name = target.name;
-    const type = target.type || target.getAttribute('data-type');
+    const type = target.type;
     let value = '';
 
     switch (type) {
@@ -14,9 +15,6 @@ export function getInputEventValue(event) {
             break;
         case 'number':
             value = Number(target.value);
-            break;
-        case 'number-array':
-            value = target.value.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
             break;
         default:
             value = target.value;

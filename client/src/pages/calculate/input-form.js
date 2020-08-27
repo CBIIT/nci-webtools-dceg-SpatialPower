@@ -30,34 +30,72 @@ export function InputForm({
 
         // set default parameters
         if (name === 'samp_case') {
-            newParams.x_case = 0.5
-            newParams.y_case = 0.5
+            newParams.x_case = '0.5'
+            newParams.y_case = '0.5'
 
             if (value === 'MVN')
-                newParams.s_case = 0.33
+                newParams.s_case = '0.33'
             else
-                newParams.r_case = 0.5
+                newParams.r_case = '0.5'
         }
 
         if (name === 'samp_control' && value !== 'systematic') {
-            newParams.x_control = 0.5
-            newParams.y_control = 0.5
+            newParams.x_control = '0.5'
+            newParams.y_control = '0.5'
 
             if (value === 'MVN')
-                newParams.s_control = 0.33
+                newParams.s_control = '0.33'
 
             if (value === 'CSR')
-                newParams.r_control = 0.5
+                newParams.r_control = '0.5'
         }
 
         mergeParams(newParams);
+    }
+
+    function handleTextToVector(){
+
+        let value = '';
+        value = params.x_case.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
+        const newParams = {...params,x_case: value}
+
+        value = params.y_case.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
+        newParams.y_case = value
+
+        value = params.r_case.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
+        newParams.r_case = value
+
+        value = params.s_case.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
+        newParams.s_case = value
+
+        value = params.x_control.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
+        newParams.x_control = value
+
+        value = params.y_control.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
+        newParams.y_control = value
+
+        value = params.r_control.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
+        newParams.r_control = value
+
+        value = params.x_control.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
+        newParams.s_control = value
+
+        value = params.n_case.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
+        newParams.n_case = value
+
+        value = params.n_control.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
+        newParams.n_control = value
+
+        return newParams;
     }
 
 
     function handleSubmit(event) {
         event.preventDefault();
         if (onSubmit) {
-            onSubmit(params);
+            const paramCopy = handleTextToVector();
+            console.log(paramCopy)
+            onSubmit(paramCopy);
         }
     }
 
@@ -264,7 +302,7 @@ export function InputForm({
             <label htmlFor="x_case" className="font-weight-bold required">X Case</label>
             <OverlayTrigger overlay={<Tooltip id="x_case_tooltip">Specify x-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
-                    type="number"
+                    type="text"
                     step="any"
                     id="x_case"
                     name="x_case"
@@ -278,7 +316,7 @@ export function InputForm({
             <label htmlFor="y_case" className="font-weight-bold required">Y Case</label>
             <OverlayTrigger overlay={<Tooltip id="y_case_tooltip">Specify y-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
-                    type="number"
+                    type="text"
                     step="any"
                     id="y_case"
                     name="y_case"
@@ -292,7 +330,7 @@ export function InputForm({
             <label htmlFor="x_control" className="font-weight-bold required">X Control</label>
             <OverlayTrigger overlay={<Tooltip id="x_control_tooltip">Specify x-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
-                    type="number"
+                    type="text"
                     step="any"
                     id="x_control"
                     name="x_control"
@@ -306,7 +344,7 @@ export function InputForm({
             <label htmlFor="y_control" className="font-weight-bold required">Y Control</label>
             <OverlayTrigger overlay={<Tooltip id="y_control_tooltip">Specify y-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
-                    type="number"
+                    type="text"
                     step="any"
                     id="y_control"
                     name="y_control"
@@ -320,7 +358,7 @@ export function InputForm({
             <label htmlFor="r_case" className="font-weight-bold required">R Case</label>
             <OverlayTrigger overlay={<Tooltip id="r_case_tooltip">Optional. Specify the radius (radii) of case cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
-                    type="number"
+                    type="text"
                     step="any"
                     id="r_case"
                     name="r_case"
@@ -334,7 +372,7 @@ export function InputForm({
             <label htmlFor="r_control" className="font-weight-bold required">R Control</label>
             <OverlayTrigger overlay={<Tooltip id="r_control_tooltip">Optional. Specify the radius (radii) of control cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
-                    type="number"
+                    type="text"
                     step="any"
                     id="r_control"
                     name="r_control"
@@ -348,7 +386,7 @@ export function InputForm({
             <label htmlFor="s_case" className="font-weight-bold required">S Case</label>
             <OverlayTrigger overlay={<Tooltip id="s_case_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for case locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
-                    type="number"
+                    type="text"
                     step="any"
                     id="s_case"
                     name="s_case"
@@ -362,7 +400,7 @@ export function InputForm({
             <label htmlFor="s_control" className="font-weight-bold required">S Control</label>
             <OverlayTrigger overlay={<Tooltip id="s_control_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for control locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
-                    type="number"
+                    type="text"
                     step="any"
                     id="s_control"
                     name="s_control"
@@ -378,7 +416,7 @@ export function InputForm({
             <label htmlFor="n_case" className="font-weight-bold required">N Case</label>
             <OverlayTrigger overlay={<Tooltip id="n_case_tooltip">Specify the sample size for case locations in each cluster as a numeric value or vector.</Tooltip>}>
                 <input
-                    type="number"
+                    type="text"
                     id="n_case"
                     name="n_case"
                     className="form-control"
@@ -392,7 +430,7 @@ export function InputForm({
             <label htmlFor="n_control" className="font-weight-bold required">N Control</label>
             <OverlayTrigger overlay={<Tooltip id="n_control_tooltip">Specify the sample size for control locations in each cluster as a numeric value or vector.</Tooltip>}>
                 <input
-                    type="number"
+                    type="text"
                     id="n_control"
                     name="n_control"
                     className="form-control"
@@ -480,7 +518,7 @@ export function InputForm({
 
         {<div className="form-group">
             <label
-                htmlFor="email"
+                htmlFor="job_name"
                 className="font-weight-bold">
                 Job Name
             </label>
