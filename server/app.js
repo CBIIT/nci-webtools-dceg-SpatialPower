@@ -85,7 +85,7 @@ apiRouter.post('/replot', async (request, response) => {
         }
 
         const body = Object.assign(request.body, {
-            directory: path.resolve(config.results.folder, body.id),
+            directory: path.resolve(config.results.folder, request.body.id),
             rds_file: 'results.rds',
             plot_format: 'png',
             plot_width: 480,
@@ -104,12 +104,12 @@ apiRouter.post('/replot', async (request, response) => {
 // generates a zip file containing exported plots
 apiRouter.post('/export-plots', async (request, response) => {
     try {
-        let body = {
+        // override default parameters
+        const body = Object.assign({
             plot_format: 'png',
-            plot_width: 600,
-            plot_height: 600,
-            ...request.body
-        };
+            plot_width: 480,
+            plot_height: 480,
+        }, request.body);
 
         // validate id format
         if (!/^[a-z0-9]+$/i.test(body.id)) {
