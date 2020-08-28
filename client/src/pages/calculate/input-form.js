@@ -30,24 +30,24 @@ export function InputForm({
 
         // set default parameters
         if (name === 'samp_case') {
-            newParams.x_case = '0.5'
-            newParams.y_case = '0.5'
+            newParams.x_case = 0.5
+            newParams.y_case = 0.5
 
             if (value === 'MVN')
-                newParams.s_case = '0.33'
+                newParams.s_case = 0.33
             else
-                newParams.r_case = '0.5'
+                newParams.r_case = 0.5
         }
 
         if (name === 'samp_control' && value !== 'systematic') {
-            newParams.x_control = '0.5'
-            newParams.y_control = '0.5'
+            newParams.x_control = 0.5
+            newParams.y_control = 0.5
 
             if (value === 'MVN')
-                newParams.s_control = '0.33'
+                newParams.s_control = 0.33
 
             if (value === 'CSR')
-                newParams.r_control = '0.5'
+                newParams.r_control = 0.5
         }
 
         mergeParams(newParams);
@@ -66,13 +66,13 @@ export function InputForm({
     function handleSubmit(event) {
         event.preventDefault();
         if (onSubmit) {
-            console.log(params);
             onSubmit(params);
         }
     }
 
     function handleReset(event) {
         event.preventDefault();
+        window.scrollTo(0, 0);
         resetParams();
         if (onReset) {
             onReset(getInitialState());
@@ -263,14 +263,14 @@ export function InputForm({
                     id="rand_seed"
                     name="rand_seed"
                     className="form-control"
-                    value={params.rand_seed || ''}
+                    value={params.rand_seed}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
 
         <hr className="mt-4" />
 
-        {params.samp_case !== '' && <div className="form-group">
+        {params.samp_case && <div className="form-group">
             <label htmlFor="x_case" className="font-weight-bold required">X Case</label>
             <OverlayTrigger overlay={<Tooltip id="x_case_tooltip">Specify x-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
@@ -286,7 +286,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        {params.samp_case !== '' && <div className="form-group">
+        {params.samp_case && <div className="form-group">
             <label htmlFor="y_case" className="font-weight-bold required">Y Case</label>
             <OverlayTrigger overlay={<Tooltip id="y_case_tooltip">Specify y-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
@@ -302,7 +302,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        {params.samp_control !== 'systematic' && params.samp_control !== '' && <div className="form-group">
+        {params.samp_control && params.samp_control !== 'systematic' && <div className="form-group">
             <label htmlFor="x_control" className="font-weight-bold required">X Control</label>
             <OverlayTrigger overlay={<Tooltip id="x_control_tooltip">Specify x-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
@@ -318,7 +318,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        {params.samp_control !== 'systematic' && params.samp_control !== '' && <div className="form-group">
+        {params.samp_control && params.samp_control !== 'systematic' && <div className="form-group">
             <label htmlFor="y_control" className="font-weight-bold required">Y Control</label>
             <OverlayTrigger overlay={<Tooltip id="y_control_tooltip">Specify y-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
@@ -334,7 +334,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        {params.samp_case !== 'MVN' && params.samp_case !== '' && <div className="form-group">
+        {params.samp_case && params.samp_case !== 'MVN' && <div className="form-group">
             <label htmlFor="r_case" className="font-weight-bold required">R Case</label>
             <OverlayTrigger overlay={<Tooltip id="r_case_tooltip">Optional. Specify the radius (radii) of case cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
@@ -350,7 +350,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        {params.samp_control === 'CSR' && params.samp_control !== '' && <div className="form-group">
+        {params.samp_control && params.samp_control === 'CSR' && <div className="form-group">
             <label htmlFor="r_control" className="font-weight-bold required">R Control</label>
             <OverlayTrigger overlay={<Tooltip id="r_control_tooltip">Optional. Specify the radius (radii) of control cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
@@ -366,7 +366,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        {params.samp_case === 'MVN' && params.samp_case !== '' && <div className="form-group">
+        {params.samp_case === 'MVN' && <div className="form-group">
             <label htmlFor="s_case" className="font-weight-bold required">S Case</label>
             <OverlayTrigger overlay={<Tooltip id="s_case_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for case locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
@@ -382,7 +382,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        {params.samp_control === 'MVN' && params.samp_control !== '' && <div className="form-group">
+        {params.samp_control === 'MVN' && <div className="form-group">
             <label htmlFor="s_control" className="font-weight-bold required">S Control</label>
             <OverlayTrigger overlay={<Tooltip id="s_control_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for control locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
@@ -398,7 +398,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        {(params.samp_case !== '' || params.samp_control !== '') && <hr className="mt-4" />}
+        {(params.samp_case || params.samp_control) && <hr className="mt-4" />}
 
         <div className="form-group">
             <label htmlFor="n_case" className="font-weight-bold required">N Case</label>
@@ -501,7 +501,6 @@ export function InputForm({
                     id="email"
                     name="email"
                     className="form-control"
-                    aria-describedby="email-help"
                     value={params.email}
                     disabled={!params.queue}
                     onChange={handleChange} />
@@ -516,11 +515,10 @@ export function InputForm({
             </label>
             <OverlayTrigger overlay={<Tooltip id="job_name_tooltip">Enter a name for the job.</Tooltip>}>
                 <input
-                    type="job"
+                    type="text"
                     id="job_name"
                     name="job_name"
                     className="form-control"
-                    aria-describedby="job_name-help"
                     value={params.job_name}
                     disabled={!params.queue}
                     onChange={handleChange} />

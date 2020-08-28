@@ -46,9 +46,11 @@ export function App() {
               {link.title}
           </NavLink>}
       />
-      <Route path="/" exact={true} component={Home} />
-      <Route path="/SparrpowR/:id?" component={Calculate} />
-      <Route path="/about" component={About} />
+      <main id="main">
+        <Route path="/" exact={true} component={Home} />
+        <Route path="/SparrpowR/:id?" component={Calculate} />
+        <Route path="/about" component={About} />
+      </main>
       <NCIFooter 
         className="py-4 bg-primary-gradient text-light"
         title={<div className="mb-4">

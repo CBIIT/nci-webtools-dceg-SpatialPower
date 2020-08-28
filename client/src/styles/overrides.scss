@@ -2,6 +2,12 @@
     outline: none;
 }
 
+// higher contrast selection
+::selection { 
+    color: white;
+    background: $primary-darker;
+}
+
 hr {
     border-top: 1px solid #dee2e6;
 }

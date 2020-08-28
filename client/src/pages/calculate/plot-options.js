@@ -20,7 +20,6 @@ export function PlotOptions({ onSubmit = e => { } }) {
         if (onSubmit) {
             onSubmit(params);
         }
-        return false;
     }
 
     function handleChange(event) {
