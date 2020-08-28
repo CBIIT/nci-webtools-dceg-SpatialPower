@@ -123,6 +123,7 @@ export function Calculate({ match }) {
     }
 
     return <div className="container py-4">
+        <h1 className="sr-only">SparrpowR</h1>
         <LoadingOverlay active={results.loading} />
         <div className="row">
             <div className="col-xl-3 col-lg-4 col-md-5 mb-3">
