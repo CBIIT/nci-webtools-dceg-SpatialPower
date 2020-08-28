@@ -19,6 +19,7 @@ export function Calculate({ match }) {
     const messages = useSelector(state => state.messages);
     const addMessage = message => dispatch(actions.addMessage(message));
     const mergeResults = results => dispatch(actions.mergeResults(results));
+    const mergeParams = params => dispatch(actions.mergeParams(params));
     const resetParams = _ => dispatch(actions.resetParams());
     const resetResults = _ => dispatch(actions.resetResults());
     const resetMessages = _ => dispatch(actions.resetMessages());
@@ -38,6 +39,7 @@ export function Calculate({ match }) {
 
         resetResults();
         resetMessages();
+        window.scrollTo(0, 0);
 
         try {
             mergeResults({ loading: true });
@@ -108,14 +110,15 @@ export function Calculate({ match }) {
      */
     async function loadResults(id) {
         if (!id) return;
-        resetResults();
-        resetMessages();
+        handleReset();
     
         try {
             mergeResults({ loading: true });
-            mergeResults(await fetchJSON(`api/fetch-results/${id}`));
+            const { params, results } = await fetchJSON(`api/fetch-results/${id}`);
+            mergeParams(params);
+            mergeResults(results);
         } catch (error) {
-            addMessage({ type: 'danger', text: `No results could be found for the specified id.` });
+            addMessage({ type: 'danger', text: `No results were found.` });
         } finally {
             const urlKey = new Date().getTime();
             mergeResults({ loading: false, submitted: true, urlKey });

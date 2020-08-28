@@ -169,26 +169,37 @@ apiRouter.get('/fetch-results/:id', async (request, response) => {
 
         // download results
         for (let {Key} of objects.Contents) {
-            logger.info(`Downloading result: ${Key}`);
-            const object = await s3.getObject({
-                Bucket: config.s3.bucket,
-                Key
-            }).promise();
             const filename = path.basename(Key);
-            await fs.promises.writeFile(
-                path.resolve(resultsFolder, filename),
-                object.Body
-            );
+            const filepath = path.resolve(resultsFolder, filename);
+
+            // download results if they do not exist
+            if (!fs.existsSync(filepath)) {
+                logger.info(`Downloading result: ${Key}`);
+                const object = await s3.getObject({
+                    Bucket: config.s3.bucket,
+                    Key
+                }).promise();
+
+                await fs.promises.writeFile(
+                    filepath, 
+                    object.Body
+                );
+            }
         }
 
-        let resultsFile = path.resolve(resultsFolder, `results.json`);
-        if (fs.existsSync(resultsFile))
-            response.sendFile(resultsFile);
-        else
+        let paramsFilePath = path.resolve(resultsFolder, `params.json`);
+        let resultsFilePath = path.resolve(resultsFolder, `results.json`);
+        if (fs.existsSync(resultsFilePath) && fs.existsSync(paramsFilePath)) {
+            const params = JSON.parse(String(await fs.promises.readFile(paramsFilePath)));
+            const results = JSON.parse(String(await fs.promises.readFile(resultsFilePath)));
+            response.json({params, results});
+        } else {
             throw(`Invalid id`);
+        }
 
     } catch(error) {
-        logger.error(error);
+        console.log(error);
+        logger.error(error.toString());
         response.status(500).json(error.toString());
     }
 });
