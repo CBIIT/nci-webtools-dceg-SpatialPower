@@ -24,7 +24,11 @@
     "email": {
         "admin": "",
         "sender": "",
-        "baseUrl": "http://localhost:3000/"
+        "baseUrl": "http://localhost:4000",
+        "smtp": {
+            "host": "",
+            "port": 587
+        }
     },
     "s3": {
         "bucket": "",
