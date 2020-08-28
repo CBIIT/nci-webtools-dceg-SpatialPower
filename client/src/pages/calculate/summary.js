@@ -23,7 +23,7 @@ export function Summary() {
 
         <Card.Body>
             <div className="row">
-                <div className="col-lg px-3 py-1">
+                <div className="col-lg px-3 py-1 table-responsive">
                     <table className="table table-borderless table-sm border-lg-right">
                         <thead>
                             <tr>
@@ -44,7 +44,7 @@ export function Summary() {
                     <hr className="d-block d-lg-none" />
                 </div>
 
-                <div className="col-lg px-3 py-1">
+                <div className="col-lg px-3 py-1 table-responsive">
                     <table className="table table-borderless table-sm">
                         <thead>
                             <tr>
