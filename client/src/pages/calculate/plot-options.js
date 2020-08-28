@@ -37,8 +37,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                 <Card.Body>
                     <form>
                         {params.sim_total > 1 && <div className="row mb-2">
-                            <div className="col-md-4 form-group">
-                                <label htmlFor="p_thresh" className="font-weight-bold">Power Threshold</label>
+                            <div className="col-lg-4 form-group">
+                                <label htmlFor="p_thresh" className="font-weight-bold text-nowrap">Power Threshold</label>
                                 <OverlayTrigger overlay={<Tooltip id="samp_case_tooltip">Specify a numeric value between 0 and 1 (default = 0.8) for the power threshold.</Tooltip>}>
                                     <input
                                         type="number"
@@ -50,7 +50,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         onChange={handleChange} />
                                 </OverlayTrigger>
                             </div>
-                            <div className="col-md form-inline mt-md-3 mb-md-0 mb-3">
+                            <div className="col-lg form-inline mt-lg-3 mb-lg-0 mb-3">
                                 <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
                                         type="checkbox"
@@ -81,8 +81,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                         </div>}
 
                         <div className="row">
-                            {params.sim_total > 1 && <div className="col-md form-group">
-                                <label htmlFor="suff_color" className="font-weight-bold">Sufficiently Powered</label>
+                            {params.sim_total > 1 && <div className="col-lg form-group">
+                                <label htmlFor="suff_color" className="font-weight-bold text-nowrap">Sufficiently Powered</label>
                                 <OverlayTrigger overlay={<Tooltip id="suff_color_tooltip">Select the color of sufficiently powered regions</Tooltip>}>
                                     <select
                                         id="suff_color"
@@ -103,8 +103,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>}
-                            {params.sim_total > 1 && <div className="col-md form-group">
-                                <label htmlFor="mid_color" className="font-weight-bold">Mid-point Color</label>
+                            {params.sim_total > 1 && <div className="col-lg form-group">
+                                <label htmlFor="mid_color" className="font-weight-bold text-nowrap">Mid-point Color</label>
                                 <OverlayTrigger overlay={<Tooltip id="mid_color_tooltip">Select the color of the mid-point</Tooltip>}>
                                     <select
                                         id="mid_color"
@@ -125,8 +125,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>}
-                            {params.sim_total > 1 && <div className="col-md form-group">
-                                <label htmlFor="insuff_color" className="font-weight-bold">Insufficiently Powered</label>
+                            {params.sim_total > 1 && <div className="col-lg form-group">
+                                <label htmlFor="insuff_color" className="font-weight-bold text-nowrap">Insufficiently Powered</label>
                                 <OverlayTrigger overlay={<Tooltip id="insuff_color_tooltip">Select the color of insufficiently powered regions</Tooltip>}>
                                     <select
                                         id="insuff_color"
@@ -147,8 +147,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>}
-                            <div className="col-md form-group">
-                                <label htmlFor="case_color" className="font-weight-bold">Case Location Color</label>
+                            <div className="col-lg form-group">
+                                <label htmlFor="case_color" className="font-weight-bold text-nowrap">Case Symbol Color</label>
                                 <OverlayTrigger overlay={<Tooltip id="case_color_tooltip">Select the color of case symbols</Tooltip>}>
                                     <select
                                         id="case_color"
@@ -169,8 +169,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="col-md form-group">
-                                <label htmlFor="control_color" className="font-weight-bold">Control Location Color</label>
+                            <div className="col-lg form-group">
+                                <label htmlFor="control_color" className="font-weight-bold text-nowrap">Control Symbol Color</label>
                                 <OverlayTrigger overlay={<Tooltip id="control_color_tooltip">Select the color of control symbols</Tooltip>}>
                                     <select
                                         id="control_color"
@@ -192,7 +192,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            {params.sim_total === 1 && <div className="col-md form-group form-inline mt-md-3 mb-md-0 mb-3" style={{ minWidth: '60%' }}>
+                            {params.sim_total === 1 && <div className="col-lg form-group form-inline mt-md-3 mb-md-0 mb-3" style={{ minWidth: '60%' }}>
                                 <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
                                         type="checkbox"
@@ -223,8 +223,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                         </div>
 
                         <div className="row">
-                            <div className="col-md form-group">
-                                <label htmlFor="case_symbol" className="font-weight-bold">Case Symbol</label>
+                            <div className="col-lg form-group">
+                                <label htmlFor="case_symbol" className="font-weight-bold text-nowrap">Case Symbol</label>
                                 <OverlayTrigger overlay={<Tooltip id="case_symbol_tooltip">Select the case symbol</Tooltip>}>
                                     <select
                                         id="case_symbol"
@@ -243,8 +243,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </select>
                                 </OverlayTrigger>
                             </div>
-                            <div className="col-md form-group">
-                                <label htmlFor="control_symbol" className="font-weight-bold">Control Symbol</label>
+                            <div className="col-lg form-group">
+                                <label htmlFor="control_symbol" className="font-weight-bold text-nowrap">Control Symbol</label>
                                 <OverlayTrigger overlay={<Tooltip id="control_symbol_tooltip">Select the control symbol</Tooltip>}>
                                     <select
                                         id="control_symbol"
@@ -264,8 +264,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="col-md form-group">
-                                <label htmlFor="case_size" className="font-weight-bold">Case Symbol Size</label>
+                            <div className="col-lg form-group">
+                                <label htmlFor="case_size" className="font-weight-bold text-nowrap">Case Symbol Size</label>
                                 <OverlayTrigger overlay={<Tooltip id="case_size_tooltip">Specify a numeric value for the size of case symbols</Tooltip>}>
                                     <input
                                         type="number"
@@ -278,8 +278,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="col-md form-group">
-                                <label htmlFor="control_size" className="font-weight-bold">Control Symbol Size</label>
+                            <div className="col-lg form-group">
+                                <label htmlFor="control_size" className="font-weight-bold text-nowrap">Control Symbol Size</label>
                                 <OverlayTrigger overlay={<Tooltip id="control_size_tooltip">Specify a numeric value for the size of control symbols</Tooltip>}>
                                     <input
                                         type="number"
@@ -292,7 +292,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            <div className="col-md form-group">
+                            <div className="col-lg form-group">
                                 <label htmlFor="replot" className="d-block">&nbsp;</label>
                                 <div className="text-center">
                                     <button
