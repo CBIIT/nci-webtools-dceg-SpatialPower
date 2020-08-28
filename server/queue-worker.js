@@ -57,16 +57,21 @@ function streamToFile(readStream, filePath) {
  */
 async function processMessage(params) {
     const s3 = new AWS.S3();
-    const email = nodemailer.createTransport({
-        SES: new AWS.SES()
-    });
+    const email = nodemailer.createTransport(config.email.smtp);
 
     try {
         // get calculation results
-        params.workingDirectory = path.resolve(config.results.folder, params.id);
+        const directory = path.resolve(config.results.folder, params.id);
         const sourcePath = path.resolve(__dirname, 'app.R');
-        await fs.promises.mkdir(params.workingDirectory, {recursive: true});
-        const results = r(sourcePath, 'calculate', [params]);
+        await fs.promises.mkdir(directory, {recursive: true});
+        const results = r(sourcePath, 'calculate', [{...params, directory}]);
+
+        // upload parameters
+        await s3.upload({
+            Body: JSON.stringify(params),
+            Bucket: config.s3.bucket,
+            Key: `${config.s3.outputKeyPrefix}${params.id}/params.json`
+        }).promise();
 
         // upload results
         await s3.upload({
@@ -77,7 +82,7 @@ async function processMessage(params) {
 
         // upload plots
         for (let filename of results.plots) {
-          const filepath = path.resolve(params.workingDirectory, filename);
+          const filepath = path.resolve(directory, filename);
           await s3.upload({
               Body: fs.createReadStream(filepath),
               Bucket: config.s3.bucket,
@@ -88,7 +93,7 @@ async function processMessage(params) {
         // specify email template variables
         const templateData = {
             originalTimestamp: params.timestamp,
-            resultsUrl: `${config.email.baseUrl}/#/SparrpowR/${params.job_name}`
+            resultsUrl: `${config.email.baseUrl}/#/SparrpowR/${params.id}`
         };
 
         // send user success email
@@ -96,7 +101,7 @@ async function processMessage(params) {
         const userEmailResults = await email.sendMail({
             from: config.email.sender,
             to: params.email,
-            subject: 'SparrpowR Results - Job:' + params.job_name,
+            subject: 'SparrpowR Results: ' + params.job_name,
             html: await readTemplate(__dirname + '/templates/user-success-email.html', templateData),
         });
 
