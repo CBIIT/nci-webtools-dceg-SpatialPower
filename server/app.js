@@ -36,11 +36,17 @@ apiRouter.post('/submit', async (request, response) => {
         const id = crypto.randomBytes(16).toString('hex');
 
         // assign id to body
-        let body = {...request.body, id};
+        let body = Object.assign(request.body, {
+            id,
+            timestamp: new Date().toISOString(),
+            plot_format: 'png',
+            plot_width: 480,
+            plot_height: 480,
+        });
 
-        // set empty strings in body
+        // remove empty values from body
         for (const key in body)
-            if (body[key] === '')
+            if ([null, undefined, ''].includes(body[key]))
                 delete body[key];
 
         if (body.queue) {
@@ -73,15 +79,18 @@ apiRouter.post('/submit', async (request, response) => {
 // handle replotting
 apiRouter.post('/replot', async (request, response) => {
     try {
-        let { body } = request;
-        
         // validate id format
-        if (!/^[a-z0-9]+$/i.test(body.id)) {
+        if (!/^[a-z0-9]+$/i.test(request.body.id)) {
             throw(`Invalid id`);
         }
 
-        body.directory = path.resolve(config.results.folder, body.id);
-        body.rds_file = 'results.rds';
+        const body = Object.assign(request.body, {
+            directory: path.resolve(config.results.folder, body.id),
+            rds_file: 'results.rds',
+            plot_format: 'png',
+            plot_width: 480,
+            plot_height: 480,
+        });
         const sourcePath = path.resolve(__dirname, 'app.R');
         const results = r(sourcePath, 'replot', [body]);
         response.json(results);
