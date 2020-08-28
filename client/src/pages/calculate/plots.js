@@ -1,21 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Nav from 'react-bootstrap/Nav';
 import Tab from 'react-bootstrap/Tab';
-import { useSelector } from 'react-redux';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button'
+import { useSelector, useDispatch } from 'react-redux';
+import { getInputEventValue } from './utils';
+import { actions } from '../../services/store/params';
 
 export function Plots({ onExport = e => { } }) {
+    const dispatch = useDispatch();
     let { id, plots, urlKey } = useSelector(state => state.results);
     const params = useSelector(state => state.params);
+    const mergeParams = value => dispatch(actions.mergeParams(value));
+    const [show, setShow] = useState(false)
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     if (!plots) return null;
     if (!Array.isArray(plots)) plots = [plots];
 
     function handleExport(event) {
         event.preventDefault();
+        setShow(false);
         if (onExport) {
             onExport(params);
         }
         return false;
+    }
+
+    function handleChange(event) {
+        const { name, value } = getInputEventValue(event);
+        mergeParams({ [name]: value });
     }
 
     const plotNames = [
@@ -36,9 +52,63 @@ export function Plots({ onExport = e => { } }) {
                     <button
                         id="export"
                         className="btn btn-outline-primary ml-auto"
-                        onClick={handleExport}>
+                        onClick={handleShow}>
                         Export
                     </button>
+                    <Modal show={show} onHide={handleClose}>
+                        <Modal.Header>
+                            Export Options
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="row">
+                                <div className="col-lg form-group">
+                                    <label htmlFor="plot_format" className="font-weight-bold text-nowrap">Image Format</label>
+                                    <select
+                                        id="plot_format"
+                                        name="plot_format"
+                                        className="custom-select"
+                                        value={params.plot_format}
+                                        onChange={handleChange}>
+                                        <option value="" hidden>(select option)</option>
+                                        <option value="png">png</option>
+                                        <option value="jpeg">jpeg</option>
+                                        <option value="tiff">tiff</option>
+                                        <option value="bmp">bmp</option>
+                                    </select>
+                                </div>
+                                <div className="col-lg form-group">
+                                    <label htmlFor="plot_width" className="font-weight-bold text-nowrap">Image Width</label>
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        id="plot_width"
+                                        name="plot_width"
+                                        className="form-control"
+                                        value={params.plot_width}
+                                        onChange={handleChange} />
+                                </div>
+                                <div className="col-lg form-group">
+                                    <label htmlFor="plot_height" className="font-weight-bold text-nowrap">Image Height</label>
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        id="plot_height"
+                                        name="plot_height"
+                                        className="form-control"
+                                        value={params.plot_height}
+                                        onChange={handleChange} />
+                                </div>
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleClose}>
+                                Close
+                            </Button>
+                            <Button variant="primary" onClick={handleExport}>
+                                Export
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
             </Card.Header>
             <Card.Body>
