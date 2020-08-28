@@ -27,7 +27,7 @@ export function Plots({ onExport = e => { } }) {
     return <Tab.Container id="plots-container" defaultActiveKey="plot-0">
         <Card className="shadow-sm mb-3">
             <Card.Header className="bg-white">
-                <div className="d-flex">
+                <div className="d-flex align-items-center">
                     <Nav variant="tabs">
                         {plots.map((plot, i) => <Nav.Item key={`plot-tab-${i}`}>
                             <Nav.Link eventKey={`plot-${i}`} className="font-weight-bold">{plotNames[i]}</Nav.Link>
