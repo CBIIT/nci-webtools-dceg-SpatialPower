@@ -8,6 +8,10 @@
     background: $primary-darker;
 }
 
+body {
+    min-width: 400px;
+}
+
 hr {
     border-top: 1px solid #dee2e6;
 }
