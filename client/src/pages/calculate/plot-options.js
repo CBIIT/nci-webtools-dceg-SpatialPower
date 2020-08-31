@@ -72,8 +72,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         name="title"
                                         checked={params.title}
                                         onChange={handleChange} />
-
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display title of plots</Tooltip>}>
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plot titles.</Tooltip>}>
                                         <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
                                     </OverlayTrigger>
                                 </div>
@@ -214,8 +213,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         name="title"
                                         checked={params.title}
                                         onChange={handleChange} />
-
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display title of plots</Tooltip>}>
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plots titles.</Tooltip>}>
                                         <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
                                     </OverlayTrigger>
                                 </div>
@@ -229,17 +227,16 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     <select
                                         id="case_symbol"
                                         name="case_symbol"
-                                        className="custom-select"
-                                        type="number"
+                                        className="custom-select r-symbols"
                                         value={params.case_symbol}
                                         onChange={handleChange}>
                                         <option value="" hidden>(select option)</option>
-                                        <option value="16">Closed Circle (⚫)</option>
-                                        <option value="1">Open Circle (⚪)</option>
-                                        <option value="0">Open Square (◻)</option>
-                                        <option value="3">Plus Sign (+)</option>
-                                        <option value="8">Star (*)</option>
-                                        <option value="4">X</option>
+                                        <option value="16">Closed Circle (&#xe810;)</option>
+                                        <option value="1">Open Circle (&#xe801;)</option>
+                                        <option value="0">Open Square (&#xe800;)</option>
+                                        <option value="3">Plus (&#xe803;)</option>
+                                        <option value="8">Star (&#xe808;)</option>
+                                        <option value="4">Cross (&#xe804;)</option>
                                     </select>
                                 </OverlayTrigger>
                             </div>
@@ -249,17 +246,16 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     <select
                                         id="control_symbol"
                                         name="control_symbol"
-                                        className="custom-select"
-                                        type="number"
+                                        className="custom-select r-symbols"
                                         value={params.control_symbol}
                                         onChange={handleChange}>
                                         <option value="" hidden>(select option)</option>
-                                        <option value="16">Closed Circle (⚫)</option>
-                                        <option value="1">Open Circle (⚪)</option>
-                                        <option value="0">Open Square (◻)</option>
-                                        <option value="3">Plus Sign (+)</option>
-                                        <option value="8">Star (*)</option>
-                                        <option value="4">X</option>
+                                        <option value="16">Closed Circle (&#xe810;)</option>
+                                        <option value="1">Open Circle (&#xe801;)</option>
+                                        <option value="0">Open Square (&#xe800;)</option>
+                                        <option value="3">Plus (&#xe803;)</option>
+                                        <option value="8">Star (&#xe808;)</option>
+                                        <option value="4">Cross (&#xe804;)</option>
                                     </select>
                                 </OverlayTrigger>
                             </div>
