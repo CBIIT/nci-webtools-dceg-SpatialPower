@@ -224,6 +224,70 @@ export function InputForm({
             </OverlayTrigger>
         </div>
 
+        {params.samp_case && <div className="pl-5 form-group">
+            <label htmlFor="x_case" className="font-weight-bold required">X coordinate(s) of case cluster(s)</label>
+            <OverlayTrigger overlay={<Tooltip id="x_case_tooltip">Specify x-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
+                <input
+                    type="text"
+                    data-type="number-array"
+                    step="any"
+                    id="x_case"
+                    name="x_case"
+                    className="form-control"
+                    value={params.x_case}
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
+            </OverlayTrigger>
+        </div>}
+
+        {params.samp_case && <div className="pl-5 form-group">
+            <label htmlFor="y_case" className="font-weight-bold required">Y coordinate(s) of case cluster(s)</label>
+            <OverlayTrigger overlay={<Tooltip id="y_case_tooltip">Specify y-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
+                <input
+                    type="text"
+                    data-type="number-array"
+                    step="any"
+                    id="y_case"
+                    name="y_case"
+                    className="form-control"
+                    value={params.y_case}
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
+            </OverlayTrigger>
+        </div>}
+
+        {params.samp_case && params.samp_case !== 'MVN' && <div className="pl-5 form-group">
+            <label htmlFor="r_case" className="font-weight-bold required">Radius (radii) of case cluster(s)</label>
+            <OverlayTrigger overlay={<Tooltip id="r_case_tooltip">Optional. Specify the radius (radii) of case cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
+                <input
+                    type="text"
+                    data-type="number-array"
+                    step="any"
+                    id="r_case"
+                    name="r_case"
+                    className="form-control"
+                    value={params.r_case}
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
+            </OverlayTrigger>
+        </div>}
+
+        {params.samp_case === 'MVN' && <div className="pl-5 form-group">
+            <label htmlFor="s_case" className="font-weight-bold required">Standard deviation(s) of case cluster(s)</label>
+            <OverlayTrigger overlay={<Tooltip id="s_case_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for case locations in the units of win as a numeric value or vector.</Tooltip>}>
+                <input
+                    type="text"
+                    data-type="number-array"
+                    step="any"
+                    id="s_case"
+                    name="s_case"
+                    className="form-control"
+                    value={params.s_case}
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
+            </OverlayTrigger>
+        </div>}
+
         <div className="form-group">
             <label htmlFor="samp_control" className="font-weight-bold required">Sample Control</label>
             <OverlayTrigger overlay={<Tooltip id="samp_control_tooltip">Specify how control locations are randomized.</Tooltip>}>
@@ -241,6 +305,72 @@ export function InputForm({
                 </select>
             </OverlayTrigger>
         </div>
+
+        {params.samp_control && params.samp_control !== 'systematic' && <div className="pl-5 form-group">
+            <label htmlFor="x_control" className="font-weight-bold required">X coordinate(s) of control cluster(s)</label>
+            <OverlayTrigger overlay={<Tooltip id="x_control_tooltip">Specify x-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
+                <input
+                    type="text"
+                    data-type="number-array"
+                    step="any"
+                    id="x_control"
+                    name="x_control"
+                    className="form-control"
+                    value={params.x_control}
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
+            </OverlayTrigger>
+        </div>}
+
+        {params.samp_control && params.samp_control !== 'systematic' && <div className="pl-5 form-group">
+            <label htmlFor="y_control" className="font-weight-bold required">Y coordinate(s) of control cluster(s)</label>
+            <OverlayTrigger overlay={<Tooltip id="y_control_tooltip">Specify y-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
+                <input
+                    type="text"
+                    data-type="number-array"
+                    step="any"
+                    id="y_control"
+                    name="y_control"
+                    className="form-control"
+                    value={params.y_control}
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
+            </OverlayTrigger>
+        </div>}
+
+        {params.samp_control && params.samp_control === 'CSR' && <div className="pl-5 form-group">
+            <label htmlFor="r_control" className="font-weight-bold required">Radius (radii) of control cluster(s)</label>
+            <OverlayTrigger overlay={<Tooltip id="r_control_tooltip">Optional. Specify the radius (radii) of control cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
+                <input
+                    type="text"
+                    data-type="number-array"
+                    step="any"
+                    id="r_control"
+                    name="r_control"
+                    className="form-control"
+                    value={params.r_control}
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
+            </OverlayTrigger>
+        </div>}
+
+        {params.samp_control === 'MVN' && <div className="pl-5 form-group">
+            <label htmlFor="s_control" className="font-weight-bold required">Standard deviation(s) of control cluster(s)</label>
+            <OverlayTrigger overlay={<Tooltip id="s_control_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for control locations in the units of win as a numeric value or vector.</Tooltip>}>
+                <input
+                    type="text"
+                    data-type="number-array"
+                    step="any"
+                    id="s_control"
+                    name="s_control"
+                    className="form-control"
+                    value={params.s_control}
+                    onChange={handleChange}
+                    onBlur={handleBlur} />
+            </OverlayTrigger>
+        </div>}
+
+        <hr className="mt-4" />
 
         <div className="form-group">
             <label htmlFor="sim_total" className="font-weight-bold required">Number of Simulations</label>
@@ -267,138 +397,6 @@ export function InputForm({
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
-
-        <hr className="mt-4" />
-
-        {params.samp_case && <div className="form-group">
-            <label htmlFor="x_case" className="font-weight-bold required">X coordinate(s) of case cluster(s)</label>
-            <OverlayTrigger overlay={<Tooltip id="x_case_tooltip">Specify x-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
-                <input
-                    type="text"
-                    data-type="number-array"
-                    step="any"
-                    id="x_case"
-                    name="x_case"
-                    className="form-control"
-                    value={params.x_case}
-                    onChange={handleChange}
-                    onBlur={handleBlur} />
-            </OverlayTrigger>
-        </div>}
-
-        {params.samp_case && <div className="form-group">
-            <label htmlFor="y_case" className="font-weight-bold required">Y coordinate(s) of case cluster(s)</label>
-            <OverlayTrigger overlay={<Tooltip id="y_case_tooltip">Specify y-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
-                <input
-                    type="text"
-                    data-type="number-array"
-                    step="any"
-                    id="y_case"
-                    name="y_case"
-                    className="form-control"
-                    value={params.y_case}
-                    onChange={handleChange} 
-                    onBlur={handleBlur} />
-            </OverlayTrigger>
-        </div>}
-
-        {params.samp_control && params.samp_control !== 'systematic' && <div className="form-group">
-            <label htmlFor="x_control" className="font-weight-bold required">X coordinate(s) of control cluster(s)</label>
-            <OverlayTrigger overlay={<Tooltip id="x_control_tooltip">Specify x-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
-                <input
-                    type="text"
-                    data-type="number-array"
-                    step="any"
-                    id="x_control"
-                    name="x_control"
-                    className="form-control"
-                    value={params.x_control}
-                    onChange={handleChange}
-                    onBlur={handleBlur} />
-            </OverlayTrigger>
-        </div>}
-
-        {params.samp_control && params.samp_control !== 'systematic' && <div className="form-group">
-            <label htmlFor="y_control" className="font-weight-bold required">Y coordinate(s) of control cluster(s)</label>
-            <OverlayTrigger overlay={<Tooltip id="y_control_tooltip">Specify y-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
-                <input
-                    type="text"
-                    data-type="number-array"
-                    step="any"
-                    id="y_control"
-                    name="y_control"
-                    className="form-control"
-                    value={params.y_control}
-                    onChange={handleChange} 
-                    onBlur={handleBlur} />
-            </OverlayTrigger>
-        </div>}
-
-        {params.samp_case && params.samp_case !== 'MVN' && <div className="form-group">
-            <label htmlFor="r_case" className="font-weight-bold required">Radius (radii) of case cluster(s)</label>
-            <OverlayTrigger overlay={<Tooltip id="r_case_tooltip">Optional. Specify the radius (radii) of case cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
-                <input
-                    type="text"
-                    data-type="number-array"
-                    step="any"
-                    id="r_case"
-                    name="r_case"
-                    className="form-control"
-                    value={params.r_case}
-                    onChange={handleChange} 
-                    onBlur={handleBlur} />
-            </OverlayTrigger>
-        </div>}
-
-        {params.samp_control && params.samp_control === 'CSR' && <div className="form-group">
-            <label htmlFor="r_control" className="font-weight-bold required">Radius (radii) of control cluster(s)</label>
-            <OverlayTrigger overlay={<Tooltip id="r_control_tooltip">Optional. Specify the radius (radii) of control cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
-                <input
-                    type="text"
-                    data-type="number-array"
-                    step="any"
-                    id="r_control"
-                    name="r_control"
-                    className="form-control"
-                    value={params.r_control}
-                    onChange={handleChange} 
-                    onBlur={handleBlur} />
-            </OverlayTrigger>
-        </div>}
-
-        {params.samp_case === 'MVN' && <div className="form-group">
-            <label htmlFor="s_case" className="font-weight-bold required">Standard deviation(s) of case cluster(s)</label>
-            <OverlayTrigger overlay={<Tooltip id="s_case_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for case locations in the units of win as a numeric value or vector.</Tooltip>}>
-                <input
-                    type="text"
-                    data-type="number-array"
-                    step="any"
-                    id="s_case"
-                    name="s_case"
-                    className="form-control"
-                    value={params.s_case}
-                    onChange={handleChange} 
-                    onBlur={handleBlur} />
-            </OverlayTrigger>
-        </div>}
-
-        {params.samp_control === 'MVN' && <div className="form-group">
-            <label htmlFor="s_control" className="font-weight-bold required">Standard deviation(s) of control cluster(s)</label>
-            <OverlayTrigger overlay={<Tooltip id="s_control_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for control locations in the units of win as a numeric value or vector.</Tooltip>}>
-                <input
-                    type="text"
-                    data-type="number-array"
-                    step="any"
-                    id="s_control"
-                    name="s_control"
-                    className="form-control"
-                    value={params.s_control}
-                    onChange={handleChange}
-                    onBlur={handleBlur} />
-            </OverlayTrigger>
-        </div>}
-
-        {(params.samp_case || params.samp_control) && <hr className="mt-4" />}
 
         <div className="form-group">
             <label htmlFor="n_case" className="font-weight-bold required">N Case</label>
