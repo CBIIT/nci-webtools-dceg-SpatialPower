@@ -271,7 +271,7 @@ export function InputForm({
         <hr className="mt-4" />
 
         {params.samp_case && <div className="form-group">
-            <label htmlFor="x_case" className="font-weight-bold required">X Case</label>
+            <label htmlFor="x_case" className="font-weight-bold required">X coordinate(s) of case cluster(s)</label>
             <OverlayTrigger overlay={<Tooltip id="x_case_tooltip">Specify x-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
@@ -287,7 +287,7 @@ export function InputForm({
         </div>}
 
         {params.samp_case && <div className="form-group">
-            <label htmlFor="y_case" className="font-weight-bold required">Y Case</label>
+            <label htmlFor="y_case" className="font-weight-bold required">Y coordinate(s) of case cluster(s)</label>
             <OverlayTrigger overlay={<Tooltip id="y_case_tooltip">Specify y-coordinate(s) of case cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
@@ -303,7 +303,7 @@ export function InputForm({
         </div>}
 
         {params.samp_control && params.samp_control !== 'systematic' && <div className="form-group">
-            <label htmlFor="x_control" className="font-weight-bold required">X Control</label>
+            <label htmlFor="x_control" className="font-weight-bold required">X coordinate(s) of control cluster(s)</label>
             <OverlayTrigger overlay={<Tooltip id="x_control_tooltip">Specify x-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
@@ -319,7 +319,7 @@ export function InputForm({
         </div>}
 
         {params.samp_control && params.samp_control !== 'systematic' && <div className="form-group">
-            <label htmlFor="y_control" className="font-weight-bold required">Y Control</label>
+            <label htmlFor="y_control" className="font-weight-bold required">Y coordinate(s) of control cluster(s)</label>
             <OverlayTrigger overlay={<Tooltip id="y_control_tooltip">Specify y-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
@@ -335,7 +335,7 @@ export function InputForm({
         </div>}
 
         {params.samp_case && params.samp_case !== 'MVN' && <div className="form-group">
-            <label htmlFor="r_case" className="font-weight-bold required">R Case</label>
+            <label htmlFor="r_case" className="font-weight-bold required">Radius (radii) of case cluster(s)</label>
             <OverlayTrigger overlay={<Tooltip id="r_case_tooltip">Optional. Specify the radius (radii) of case cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
@@ -351,7 +351,7 @@ export function InputForm({
         </div>}
 
         {params.samp_control && params.samp_control === 'CSR' && <div className="form-group">
-            <label htmlFor="r_control" className="font-weight-bold required">R Control</label>
+            <label htmlFor="r_control" className="font-weight-bold required">Radius (radii) of control cluster(s)</label>
             <OverlayTrigger overlay={<Tooltip id="r_control_tooltip">Optional. Specify the radius (radii) of control cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
@@ -367,7 +367,7 @@ export function InputForm({
         </div>}
 
         {params.samp_case === 'MVN' && <div className="form-group">
-            <label htmlFor="s_case" className="font-weight-bold required">S Case</label>
+            <label htmlFor="s_case" className="font-weight-bold required">Standard deviation(s) of case cluster(s)</label>
             <OverlayTrigger overlay={<Tooltip id="s_case_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for case locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
@@ -383,7 +383,7 @@ export function InputForm({
         </div>}
 
         {params.samp_control === 'MVN' && <div className="form-group">
-            <label htmlFor="s_control" className="font-weight-bold required">S Control</label>
+            <label htmlFor="s_control" className="font-weight-bold required">Standard deviation(s) of control cluster(s)</label>
             <OverlayTrigger overlay={<Tooltip id="s_control_tooltip">Optional. Specify the standard deviation(s) of the multivariate normal distribution for control locations in the units of win as a numeric value or vector.</Tooltip>}>
                 <input
                     type="text"
