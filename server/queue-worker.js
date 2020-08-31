@@ -93,7 +93,7 @@ async function processMessage(params) {
         // specify email template variables
         const templateData = {
             originalTimestamp: params.timestamp,
-            resultsUrl: `${config.email.baseUrl}/#/SparrpowR/${params.id}`
+            resultsUrl: `${config.email.baseUrl}/#/sparrpowR/${params.id}`
         };
 
         // send user success email

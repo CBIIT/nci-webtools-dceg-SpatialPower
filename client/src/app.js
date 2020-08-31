@@ -16,7 +16,7 @@ export function App() {
       title: 'Home',
     },
     {
-      route: '/SparrpowR',
+      route: '/sparrpowR',
       title: 'SparrpowR',
     },
     {
@@ -48,7 +48,7 @@ export function App() {
       />
       <main id="main">
         <Route path="/" exact={true} component={Home} />
-        <Route path="/SparrpowR/:id?" component={Calculate} />
+        <Route path="/sparrpowR/:id?" component={Calculate} />
         <Route path="/about" component={About} />
       </main>
       <NCIFooter 

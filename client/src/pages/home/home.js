@@ -29,11 +29,11 @@ export function Home() {
         </div>
         <div className="container lead mb-4">
             <p>
-                The sparrpowR web tool serves as a frontend interface for the <a className="font-weight-bold" href="https://cran.r-project.org/web/packages/sparrpowR/index.html">sparrpowR package</a>. The webtool has the same functionality as the package, but allows users to easily input their study parameters into an online form instead of interacting directly with R.
+                The Spatial Power Web Tool serves as a frontend interface for the <a className="font-weight-bold" href="https://cran.r-project.org/web/packages/sparrpowR/index.html">sparrpowR package</a>. The webtool has the same functionality as the package, but allows users to easily input their study parameters into an online form instead of interacting directly with R.
             </p>
 
             <p>
-                The webtool displays the calculated power in tabular form as well as graphically, with the same graphics directly produced by the R package. Users are  able to download their power results and visualizations directly from the webtool for implementation in presentations, grant applications, or even publications.
+                The web tool displays the calculated power in tabular form as well as graphically, with the same graphics directly produced by the R package. Users are  able to download their power results and visualizations directly from the webtool for implementation in presentations, grant applications, or even publications.
             </p>
         </div>
         {/*

@@ -10,14 +10,14 @@ export function About() {
         <hr />
 
         <p>
-            The sparrpowR web tool serves as a frontend interface for the <a className="font-weight-bold" href="https://cran.r-project.org/web/packages/sparrpowR/index.html">sparrpowR package</a>. The webtool has the same functionality as the package, but allows users to easily input their study parameters into an online form instead of interacting directly with R.
+            The Spatial Power Web Tool serves as a frontend interface for the <a className="font-weight-bold" href="https://cran.r-project.org/web/packages/sparrpowR/index.html">sparrpowR package</a>. The webtool has the same functionality as the package, but allows users to easily input their study parameters into an online form instead of interacting directly with R.
         </p>
 
         <p>
-            The webtool displays the calculated power in tabular form as well as graphically, with the same graphics directly produced by the R package. Users are  able to download their power results and visualizations directly from the webtool for implementation in presentations, grant applications, or even publications.
+            The web tool displays the calculated power in tabular form as well as graphically, with the same graphics directly produced by the R package. Users are  able to download their power results and visualizations directly from the webtool for implementation in presentations, grant applications, or even publications.
         </p>
 
-        <p className="font-weight-bold">References</p>
+        <h2 className="h5">References</h2>
         <ol>
             <li>Dorey FJ. In Brief: Statistics in Brief: Statistical Power: What Is It and When Should It Be Used? 2011.</li>
             <li>Jones S, Carley S, Harrison M. An introduction to power and sample size estimation. Emerg Med J EMJ. 2003;20(5):453.</li>
