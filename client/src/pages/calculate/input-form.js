@@ -487,7 +487,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>
 
-        {<div className="form-group">
+        {params.queue && <div className="form-group">
             <label
                 htmlFor="email"
                 className="font-weight-bold">
@@ -505,7 +505,7 @@ export function InputForm({
             </OverlayTrigger>
         </div>}
 
-        {<div className="form-group">
+        {params.queue && <div className="form-group">
             <label
                 htmlFor="job_name"
                 className="font-weight-bold">
