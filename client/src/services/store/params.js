@@ -3,11 +3,11 @@ import { mergeObject } from './utils';
 
 export const getInitialState = () => ({
     win: '',
-    x_origin: '',
-    y_origin: '',
-    width: '',
-    height: '',
-    radius: '',
+    x_origin: 0,
+    y_origin: 0,
+    width: 1,
+    height: 2,
+    radius: 1,
     sim_total: 2,
     x_case: '',
     y_case: '',
