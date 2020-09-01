@@ -29,7 +29,6 @@ export const getInitialState = () => ({
     plot_pts: true,
     title: false,
     suff_color: 'green',
-    mid_color: 'grey',
     insuff_color: 'blue',
     case_color: 'purple',
     control_color: 'orange',
