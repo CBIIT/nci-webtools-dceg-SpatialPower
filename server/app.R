@@ -42,7 +42,6 @@ calculate <- function(params) {
         s_control = as.double(unlist(params$s_control, use.names=FALSE)),
         lower_tail = as.double(params$lower_tail),
         upper_tail = as.double(params$upper_tail),
-        cascon = as.logical(params$cascon),
         n_core = 4
     )
 
@@ -88,7 +87,7 @@ replot <- function(params) {
 plot_results <- function(results, params) {
     # cols[3] (mid_color) is only used when plot_text == TRUE, and is not actually used for legends. 
     # cols[1:3] do not match the order of colors in the documentation
-    params$cols <- c(params$insuff_color, params$suff_color, params$mid_color, params$case_color, params$control_color)
+    params$cols <- c(params$insuff_color, params$suff_color, params$case_color, params$control_color)
     params$chars <- as.integer(c(params$case_symbol, params$control_symbol))
     params$sizes <- as.integer(c(params$case_size, params$control_size))
 
@@ -113,6 +112,7 @@ plot_results <- function(results, params) {
             sizes = params$sizes,
             plot_pts = params$plot_pts,
             plot_title = params$title, 
+            cascon = as.logical(params$cascon),
             cols = params$cols)
     dev.off()
 
