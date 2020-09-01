@@ -475,33 +475,6 @@ export function InputForm({
             </OverlayTrigger>
         </div>
 
-        <div className="form-group custom-control custom-checkbox">
-            <input
-                type="checkbox"
-                className="custom-control-input"
-                id="cascon"
-                name="cascon"
-                onChange={handleChange} />
-            <OverlayTrigger overlay={<Tooltip id="cascon_tooltip">If checked, computes the statistical power to detect case clusters and control clusters. If not, computes the statistical power to detect case clusters only.</Tooltip>}>
-                <label className="custom-control-label" htmlFor="cascon">Detect Control Clusters</label>
-            </OverlayTrigger>
-
-        </div>
-
-        {params.cascon && <div className="form-group">
-            <label htmlFor="upper_tail" className="font-weight-bold required">Upper Tail</label>
-            <OverlayTrigger overlay={<Tooltip id="upper_tail_tooltip">Optional. Specify a numeric value for the upper p-value threshold (default=0.975).</Tooltip>}>
-                <input
-                    type="number"
-                    step="any"
-                    id="upper_tail"
-                    name="upper_tail"
-                    className="form-control"
-                    value={params.upper_tail}
-                    onChange={handleChange} />
-            </OverlayTrigger>
-        </div>}
-
         <hr className="mt-4" />
 
         <div className="form-group custom-control custom-checkbox">
@@ -521,26 +494,8 @@ export function InputForm({
 
         {params.queue && <div className="form-group">
             <label
-                htmlFor="email"
-                className="font-weight-bold">
-                Email
-            </label>
-            <OverlayTrigger overlay={<Tooltip id="email_tooltip">Results will be sent to the specified email.</Tooltip>}>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="form-control"
-                    value={params.email}
-                    disabled={!params.queue}
-                    onChange={handleChange} />
-            </OverlayTrigger>
-        </div>}
-
-        {params.queue && <div className="form-group">
-            <label
                 htmlFor="job_name"
-                className="font-weight-bold">
+                className="font-weight-bold required">
                 Job Name
             </label>
             <OverlayTrigger overlay={<Tooltip id="job_name_tooltip">Enter a name for the job.</Tooltip>}>
@@ -550,6 +505,24 @@ export function InputForm({
                     name="job_name"
                     className="form-control"
                     value={params.job_name}
+                    disabled={!params.queue}
+                    onChange={handleChange} />
+            </OverlayTrigger>
+        </div>}
+
+        {params.queue && <div className="form-group">
+            <label
+                htmlFor="email"
+                className="font-weight-bold required">
+                Email
+            </label>
+            <OverlayTrigger overlay={<Tooltip id="email_tooltip">Results will be sent to the specified email.</Tooltip>}>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    className="form-control"
+                    value={params.email}
                     disabled={!params.queue}
                     onChange={handleChange} />
             </OverlayTrigger>
