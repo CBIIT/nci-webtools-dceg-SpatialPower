@@ -17,9 +17,12 @@ export function InputForm({
     const resetParams = _ => dispatch(actions.resetParams());
     const simQueueCutoff = 100;
     const [sims, setSims] = useState(2)
+    const [submitted, setSubmit] = useState(false)
 
-    const handleSims = (event) => setSims(event.target.value)
-
+    const handleSims = (event) => {
+        setSims(event.target.value)
+        setSubmit(false)
+    }
     function checkRequired(){
 
         if(!params.samp_case || !params.samp_control)
@@ -40,6 +43,7 @@ export function InputForm({
     function handleChange(event) {
         const { name, value } = getInputEventValue(event);
         const newParams = { ...params, [name]: value };
+        setSubmit(false)
 
         // cap maximum number of simulations
         newParams.sim_total = Math.min(50000, newParams.sim_total);
@@ -120,6 +124,7 @@ export function InputForm({
     function handleSubmit(event) {
         event.preventDefault();
         if (onSubmit) {
+            setSubmit(true)
             const newParams = { ...params, ['sim_total']: sims }
             mergeParams(newParams)
             onSubmit(newParams);
@@ -569,7 +574,7 @@ export function InputForm({
                 Reset
             </button>
 
-            <button type="submit" className="btn btn-primary" disabled={!checkRequired()}>
+            <button type="submit" className="btn btn-primary" disabled={!checkRequired() || submitted}>
                 Submit
             </button>
         </div>
