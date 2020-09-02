@@ -13,6 +13,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
     const { plots } = useSelector(state => state.results);
     const mergeParams = value => dispatch(actions.mergeParams(value));
     const [selectedAccordionPanel, setSelectedAccordionPanel] = useState(null);
+    const isMac = /Mac|iPhone|iPod|iPad/.test(navigator.platform);
     if (!plots || !plots.length) return null;
 
     function handleSubmit(event) {
@@ -79,7 +80,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                             </div>
                         </div>
 
-                        <div className="row" style={{ width: '87%' }}>
+                        <div className="row" style={{ width: '85%' }}>
 
                             <div className="col-lg form-group">
                                 <label htmlFor="case_symbol" className="font-weight-bold text-nowrap">Case Symbol</label>
@@ -140,7 +141,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
 
                         </div>
 
-                        <div className="row" style={{ width: '87%' }}>
+                        <div className="row" style={{ width: '85%' }}>
                             <div className="col-lg form-group">
                                 <label htmlFor="control_symbol" className="font-weight-bold text-nowrap">Control Symbol</label>
                                 <OverlayTrigger overlay={<Tooltip id="control_symbol_tooltip">Select the control symbol</Tooltip>}>
@@ -198,8 +199,48 @@ export function PlotOptions({ onSubmit = e => { } }) {
                             </div>
                         </div>
 
-                        <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
-                            <div className="row d-flex" style={{ width: '87%' }}>
+                        <div className="row" style={{marginLeft: '0',marginRight: '0'}}>
+                            <div className="row" style={{ width: '85%' }}>
+                                <div className="col-lg form-group">
+                                    <label htmlFor="case_symbol" className="font-weight-bold text-nowrap">Case Symbol</label>
+                                    <OverlayTrigger overlay={<Tooltip id="case_symbol_tooltip">Select the case symbol</Tooltip>}>
+                                        {/* Use unicode icons as fallbacks, since native Mac OS selects in Safari/Chrome do not support custom webfonts in select options */}
+                                        <select
+                                            id="case_symbol"
+                                            name="case_symbol"
+                                            className="custom-select r-symbols"
+                                            value={params.case_symbol}
+                                            onChange={handleChange}>
+                                            <option value="" hidden>(select option)</option>
+                                            <option value="16">Closed Circle ({isMac ? '\u25cf' : '\ue810'})</option>
+                                            <option value="1">Open Circle ({isMac ? '\u25cb' : '\ue801'})</option>
+                                            <option value="0">Open Square ({isMac ? '\u25a1' : '\ue800'})</option>
+                                            <option value="3">Plus ({isMac ? '\uff0b' : '\ue803'})</option>
+                                            <option value="8">Star ({isMac ? '\ufe61' : '\ue808'})</option>
+                                            <option value="4">Cross ({isMac ? '\u2a09' : '\ue804'})</option>
+                                        </select>
+                                    </OverlayTrigger>
+                                </div>
+                                <div className="col-lg form-group">
+                                    <label htmlFor="control_symbol" className="font-weight-bold text-nowrap">Control Symbol</label>
+                                    <OverlayTrigger overlay={<Tooltip id="control_symbol_tooltip">Select the control symbol</Tooltip>}>
+                                        {/* Use unicode icons as fallbacks, since native Mac OS selects in Safari/Chrome do not support custom webfonts in select options */}
+                                        <select
+                                            id="control_symbol"
+                                            name="control_symbol"
+                                            className="custom-select r-symbols"
+                                            value={params.control_symbol}
+                                            onChange={handleChange}>
+                                            <option value="" hidden>(select option)</option>
+                                            <option value="16">Closed Circle ({isMac ? '\u25cf' : '\ue810'})</option>
+                                            <option value="1">Open Circle ({isMac ? '\u25cb' : '\ue801'})</option>
+                                            <option value="0">Open Square ({isMac ? '\u25a1' : '\ue800'})</option>
+                                            <option value="3">Plus ({isMac ? '\uff0b' : '\ue803'})</option>
+                                            <option value="8">Star ({isMac ? '\ufe61' : '\ue808'})</option>
+                                            <option value="4">Cross ({isMac ? '\u2a09' : '\ue804'})</option>
+                                        </select>
+                                    </OverlayTrigger>
+                                </div>
 
                                 <div className="col-lg form-group" style={{maxWidth:'33.3%'}}>
                                     <label htmlFor="p_thresh" className="font-weight-bold text-nowrap">Power Threshold</label>
