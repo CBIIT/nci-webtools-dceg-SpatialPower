@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -15,7 +15,10 @@ export function InputForm({
     const mergeParams = value => dispatch(actions.mergeParams(value));
     const resetParams = _ => dispatch(actions.resetParams());
     const simQueueCutoff = 100;
+    const [sims,setSims] = useState(2)
 
+    const handleSims = (event) => setSims(event.target.value)
+    
     function handleChange(event) {
         const { name, value } = getInputEventValue(event);
         const newParams = { ...params, [name]: value };
@@ -98,7 +101,9 @@ export function InputForm({
     function handleSubmit(event) {
         event.preventDefault();
         if (onSubmit) {
-            onSubmit(params);
+            const newParams = {...params,['sim_total']: sims}
+            mergeParams(newParams)
+            onSubmit(newParams);
         }
     }
 
@@ -412,8 +417,8 @@ export function InputForm({
                     id="sim_total"
                     name="sim_total"
                     className="form-control"
-                    value={params.sim_total || ''}
-                    onChange={handleChange} />
+                    value={sims}
+                    onChange={handleSims} />
             </OverlayTrigger>
         </div>
 
