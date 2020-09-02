@@ -36,20 +36,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
             <Accordion.Collapse eventKey="0">
                 <Card.Body>
                     <form>
-                        {params.sim_total > 1 && <div className="row mb-2">
-                            <div className="col-lg-4 form-group">
-                                <label htmlFor="p_thresh" className="font-weight-bold text-nowrap">Power Threshold</label>
-                                <OverlayTrigger overlay={<Tooltip id="samp_case_tooltip">Specify a numeric value between 0 and 1 (default = 0.8) for the power threshold.</Tooltip>}>
-                                    <input
-                                        type="number"
-                                        step="any"
-                                        id="p_thresh"
-                                        name="p_thresh"
-                                        className="form-control"
-                                        value={params.p_thresh}
-                                        onChange={handleChange} />
-                                </OverlayTrigger>
-                            </div>
+                        <div className="row mb-2">
+
                             <div className="col-lg form-inline mt-lg-3 mb-lg-0 mb-3">
                                 <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
@@ -64,7 +52,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </OverlayTrigger>
                                 </div>
 
-                                <div className="form-group custom-control custom-checkbox">
+                                <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
                                         type="checkbox"
                                         className="custom-control-input"
@@ -76,55 +64,43 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
                                     </OverlayTrigger>
                                 </div>
+
+                                <div className="form-group custom-control custom-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        className="custom-control-input"
+                                        id="cascon"
+                                        name="cascon"
+                                        onChange={handleChange} />
+                                    <OverlayTrigger overlay={<Tooltip id="cascon_tooltip">If checked, computes the statistical power to detect case clusters and control clusters. If not, computes the statistical power to detect case clusters only.</Tooltip>}>
+                                        <label className="custom-control-label" htmlFor="cascon">Detect Control Clusters</label>
+                                    </OverlayTrigger>
+                                </div>
                             </div>
-                        </div>}
+                        </div>
 
-                        <div className="row" style={{ width: '85%' }}>
-                            {params.sim_total > 1 && <div className="col-lg form-group">
-                                <label htmlFor="suff_color" className="font-weight-bold text-nowrap">Sufficiently Powered</label>
-                                <OverlayTrigger overlay={<Tooltip id="suff_color_tooltip">Select the color of sufficiently powered regions</Tooltip>}>
+                        <div className="row" style={{ width: '87%' }}>
+
+                            <div className="col-lg form-group">
+                                <label htmlFor="case_symbol" className="font-weight-bold text-nowrap">Case Symbol</label>
+                                <OverlayTrigger overlay={<Tooltip id="case_symbol_tooltip">Select the case symbol</Tooltip>}>
                                     <select
-                                        id="suff_color"
-                                        name="suff_color"
-                                        className="custom-select"
-                                        value={params.suff_color}
+                                        id="case_symbol"
+                                        name="case_symbol"
+                                        className="custom-select r-symbols"
+                                        value={params.case_symbol}
                                         onChange={handleChange}>
                                         <option value="" hidden>(select option)</option>
-                                        <option value="red">Red</option>
-                                        <option value="orange">Orange</option>
-                                        <option value="yellow">Yellow</option>
-                                        <option value="green">Green</option>
-                                        <option value="blue">Blue</option>
-                                        <option value="purple">Purple</option>
-                                        <option value="black">Black</option>
-                                        <option value="white">White</option>
-                                        <option value="grey">Grey</option>
+                                        <option value="16">Closed Circle (&#xe810;)</option>
+                                        <option value="1">Open Circle (&#xe801;)</option>
+                                        <option value="0">Open Square (&#xe800;)</option>
+                                        <option value="3">Plus (&#xe803;)</option>
+                                        <option value="8">Star (&#xe808;)</option>
+                                        <option value="4">Cross (&#xe804;)</option>
                                     </select>
                                 </OverlayTrigger>
-                            </div>}
+                            </div>
 
-                            {params.sim_total > 1 && <div className="col-lg form-group">
-                                <label htmlFor="insuff_color" className="font-weight-bold text-nowrap">Insufficiently Powered</label>
-                                <OverlayTrigger overlay={<Tooltip id="insuff_color_tooltip">Select the color of insufficiently powered regions</Tooltip>}>
-                                    <select
-                                        id="insuff_color"
-                                        name="insuff_color"
-                                        className="custom-select"
-                                        value={params.insuff_color}
-                                        onChange={handleChange}>
-                                        <option value="" hidden>(select option)</option>
-                                        <option value="red">Red</option>
-                                        <option value="orange">Orange</option>
-                                        <option value="yellow">Yellow</option>
-                                        <option value="green">Green</option>
-                                        <option value="blue">Blue</option>
-                                        <option value="purple">Purple</option>
-                                        <option value="black">Black</option>
-                                        <option value="white">White</option>
-                                        <option value="grey">Grey</option>
-                                    </select>
-                                </OverlayTrigger>
-                            </div>}
                             <div className="col-lg form-group">
                                 <label htmlFor="case_color" className="font-weight-bold text-nowrap">Case Symbol Color</label>
                                 <OverlayTrigger overlay={<Tooltip id="case_color_tooltip">Select the color of case symbols</Tooltip>}>
@@ -144,6 +120,43 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         <option value="black">Black</option>
                                         <option value="white">White</option>
                                         <option value="grey">Grey</option>
+                                    </select>
+                                </OverlayTrigger>
+                            </div>
+
+                            <div className="col-lg form-group">
+                                <label htmlFor="case_size" className="font-weight-bold text-nowrap">Case Symbol Size</label>
+                                <OverlayTrigger overlay={<Tooltip id="case_size_tooltip">Specify a numeric value for the size of case symbols</Tooltip>}>
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        id="case_size"
+                                        name="case_size"
+                                        className="form-control"
+                                        value={params.case_size}
+                                        onChange={handleChange} />
+                                </OverlayTrigger>
+                            </div>
+
+                        </div>
+
+                        <div className="row" style={{ width: '87%' }}>
+                            <div className="col-lg form-group">
+                                <label htmlFor="control_symbol" className="font-weight-bold text-nowrap">Control Symbol</label>
+                                <OverlayTrigger overlay={<Tooltip id="control_symbol_tooltip">Select the control symbol</Tooltip>}>
+                                    <select
+                                        id="control_symbol"
+                                        name="control_symbol"
+                                        className="custom-select r-symbols"
+                                        value={params.control_symbol}
+                                        onChange={handleChange}>
+                                        <option value="" hidden>(select option)</option>
+                                        <option value="16">Closed Circle (&#xe810;)</option>
+                                        <option value="1">Open Circle (&#xe801;)</option>
+                                        <option value="0">Open Square (&#xe800;)</option>
+                                        <option value="3">Plus (&#xe803;)</option>
+                                        <option value="8">Star (&#xe808;)</option>
+                                        <option value="4">Cross (&#xe804;)</option>
                                     </select>
                                 </OverlayTrigger>
                             </div>
@@ -170,103 +183,97 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
 
-                            {params.sim_total === 1 && <div className="col-lg form-group form-inline mt-md-3 mb-md-0 mb-3" style={{ minWidth: '60%' }}>
-                                <div className="form-group custom-control custom-checkbox mr-3">
+                            <div className="col-lg form-group">
+                                <label htmlFor="control_size" className="font-weight-bold text-nowrap">Control Symbol Size</label>
+                                <OverlayTrigger overlay={<Tooltip id="control_size_tooltip">Specify a numeric value for the size of control symbols</Tooltip>}>
                                     <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="plot_pts"
-                                        name="plot_pts"
-                                        checked={params.plot_pts}
+                                        type="number"
+                                        step="any"
+                                        id="control_size"
+                                        name="control_size"
+                                        className="form-control"
+                                        value={params.control_size}
                                         onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
-                                    </OverlayTrigger>
-                                </div>
-
-                                <div className="form-group custom-control custom-checkbox">
-                                    <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="title"
-                                        name="title"
-                                        checked={params.title}
-                                        onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plots titles.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
-                                    </OverlayTrigger>
-                                </div>
-                            </div>}
+                                </OverlayTrigger>
+                            </div>
                         </div>
 
-                        <div className="row" style={{marginLeft: '0',marginRight: '0'}}>
-                            <div className="row" style={{ width: '85%' }}>
-                                <div className="col-lg form-group">
-                                    <label htmlFor="case_symbol" className="font-weight-bold text-nowrap">Case Symbol</label>
-                                    <OverlayTrigger overlay={<Tooltip id="case_symbol_tooltip">Select the case symbol</Tooltip>}>
-                                        <select
-                                            id="case_symbol"
-                                            name="case_symbol"
-                                            className="custom-select r-symbols"
-                                            value={params.case_symbol}
-                                            onChange={handleChange}>
-                                            <option value="" hidden>(select option)</option>
-                                            <option value="16">Closed Circle (&#xe810;)</option>
-                                            <option value="1">Open Circle (&#xe801;)</option>
-                                            <option value="0">Open Square (&#xe800;)</option>
-                                            <option value="3">Plus (&#xe803;)</option>
-                                            <option value="8">Star (&#xe808;)</option>
-                                            <option value="4">Cross (&#xe804;)</option>
-                                        </select>
-                                    </OverlayTrigger>
-                                </div>
-                                <div className="col-lg form-group">
-                                    <label htmlFor="control_symbol" className="font-weight-bold text-nowrap">Control Symbol</label>
-                                    <OverlayTrigger overlay={<Tooltip id="control_symbol_tooltip">Select the control symbol</Tooltip>}>
-                                        <select
-                                            id="control_symbol"
-                                            name="control_symbol"
-                                            className="custom-select r-symbols"
-                                            value={params.control_symbol}
-                                            onChange={handleChange}>
-                                            <option value="" hidden>(select option)</option>
-                                            <option value="16">Closed Circle (&#xe810;)</option>
-                                            <option value="1">Open Circle (&#xe801;)</option>
-                                            <option value="0">Open Square (&#xe800;)</option>
-                                            <option value="3">Plus (&#xe803;)</option>
-                                            <option value="8">Star (&#xe808;)</option>
-                                            <option value="4">Cross (&#xe804;)</option>
-                                        </select>
-                                    </OverlayTrigger>
-                                </div>
+                        <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
+                            <div className="row d-flex" style={{ width: '87%' }}>
 
-                                <div className="col-lg form-group">
-                                    <label htmlFor="case_size" className="font-weight-bold text-nowrap">Case Symbol Size</label>
-                                    <OverlayTrigger overlay={<Tooltip id="case_size_tooltip">Specify a numeric value for the size of case symbols</Tooltip>}>
+                                <div className="col-lg form-group" style={{maxWidth:'33.3%'}}>
+                                    <label htmlFor="p_thresh" className="font-weight-bold text-nowrap">Power Threshold</label>
+                                    <OverlayTrigger overlay={<Tooltip id="samp_case_tooltip">Specify a numeric value between 0 and 1 (default = 0.8) for the power threshold.</Tooltip>}>
                                         <input
                                             type="number"
                                             step="any"
-                                            id="case_size"
-                                            name="case_size"
+                                            id="p_thresh"
+                                            name="p_thresh"
                                             className="form-control"
-                                            value={params.case_size}
+                                            value={params.p_thresh}
                                             onChange={handleChange} />
                                     </OverlayTrigger>
                                 </div>
 
-                                <div className="col-lg form-group">
-                                    <label htmlFor="control_size" className="font-weight-bold text-nowrap">Control Symbol Size</label>
-                                    <OverlayTrigger overlay={<Tooltip id="control_size_tooltip">Specify a numeric value for the size of control symbols</Tooltip>}>
+                                {params.cascon && <div className="col-lg form-group" style={{maxWidth:'33.3%'}}>
+                                    <label htmlFor="upper_tail" className="font-weight-bold required">Upper Tail</label>
+                                    <OverlayTrigger overlay={<Tooltip id="upper_tail_tooltip">Optional. Specify a numeric value for the upper p-value threshold (default=0.975).</Tooltip>}>
                                         <input
                                             type="number"
                                             step="any"
-                                            id="control_size"
-                                            name="control_size"
+                                            id="upper_tail"
+                                            name="upper_tail"
                                             className="form-control"
-                                            value={params.control_size}
+                                            value={params.upper_tail}
                                             onChange={handleChange} />
                                     </OverlayTrigger>
-                                </div>
+                                </div>}
+
+                                {params.sim_total > 1 && <div className="col-lg form-group">
+                                    <label htmlFor="suff_color" className="font-weight-bold text-nowrap">Sufficiently Powered</label>
+                                    <OverlayTrigger overlay={<Tooltip id="suff_color_tooltip">Select the color of sufficiently powered regions</Tooltip>}>
+                                        <select
+                                            id="suff_color"
+                                            name="suff_color"
+                                            className="custom-select"
+                                            value={params.suff_color}
+                                            onChange={handleChange}>
+                                            <option value="" hidden>(select option)</option>
+                                            <option value="red">Red</option>
+                                            <option value="orange">Orange</option>
+                                            <option value="yellow">Yellow</option>
+                                            <option value="green">Green</option>
+                                            <option value="blue">Blue</option>
+                                            <option value="purple">Purple</option>
+                                            <option value="black">Black</option>
+                                            <option value="white">White</option>
+                                            <option value="grey">Grey</option>
+                                        </select>
+                                    </OverlayTrigger>
+                                </div>}
+
+                                {params.sim_total > 1 && <div className="col-lg form-group">
+                                    <label htmlFor="insuff_color" className="font-weight-bold text-nowrap">Insufficiently Powered</label>
+                                    <OverlayTrigger overlay={<Tooltip id="insuff_color_tooltip">Select the color of insufficiently powered regions</Tooltip>}>
+                                        <select
+                                            id="insuff_color"
+                                            name="insuff_color"
+                                            className="custom-select"
+                                            value={params.insuff_color}
+                                            onChange={handleChange}>
+                                            <option value="" hidden>(select option)</option>
+                                            <option value="red">Red</option>
+                                            <option value="orange">Orange</option>
+                                            <option value="yellow">Yellow</option>
+                                            <option value="green">Green</option>
+                                            <option value="blue">Blue</option>
+                                            <option value="purple">Purple</option>
+                                            <option value="black">Black</option>
+                                            <option value="white">White</option>
+                                            <option value="grey">Grey</option>
+                                        </select>
+                                    </OverlayTrigger>
+                                </div>}
                             </div>
 
                             <div className="form-group">
