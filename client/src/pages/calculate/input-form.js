@@ -20,6 +20,23 @@ export function InputForm({
 
     const handleSims = (event) => setSims(event.target.value)
 
+    function checkRequired(){
+
+        if(!params.samp_case || !params.samp_control)
+            return false;
+
+        if(params.queue)
+            return params.email && params.job_name;
+
+        if(params.samp_case)
+            return params.x_case && params.y_case && params.r_case && params.s_case; 
+        
+        if(params.samp_control)
+            return params.x_control && params.y_control && params.r_control && params.samp_control
+
+        return sims && params.rand_seed && params.n_case && params.n_control && params.lower_tail;
+    }
+
     function handleChange(event) {
         const { name, value } = getInputEventValue(event);
         const newParams = { ...params, [name]: value };
@@ -33,21 +50,22 @@ export function InputForm({
         }
 
         // set default parameters
-        if (name === 'win' && newParams.win == 'unit_circle' || newParams.win == 'unit_square') {
+        if ((name === 'win' || name === 'samp_case') && (newParams.win == 'unit_circle' || newParams.win == 'unit_square')) {
 
             newParams.x_case = 0.5
             newParams.y_case = 0.5
             newParams.s_case = 0.33
             newParams.r_case = 0.5
+        }
 
-
+        if((name === 'win' || name === 'samp_control') && (newParams.win == 'unit_circle' || newParams.win == 'unit_square')){
             newParams.x_control = 0.5
             newParams.y_control = 0.5
             newParams.s_control = 0.33
             newParams.r_control = 0.5
         }
 
-        else if (newParams.win === 'rectangle' && name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'width' || name === 'height') {
+        if (newParams.win === 'rectangle' && name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'width' || name === 'height') {
 
             if (name === 'win') {
                 newParams.x_origin = 0
@@ -91,7 +109,7 @@ export function InputForm({
 
     function handleBlur(event) {
         const { name, value, dataset } = event.target;
-        const newParams = { ...params, [name]: value };
+        const newParams = { ...params, [name]: value }; 
 
         if (dataset.type === 'number-array')
             newParams[name] = value.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
@@ -141,7 +159,7 @@ export function InputForm({
             {params.win === "rectangle" && <>
                 <div className="row">
                     <div className="col-md-6 form-group">
-                        <label htmlFor="x_origin" className="font-weight-bold required">X Origin</label>
+                        <label htmlFor="x_origin" className="font-weight-bold">X Origin</label>
                         <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the lower left corner</Tooltip>}>
                             <input
                                 type="number"
@@ -150,12 +168,13 @@ export function InputForm({
                                 step="any"
                                 className="form-control"
                                 value={params.x_origin}
-                                onChange={handleChange} />
+                                onChange={handleChange}
+                                onBlur={handleBlur} />
                         </OverlayTrigger>
                     </div>
 
                     <div className="col-md-6 form-group">
-                        <label htmlFor="y_origin" className="font-weight-bold required">Y Origin</label>
+                        <label htmlFor="y_origin" className="font-weight-bold">Y Origin</label>
                         <OverlayTrigger overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the lower left corner</Tooltip>}>
                             <input
                                 type="number"
@@ -164,14 +183,15 @@ export function InputForm({
                                 step="any"
                                 className="form-control"
                                 value={params.y_origin}
-                                onChange={handleChange} />
+                                onChange={handleChange}
+                                onBlur={handleBlur} />
                         </OverlayTrigger>
                     </div>
                 </div>
 
                 <div className="row">
                     <div className="col-md-6 form-group">
-                        <label htmlFor="width" className="font-weight-bold required">Width</label>
+                        <label htmlFor="width" className="font-weight-bold">Width</label>
                         <OverlayTrigger overlay={<Tooltip id="width_tooltip">Enter the width of the rectangle</Tooltip>}>
                             <input
                                 type="number"
@@ -186,7 +206,7 @@ export function InputForm({
                     </div>
 
                     <div className="col-md-6 form-group">
-                        <label htmlFor="height" className="font-weight-bold required">Height</label>
+                        <label htmlFor="height" className="font-weight-bold">Height</label>
                         <OverlayTrigger overlay={<Tooltip id="height_tooltip">Enter the height of the rectangle</Tooltip>}>
                             <input
                                 type="number"
@@ -204,7 +224,7 @@ export function InputForm({
 
             {params.win === "circle" && <div className="row">
                 <div className="col-md-4 form-group">
-                    <label htmlFor="x_origin" className="font-weight-bold required">X Origin</label>
+                    <label htmlFor="x_origin" className="font-weight-bold">X Origin</label>
                     <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the center of the circle</Tooltip>}>
                         <input
                             type="number"
@@ -218,7 +238,7 @@ export function InputForm({
                 </div>
 
                 <div className="col-md-4 form-group">
-                    <label htmlFor="y_origin" className="font-weight-bold required">Y Origin</label>
+                    <label htmlFor="y_origin" className="font-weight-bold">Y Origin</label>
                     <OverlayTrigger overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the center of the circle</Tooltip>}>
                         <input
                             type="number"
@@ -232,7 +252,7 @@ export function InputForm({
                 </div>
 
                 <div className="col-md-4 form-group">
-                    <label htmlFor="radius" className="font-weight-bold required">Radius</label>
+                    <label htmlFor="radius" className="font-weight-bold">Radius</label>
                     <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Enter the radius of the circle</Tooltip>}>
                         <input
                             type="number"
@@ -277,7 +297,7 @@ export function InputForm({
                         id="x_case"
                         name="x_case"
                         className="form-control"
-                        value={params.x_case}
+                        value={params.x_case || ''}
                         onChange={handleChange}
                         onBlur={handleBlur} />
                 </OverlayTrigger>
@@ -549,7 +569,7 @@ export function InputForm({
                 Reset
             </button>
 
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" disabled={!checkRequired()}>
                 Submit
             </button>
         </div>
