@@ -61,3 +61,9 @@ hr {
 .custom-checkbox .custom-control-input[readonly]:checked ~ .custom-control-label::before {
     background-color: rgba(24, 83, 148, 0.5);
 }
+
+.legend{
+    font-size: 1.2rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
