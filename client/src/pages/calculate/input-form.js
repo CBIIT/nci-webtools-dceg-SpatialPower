@@ -20,21 +20,28 @@ export function InputForm({
     const [submitted, setSubmit] = useState(false)
 
     const handleSims = (event) => {
-        setSims(event.target.value)
+        
+        const numSims = event.target.value;
+
+        setSims(numSims)
+        if(numSims > simQueueCutoff){
+            mergeParams({queue: true})
+        }
+            
         setSubmit(false)
     }
-    function checkRequired(){
+    function checkRequired() {
 
-        if(!params.samp_case || !params.samp_control)
+        if (!params.samp_case || !params.samp_control)
             return false;
 
-        if(params.queue)
+        if (params.queue)
             return params.email && params.job_name;
 
-        if(params.samp_case)
-            return params.x_case && params.y_case && params.r_case && params.s_case; 
-        
-        if(params.samp_control)
+        if (params.samp_case)
+            return params.x_case && params.y_case && params.r_case && params.s_case;
+
+        if (params.samp_control)
             return params.x_control && params.y_control && params.r_control && params.samp_control
 
         return sims && params.rand_seed && params.n_case && params.n_control && params.lower_tail;
@@ -62,7 +69,7 @@ export function InputForm({
             newParams.r_case = 0.5
         }
 
-        if((name === 'win' || name === 'samp_control') && (newParams.win == 'unit_circle' || newParams.win == 'unit_square')){
+        if ((name === 'win' || name === 'samp_control') && (newParams.win == 'unit_circle' || newParams.win == 'unit_square')) {
             newParams.x_control = 0.5
             newParams.y_control = 0.5
             newParams.s_control = 0.33
@@ -113,7 +120,7 @@ export function InputForm({
 
     function handleBlur(event) {
         const { name, value, dataset } = event.target;
-        const newParams = { ...params, [name]: value }; 
+        const newParams = { ...params, [name]: value };
 
         if (dataset.type === 'number-array')
             newParams[name] = value.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
@@ -353,6 +360,20 @@ export function InputForm({
                         onBlur={handleBlur} />
                 </OverlayTrigger>
             </div>}
+            <div className="form-group">
+                <label htmlFor="n_case" className="font-weight-bold required">N Case</label>
+                <OverlayTrigger overlay={<Tooltip id="n_case_tooltip">Specify the sample size for case locations in each cluster as a numeric value or vector.</Tooltip>}>
+                    <input
+                        type="text"
+                        data-type="number-array"
+                        id="n_case"
+                        name="n_case"
+                        className="form-control"
+                        value={params.n_case || ''}
+                        onChange={handleChange}
+                        onBlur={handleBlur} />
+                </OverlayTrigger>
+            </div>
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
@@ -438,6 +459,20 @@ export function InputForm({
                         onBlur={handleBlur} />
                 </OverlayTrigger>
             </div>}
+            <div className="form-group">
+                <label htmlFor="n_control" className="font-weight-bold required">N Control</label>
+                <OverlayTrigger overlay={<Tooltip id="n_control_tooltip">Specify the sample size for control locations in each cluster as a numeric value or vector.</Tooltip>}>
+                    <input
+                        type="text"
+                        data-type="number-array"
+                        id="n_control"
+                        name="n_control"
+                        className="form-control"
+                        value={params.n_control || ''}
+                        onChange={handleChange}
+                        onBlur={handleBlur} />
+                </OverlayTrigger>
+            </div>
         </fieldset>
 
         <div className="form-group">
@@ -467,37 +502,6 @@ export function InputForm({
         </div>
 
         <div className="form-group">
-            <label htmlFor="n_case" className="font-weight-bold required">N Case</label>
-            <OverlayTrigger overlay={<Tooltip id="n_case_tooltip">Specify the sample size for case locations in each cluster as a numeric value or vector.</Tooltip>}>
-                <input
-                    type="text"
-                    data-type="number-array"
-                    id="n_case"
-                    name="n_case"
-                    className="form-control"
-                    value={params.n_case || ''}
-                    onChange={handleChange}
-                    onBlur={handleBlur} />
-            </OverlayTrigger>
-        </div>
-
-
-        <div className="form-group">
-            <label htmlFor="n_control" className="font-weight-bold required">N Control</label>
-            <OverlayTrigger overlay={<Tooltip id="n_control_tooltip">Specify the sample size for control locations in each cluster as a numeric value or vector.</Tooltip>}>
-                <input
-                    type="text"
-                    data-type="number-array"
-                    id="n_control"
-                    name="n_control"
-                    className="form-control"
-                    value={params.n_control || ''}
-                    onChange={handleChange}
-                    onBlur={handleBlur} />
-            </OverlayTrigger>
-        </div>
-
-        <div className="form-group">
             <label htmlFor="lower_tail" className="font-weight-bold required">Lower Tail</label>
             <OverlayTrigger overlay={<Tooltip id="lower_tail_tooltip">Optional. Specify a numeric value for the lower p-value threshold (default=0.025).</Tooltip>}>
                 <input
@@ -523,7 +527,7 @@ export function InputForm({
                     name="queue"
                     checked={params.queue}
                     onChange={handleChange}
-                    readOnly={params.sim_total > simQueueCutoff} />
+                    readOnly={sims > simQueueCutoff} />
 
                 <OverlayTrigger overlay={<Tooltip id="queue_tooltip">If checked, submit this job to a processing queue and receive results via email. This option will always be selected if more than {simQueueCutoff} simulations will be run.</Tooltip>}>
                     <label className="custom-control-label" htmlFor="queue">Submit Job to Queue</label>
