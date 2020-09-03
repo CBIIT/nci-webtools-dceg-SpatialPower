@@ -142,7 +142,7 @@ export function InputForm({
 
     return <form className={className} onSubmit={handleSubmit} onReset={handleReset}>
         <fieldset className="border px-3 mb-4">
-            <legend className="legend" style={{ width: '32%' }}>Spatial Window</legend>
+            <legend className="legend" style={{ width: '26%' }}>Spatial Window</legend>
             <div className="form-group">
                 <label htmlFor="win" className="font-weight-bold required">Window Shape</label>
                 <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the shape of the window</Tooltip>}>
@@ -173,8 +173,7 @@ export function InputForm({
                                 step="any"
                                 className="form-control"
                                 value={params.x_origin}
-                                onChange={handleChange}
-                                onBlur={handleBlur} />
+                                onChange={handleChange} />
                         </OverlayTrigger>
                     </div>
 
@@ -188,8 +187,7 @@ export function InputForm({
                                 step="any"
                                 className="form-control"
                                 value={params.y_origin}
-                                onChange={handleChange}
-                                onBlur={handleBlur} />
+                                onChange={handleChange} />
                         </OverlayTrigger>
                     </div>
                 </div>
@@ -274,7 +272,7 @@ export function InputForm({
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
-            <legend className="legend" style={{ width: '28%' }}>Sample Case</legend>
+            <legend className="legend" style={{ width: '24%' }}>Sample Case</legend>
             <div className="form-group">
                 <label htmlFor="samp_case" className="font-weight-bold required">Case Type</label>
                 <OverlayTrigger overlay={<Tooltip id="samp_case_tooltip">Specify how case locations are randomized.</Tooltip>}>
@@ -358,7 +356,7 @@ export function InputForm({
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
-            <legend className="legend" style={{ width: '33%' }}>Sample Control</legend>
+            <legend className="legend" style={{ width: '28%' }}>Sample Control</legend>
             <div className="form-group">
                 <label htmlFor="samp_control" className="font-weight-bold required">Control Type</label>
                 <OverlayTrigger overlay={<Tooltip id="samp_control_tooltip">Specify how control locations are randomized.</Tooltip>}>
