@@ -80,6 +80,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         className="custom-control-input"
                                         id="cascon"
                                         name="cascon"
+                                        checked={params.cascon}
                                         onChange={handleChange} />
                                     <OverlayTrigger overlay={<Tooltip id="cascon_tooltip">If checked, computes the statistical power to detect case clusters and control clusters. If not, computes the statistical power to detect case clusters only.</Tooltip>}>
                                         <label className="custom-control-label" htmlFor="cascon">Detect Control Clusters</label>
