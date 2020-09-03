@@ -28,6 +28,14 @@ export function PlotOptions({ onSubmit = e => { } }) {
         mergeParams({ [name]: value });
     }
 
+    function checkRequired(){
+
+        if(params.cascon)
+            return params.upper_tail
+
+        return true;
+    }
+
     return <Accordion onSelect={setSelectedAccordionPanel}>
         <Card className="shadow-sm mb-3">
             <Accordion.Toggle as={Card.Header} eventKey="0" role="button">
@@ -285,6 +293,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         id="replot"
                                         type="submit"
                                         className="btn btn-primary mr-1 ml-5"
+                                        disabled={!checkRequired()}
                                         onClick={handleSubmit}>
                                         Re-Plot
                                     </button>
