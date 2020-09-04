@@ -133,7 +133,6 @@ export function InputForm({
         if (onSubmit) {
             setSubmit(true)
             const newParams = { ...params, ['sim_total']: Number(sims) }
-            console.log(typeof newParams.sim_total)
             mergeParams(newParams)
             onSubmit(newParams);
         }
