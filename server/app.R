@@ -99,6 +99,8 @@ plot_results <- function(results, params) {
     # svg files are rather large compared to other formats due to a large number of paths
     # svg width/heights are specified in inches, not pixels
 
+    scale <- sqrt(params$plot_width ^ 2 + params$plot_height ^ 2)/sqrt(480 ^ 2 + 480 ^ 2)
+
     # set up graphics device
     do.call(params$plot_format, list(
         filename = paste0("plot-%d.", params$plot_format),
@@ -113,6 +115,7 @@ plot_results <- function(results, params) {
             plot_pts = params$plot_pts,
             plot_title = params$title, 
             cascon = as.logical(params$cascon),
+            scale = scale,
             cols = params$cols)
     dev.off()
 
