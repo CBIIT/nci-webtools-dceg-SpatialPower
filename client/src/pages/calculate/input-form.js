@@ -122,8 +122,11 @@ export function InputForm({
         const { name, value, dataset } = event.target;
         const newParams = { ...params, [name]: value };
 
+
         if (dataset.type === 'number-array')
             newParams[name] = value.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
+        else if(dataset.type === 'number')
+            newParams[name] = Number(value)
 
         mergeParams(newParams);
     }
@@ -132,7 +135,7 @@ export function InputForm({
         event.preventDefault();
         if (onSubmit) {
             setSubmit(true)
-            const newParams = { ...params, ['sim_total']: Number(sims) }
+            const newParams = { ...params, ['sim_total']: Number(sims) }    
             mergeParams(newParams)
             onSubmit(newParams);
         }
@@ -174,13 +177,15 @@ export function InputForm({
                         <label htmlFor="x_origin" className="font-weight-bold">X Origin</label>
                         <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the lower left corner</Tooltip>}>
                             <input
-                                type="number"
+                                type="text"
+                                data-type="number"
                                 id="x_origin"
                                 name="x_origin"
                                 step="any"
                                 className="form-control"
                                 value={params.x_origin}
-                                onChange={handleChange} />
+                                onChange={handleChange}
+                                onBlur={handleBlur}/>
                         </OverlayTrigger>
                     </div>
 
@@ -188,13 +193,15 @@ export function InputForm({
                         <label htmlFor="y_origin" className="font-weight-bold">Y Origin</label>
                         <OverlayTrigger overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the lower left corner</Tooltip>}>
                             <input
-                                type="number"
+                                type="text"
+                                data-type="number"
                                 id="y_origin"
                                 name="y_origin"
                                 step="any"
                                 className="form-control"
                                 value={params.y_origin}
-                                onChange={handleChange} />
+                                onChange={handleChange} 
+                                onBlur={handleBlur}/>
                         </OverlayTrigger>
                     </div>
                 </div>
@@ -237,13 +244,15 @@ export function InputForm({
                     <label htmlFor="x_origin" className="font-weight-bold">X Origin</label>
                     <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the center of the circle</Tooltip>}>
                         <input
-                            type="number"
+                            type="text"
+                            data-type="number"
                             id="x_origin"
                             name="x_origin"
                             step="any"
                             className="form-control"
                             value={params.x_origin}
-                            onChange={handleChange} />
+                            onChange={handleChange} 
+                            onBlur={handleBlur}/>
                     </OverlayTrigger>
                 </div>
 
@@ -251,13 +260,15 @@ export function InputForm({
                     <label htmlFor="y_origin" className="font-weight-bold">Y Origin</label>
                     <OverlayTrigger overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the center of the circle</Tooltip>}>
                         <input
-                            type="number"
+                            type="text"
+                            data-type="number"
                             id="y_origin"
                             name="y_origin"
                             step="any"
                             className="form-control"
                             value={params.y_origin}
-                            onChange={handleChange} />
+                            onChange={handleChange} 
+                            onBlur={handleBlur}/>
                     </OverlayTrigger>
                 </div>
 
