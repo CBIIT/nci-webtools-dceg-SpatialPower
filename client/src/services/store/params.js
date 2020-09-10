@@ -9,6 +9,7 @@ export const getInitialState = () => ({
     height: 2,
     radius: 1,
     sim_total: 2,
+    final_sims: 2,
     x_case: '',
     y_case: '',
     samp_case: '',

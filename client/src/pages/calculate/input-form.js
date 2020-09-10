@@ -16,7 +16,7 @@ export function InputForm({
     const mergeParams = value => dispatch(actions.mergeParams(value));
     const resetParams = _ => dispatch(actions.resetParams());
     const simQueueCutoff = 100;
-    const [sims, setSims] = useState(2)
+    const [sims, setSims] = useState(params.sim_total)
     const [submitted, setSubmit] = useState(false)
 
     const handleSims = (event) => {
@@ -135,7 +135,7 @@ export function InputForm({
         event.preventDefault();
         if (onSubmit) {
             setSubmit(true)
-            const newParams = { ...params, ['sim_total']: Number(sims) }    
+            const newParams = { ...params, ['final_sims']: params.sim_total }    
             mergeParams(newParams)
             onSubmit(newParams);
         }
@@ -494,8 +494,8 @@ export function InputForm({
                     id="sim_total"
                     name="sim_total"
                     className="form-control"
-                    value={sims}
-                    onChange={handleSims} />
+                    value={params.sim_total}
+                    onChange={handleChange} />
             </OverlayTrigger>
         </div>
 

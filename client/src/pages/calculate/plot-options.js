@@ -14,6 +14,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
     const mergeParams = value => dispatch(actions.mergeParams(value));
     const [selectedAccordionPanel, setSelectedAccordionPanel] = useState(null);
     const isMac = /Mac|iPhone|iPod|iPad/.test(navigator.platform);
+
     if (!plots || !plots.length) return null;
 
     function handleSubmit(event) {
@@ -48,7 +49,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                         <div className="row mb-2">
 
                             <div className="col-lg form-inline mt-lg-3 mb-lg-0 mb-3">
-                                {params.sim_total > 1 && <div className="form-group custom-control custom-checkbox mr-3">
+                                {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
                                         type="checkbox"
                                         className="custom-control-input"
@@ -69,16 +70,16 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         name="title"
                                         checked={params.title}
                                         onChange={handleChange} />
-                                    {params.sim_total > 1 && <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plot titles.</Tooltip>}>
+                                    {params.final_sims > 1 && <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plot titles.</Tooltip>}>
                                         <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
                                     </OverlayTrigger>}
 
-                                    {params.sim_total === 1 && <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plot titles.</Tooltip>}>
+                                    {params.final_sims === 1 && <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plot titles.</Tooltip>}>
                                         <label className="custom-control-label" htmlFor="title">Display Plot Title</label>
                                     </OverlayTrigger>}
                                 </div>
 
-                                {params.sim_total > 1 && <div className="form-group custom-control custom-checkbox">
+                                {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox">
                                     <input
                                         type="checkbox"
                                         className="custom-control-input"
@@ -213,7 +214,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </OverlayTrigger>
                                 </div>
                             </div>
-                            {params.sim_total === 1 && <div className="form-group">
+                            {params.final_sims === 1 && <div className="form-group">
                                 <label htmlFor="replot" className="d-block">&nbsp;</label>
                                 <div className="text-center">
                                     <button
@@ -228,7 +229,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                             </div>}
                         </div>
 
-                        {params.sim_total > 1 && <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
+                        {params.final_sims > 1 && <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
                             <div className="row" style={{ width: '85%' }}>
                                 <div className="col-lg form-group">
                                     <label htmlFor="p_thresh" className="font-weight-bold text-nowrap">Power Threshold</label>
