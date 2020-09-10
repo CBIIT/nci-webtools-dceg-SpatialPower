@@ -19,17 +19,6 @@ export function InputForm({
     const [sims, setSims] = useState(params.sim_total)
     const [submitted, setSubmit] = useState(false)
 
-    const handleSims = (event) => {
-        
-        const numSims = event.target.value;
-
-        setSims(numSims)
-        if(numSims > simQueueCutoff){
-            mergeParams({queue: true})
-        }
-            
-        setSubmit(false)
-    }
     function checkRequired() {
 
         if (!params.samp_case || !params.samp_control)
@@ -134,7 +123,10 @@ export function InputForm({
     function handleSubmit(event) {
         event.preventDefault();
         if (onSubmit) {
-            setSubmit(true)
+
+            if(!params.queue)
+                setSubmit(true)
+            
             const newParams = { ...params, ['final_sims']: params.sim_total }    
             mergeParams(newParams)
             onSubmit(newParams);
