@@ -16,7 +16,6 @@ export function InputForm({
     const mergeParams = value => dispatch(actions.mergeParams(value));
     const resetParams = _ => dispatch(actions.resetParams());
     const simQueueCutoff = 100;
-    const [sims, setSims] = useState(params.sim_total)
     const [submitted, setSubmit] = useState(false)
 
     function checkRequired() {
@@ -33,7 +32,7 @@ export function InputForm({
         if (params.samp_control)
             return params.x_control && params.y_control && params.r_control && params.samp_control
 
-        return sims && params.rand_seed && params.n_case && params.n_control && params.lower_tail;
+        return params.sim_total && params.rand_seed && params.n_case && params.n_control && params.lower_tail;
     }
 
     function handleChange(event) {
@@ -530,7 +529,7 @@ export function InputForm({
                     name="queue"
                     checked={params.queue}
                     onChange={handleChange}
-                    readOnly={sims > simQueueCutoff} />
+                    readOnly={params.sim_total > simQueueCutoff} />
 
                 <OverlayTrigger overlay={<Tooltip id="queue_tooltip">If checked, submit this job to a processing queue and receive results via email. This option will always be selected if more than {simQueueCutoff} simulations will be run.</Tooltip>}>
                     <label className="custom-control-label" htmlFor="queue">Submit Job to Queue</label>
