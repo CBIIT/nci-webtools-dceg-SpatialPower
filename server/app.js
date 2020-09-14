@@ -8,6 +8,7 @@ const AWS = require('aws-sdk');
 const r = require('r-wrapper');
 const config = require('./config.json');
 const logger = require('./utils/logger');
+const process = require('process')
 
 const app = express();
 const apiRouter = express.Router();
@@ -57,18 +58,27 @@ apiRouter.post('/submit', async (request, response) => {
                 MessageGroupId: id,
                 MessageBody: JSON.stringify(body)
             }).promise();
-            response.json({id});
+            response.json({ id });
         } else {
             // ensure working directory exists
             body.directory = path.resolve(config.results.folder, id);
-            await fs.promises.mkdir(body.directory, {recursive: true});
+            await fs.promises.mkdir(body.directory, { recursive: true });
 
             // perform calculation and return results
             const sourcePath = path.resolve(__dirname, 'app.R');
             const results = r(sourcePath, 'calculate', [body]);
+            const renamePlots = ['simulated-data.png', 'local-power-continuous-scale.png', 'local-power-above-threshold.png'];
+            const filePath = process.cwd() + '\\results\\' + results.id + '\\'
+
+            fs.rename(filePath + 'plot-1.png', filePath + renamePlots[0], () => { });
+            fs.rename(filePath + 'plot-2.png', filePath + renamePlots[1], () => { });
+            fs.rename(filePath + 'plot-3.png', filePath + renamePlots[2], () => { });
+
+            results.plots = renamePlots
+
             response.json(results);
         }
-    } catch(error) {
+    } catch (error) {
         const errorText = String(error.stderr || error);
         logger.error(errorText);
         response.status(500).json(errorText);
@@ -81,7 +91,7 @@ apiRouter.post('/replot', async (request, response) => {
     try {
         // validate id format
         if (!/^[a-z0-9]+$/i.test(request.body.id)) {
-            throw(`Invalid id`);
+            throw (`Invalid id`);
         }
 
         const body = Object.assign(request.body, {
@@ -93,8 +103,17 @@ apiRouter.post('/replot', async (request, response) => {
         });
         const sourcePath = path.resolve(__dirname, 'app.R');
         const results = r(sourcePath, 'replot', [body]);
+
+        const renamePlots = ['simulated-data.png', 'local-power-continuous-scale.png', 'local-power-above-threshold.png'];
+        const filePath = process.cwd() + '\\results\\' + request.body.id + '\\'
+
+        fs.rename(filePath + 'plot-1.png', filePath + renamePlots[0], () => { });
+        fs.rename(filePath + 'plot-2.png', filePath + renamePlots[1], () => { });
+        fs.rename(filePath + 'plot-3.png', filePath + renamePlots[2], () => { });
+        results.plots = renamePlots
+
         response.json(results);
-    } catch(error) {
+    } catch (error) {
         const errorText = String(error.stderr || error);
         logger.error(errorText);
         response.status(500).json(errorText);
@@ -113,12 +132,12 @@ apiRouter.post('/export-plots', async (request, response) => {
 
         // validate id format
         if (!/^[a-z0-9]+$/i.test(body.id)) {
-            throw('Invalid id');
+            throw ('Invalid id');
         }
 
         // validate image format
         if (!['bmp', 'jpeg', 'png', 'tiff'].includes(body.plot_format))
-            throw('Invalid format')
+            throw ('Invalid format')
 
         // create temporary directory
         const basePath = path.resolve(config.results.folder, body.id);
@@ -135,6 +154,9 @@ apiRouter.post('/export-plots', async (request, response) => {
         // generate plots
         const sourcePath = path.resolve(__dirname, 'app.R');
         let results = r(sourcePath, 'replot', [body]);
+        const format = request.body.format;
+        results.plots = ['simulated-data.' + format, 'local-power-continuous-scale.' + format, 'local-power-above-threshold.' + format];
+        console.log(results)
         if (!Array.isArray(results)) results = [results];
 
         // zip exported plots
@@ -144,11 +166,11 @@ apiRouter.post('/export-plots', async (request, response) => {
 
         // send generated zip file
         output.on('close', () => response.json(path.basename(zipFilePath)));
-        archive.on('error', err => {throw err});
+        archive.on('error', err => { throw err });
         archive.pipe(output);
         archive.directory(body.directory, false);
         archive.finalize();
-    } catch(error) {
+    } catch (error) {
         logger.error(error);
         response.status(500).json(error.toString());
     }
@@ -163,21 +185,21 @@ apiRouter.get('/fetch-results/:id', async (request, response) => {
 
         // validate id format
         if (!/^[a-z0-9]+$/i.test(id)) {
-            throw(`Invalid id`);
+            throw (`Invalid id`);
         }
 
         // ensure output directory exists
         const resultsFolder = path.resolve(config.results.folder, id);
-        await fs.promises.mkdir(resultsFolder, {recursive: true});
+        await fs.promises.mkdir(resultsFolder, { recursive: true });
 
         // find objects which use the specified id as the prefix
-        const objects =  await s3.listObjectsV2({
+        const objects = await s3.listObjectsV2({
             Bucket: config.s3.bucket,
             Prefix: `${config.s3.outputKeyPrefix}${id}/`,
         }).promise();
 
         // download results
-        for (let {Key} of objects.Contents) {
+        for (let { Key } of objects.Contents) {
             const filename = path.basename(Key);
             const filepath = path.resolve(resultsFolder, filename);
 
@@ -190,7 +212,7 @@ apiRouter.get('/fetch-results/:id', async (request, response) => {
                 }).promise();
 
                 await fs.promises.writeFile(
-                    filepath, 
+                    filepath,
                     object.Body
                 );
             }
@@ -201,12 +223,12 @@ apiRouter.get('/fetch-results/:id', async (request, response) => {
         if (fs.existsSync(resultsFilePath) && fs.existsSync(paramsFilePath)) {
             const params = JSON.parse(String(await fs.promises.readFile(paramsFilePath)));
             const results = JSON.parse(String(await fs.promises.readFile(resultsFilePath)));
-            response.json({params, results});
+            response.json({ params, results });
         } else {
-            throw(`Invalid id`);
+            throw (`Invalid id`);
         }
 
-    } catch(error) {
+    } catch (error) {
         console.log(error);
         logger.error(error.toString());
         response.status(500).json(error.toString());
@@ -221,7 +243,7 @@ app.listen(config.server.port, () => {
 
     // create required folders 
     for (let folder of [config.logs.folder, config.results.folder]) {
-        fs.mkdirSync(folder, {recursive: true});
+        fs.mkdirSync(folder, { recursive: true });
     }
 
     logger.info(`Application is running on port: ${config.server.port}`)

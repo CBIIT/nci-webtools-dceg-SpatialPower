@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import Alert from 'react-bootstrap/Alert';
 import Card from 'react-bootstrap/Card';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import { LoadingOverlay } from '@cbiitss/react-components';
 import { actions as paramsActions } from '../../services/store/params';
 import { actions as resultsActions } from '../../services/store/results';
@@ -15,6 +15,7 @@ const actions = { ...paramsActions, ...resultsActions, ...messagesActions };
 
 export function Calculate({ match }) {
     const dispatch = useDispatch();
+    const params = useSelector(state => state.params)
     const results = useSelector(state => state.results);
     const messages = useSelector(state => state.messages);
     const addMessage = message => dispatch(actions.addMessage(message));
@@ -28,7 +29,7 @@ export function Calculate({ match }) {
     /** Load results when match.params change */
     const { id } = match.params;
     const _loadResults = useCallback(loadResults, [id])
-    useEffect(_ => {_loadResults(id)}, [id, _loadResults]);
+    useEffect(_ => { _loadResults(id) }, [id, _loadResults]);
 
     /**
      * Posts calculation parameters to the 'submit' endpoint and saves results to the store
@@ -54,7 +55,11 @@ export function Calculate({ match }) {
             addMessage({ type: 'danger', text: error });
         } finally {
             const urlKey = new Date().getTime();
-            mergeResults({ loading: false, submitted: true, urlKey });
+            mergeResults({
+                loading: false,
+                submitted: true,
+                urlKey
+            });
         }
     }
 
@@ -73,7 +78,11 @@ export function Calculate({ match }) {
             addMessage({ type: 'danger', text: error });
         } finally {
             const urlKey = new Date().getTime();
-            mergeResults({ loading: false, submitted: true, urlKey });
+            mergeResults({
+                loading: false,
+                submitted: true,
+                urlKey
+            });
         }
     }
 
@@ -93,7 +102,7 @@ export function Calculate({ match }) {
         } finally {
             mergeResults({ loading: false });
         }
-    }    
+    }
 
     /**
      * Resets calculation parameters, results, and messages to their initial state
@@ -111,7 +120,7 @@ export function Calculate({ match }) {
     async function loadResults(id) {
         if (!id) return;
         handleReset();
-    
+
         try {
             mergeResults({ loading: true });
             const { params, results } = await fetchJSON(`api/fetch-results/${id}`);
@@ -155,7 +164,7 @@ export function Calculate({ match }) {
                     </Card> : <>
                         <Summary />
                         <PlotOptions onSubmit={handleReplot} />
-                        <Plots onExport={handleExportPlots}/>
+                        <Plots onExport={handleExportPlots} />
                     </>}
             </div>
         </div>
