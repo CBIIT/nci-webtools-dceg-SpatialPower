@@ -30,7 +30,7 @@ export function InputForm({
             return params.x_case && params.y_case && params.r_case && params.s_case;
 
         if (params.samp_control)
-            return params.x_control && params.y_control && params.r_control && params.samp_control
+            return params.x_control && params.y_control && params.samp_control
 
         return params.sim_total && params.rand_seed && params.n_case && params.n_control && params.lower_tail;
     }
@@ -61,7 +61,6 @@ export function InputForm({
             newParams.x_control = 0.5
             newParams.y_control = 0.5
             newParams.s_control = 0.33
-            newParams.r_control = 0.5
         }
 
         if (newParams.win === 'rectangle' && name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'width' || name === 'height') {
@@ -80,7 +79,6 @@ export function InputForm({
 
             newParams.x_control = newParams.width / 2
             newParams.y_control = newParams.height / 2
-            newParams.r_control = Math.floor(Math.min(newParams.width / 2, newParams.height / 2) * 10) / 10
             newParams.s_control = Math.floor(Math.min(newParams.width / 3, newParams.height / 3) * 10) / 10
         }
 
@@ -99,7 +97,6 @@ export function InputForm({
 
             newParams.x_control = newParams.x_origin;
             newParams.y_control = newParams.y_origin;
-            newParams.r_control = Math.floor((newParams.radius / 2) * 10) / 10
             newParams.s_control = Math.floor((newParams.radius / 3) * 10) / 10
         }
 
@@ -398,7 +395,7 @@ export function InputForm({
                 </OverlayTrigger>
             </div>
 
-            {params.samp_control && params.samp_control !== 'systematic' && <div className="form-group">
+            {params.samp_control && params.samp_control === 'MVN' && <div className="form-group">
                 <label htmlFor="x_control" className="font-weight-bold required">X coordinate(s) of control cluster(s)</label>
                 <OverlayTrigger overlay={<Tooltip id="x_control_tooltip">Specify x-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                     <input
@@ -414,7 +411,7 @@ export function InputForm({
                 </OverlayTrigger>
             </div>}
 
-            {params.samp_control && params.samp_control !== 'systematic' && <div className="form-group">
+            {params.samp_control && params.samp_control === 'MVN' && <div className="form-group">
                 <label htmlFor="y_control" className="font-weight-bold required">Y coordinate(s) of control cluster(s)</label>
                 <OverlayTrigger overlay={<Tooltip id="y_control_tooltip">Specify y-coordinate(s) of control cluster(s) as a numeric value or vector.</Tooltip>}>
                     <input
@@ -425,22 +422,6 @@ export function InputForm({
                         name="y_control"
                         className="form-control"
                         value={params.y_control}
-                        onChange={handleChange}
-                        onBlur={handleBlur} />
-                </OverlayTrigger>
-            </div>}
-
-            {params.samp_control && params.samp_control === 'CSR' && <div className="form-group">
-                <label htmlFor="r_control" className="font-weight-bold required">Radius (radii) of control cluster(s)</label>
-                <OverlayTrigger overlay={<Tooltip id="r_control_tooltip">Optional. Specify the radius (radii) of control cluster(s) in the units of win as a numeric value or vector.</Tooltip>}>
-                    <input
-                        type="text"
-                        data-type="number-array"
-                        step="any"
-                        id="r_control"
-                        name="r_control"
-                        className="form-control"
-                        value={params.r_control}
                         onChange={handleChange}
                         onBlur={handleBlur} />
                 </OverlayTrigger>
