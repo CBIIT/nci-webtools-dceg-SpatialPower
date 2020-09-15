@@ -137,27 +137,30 @@ apiRouter.post('/export-plots', async (request, response) => {
         // generate plots
         const sourcePath = path.resolve(__dirname, 'app.R');
         let results = r(sourcePath, 'replot', [body]);
+
         const format = body.plot_format;
         const filePath = body.directory + '\\';
         const renamePlots = ['simulated-data.' + format, 'local-power-continuous-scale.' + format, 'local-power-above-threshold.' + format];
 
-        fs.rename(filePath + 'plot-1.' + format, filePath + renamePlots[0], () => { });
-        fs.rename(filePath + 'plot-2.' + format, filePath + renamePlots[1], () => { });
-        fs.rename(filePath + 'plot-3.' + format, filePath + renamePlots[2], () => {
+        fs.rename(filePath + 'plot-1.' + format, filePath + renamePlots[0], () => {
+            fs.rename(filePath + 'plot-2.' + format, filePath + renamePlots[1], () => {
+                fs.rename(filePath + 'plot-3.' + format, filePath + renamePlots[2], () => {
 
-            if (!Array.isArray(results)) results = [results];
+                    if (!Array.isArray(results)) results = [results];
 
-            // zip exported plots
-            const zipFilePath = `${body.directory}.zip`;
-            const output = fs.createWriteStream(zipFilePath);
-            const archive = archiver('zip');
+                    // zip exported plots
+                    const zipFilePath = `${body.directory}.zip`;
+                    const output = fs.createWriteStream(zipFilePath);
+                    const archive = archiver('zip');
 
-            // send generated zip file
-            output.on('close', () => response.json(path.basename(zipFilePath)));
-            archive.on('error', err => { throw err });
-            archive.pipe(output);
-            archive.directory(body.directory, false);
-            archive.finalize();
+                    // send generated zip file
+                    output.on('close', () => response.json(path.basename(zipFilePath)));
+                    archive.on('error', err => { throw err });
+                    archive.pipe(output);
+                    archive.directory(body.directory, false);
+                    archive.finalize();
+                });
+            });
         });
     } catch (error) {
         logger.error(error);
