@@ -33,7 +33,7 @@ export function Calculate({ match }) {
     function validateInput(params) {
 
         var valid = true;
-        var { samp_case, samp_control, x_origin, y_origin, width, height, x_case, y_case, x_control, y_control, n_case, n_control, s_case, r_case, s_control } = params;
+        var { samp_case, samp_control, x_origin, y_origin, radius, width, height, x_case, y_case, x_control, y_control, n_case, n_control, s_case, r_case, s_control } = params;
         var names = ["X Case", "Y Case", "X Control", "Y Control"]
         var i = 0;
 
@@ -56,7 +56,7 @@ export function Calculate({ match }) {
 
                     const distance = Math.sqrt(Math.pow(x_case[i] - x_origin, 2) + Math.pow(y_case[i] - y_origin, 2));
 
-                    if (distance > params.radius) {
+                    if (distance > radius) {
                         addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case cannot be outside the window' })
                         valid = false;
                     }
@@ -100,7 +100,7 @@ export function Calculate({ match }) {
     
                         const distance = Math.sqrt(Math.pow(x_control[i] - x_origin, 2) + Math.pow(y_control[i] - y_origin, 2));
     
-                        if (distance > params.radius) {
+                        if (distance > radius) {
                             addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control cannot be outside the window' })
                             valid = false;
                         }
@@ -127,18 +127,22 @@ export function Calculate({ match }) {
             }
         }
 
+        i = 0;
+
         /*The dimension of N Case, S Case, and R Case must be either:
         *  -Equal to 1 
         *  -Equal to the dimension of X and Y Case
         */
         names = ["N Case", "S Case"];
         [n_case, s_case].forEach((case_type) => {
-
+            console.log(names[i])
             if (case_type.length !== x_case.length && case_type.length !== 1) {
                 addMessage({ type: 'danger', text: 'Sample Case: ' + names[i] + ' must be 1 dimension or equal to dimension of X and Y Case' })
                 valid = false;
             }
             else{
+
+                //N and S Case Values must be positive
                 case_type.forEach((value) => {
                     
                     if(value <= 0){
@@ -149,6 +153,25 @@ export function Calculate({ match }) {
             }
             i += 1;
         });
+
+        //Only check R Case if needed
+        if(samp_case === 'uniform' || samp_case === 'CSR'){
+
+            var half; 
+            if(params.win === 'circle' || params.win === 'unit_circle')
+                half = radius;
+            else
+                half = width/2;
+
+            //R Case values must be less than half the width of the window
+            r_case.forEach((value) => {
+
+                if(value > half){
+                    addMessage({ type: 'danger', text: 'Sample Case: R Case values must be less than half the width of the window' })
+                    valid = false;
+                }
+            });
+        }
 
         i = 0;
 
@@ -162,6 +185,17 @@ export function Calculate({ match }) {
             if (control_type.length !== x_case.length && control_type.length !== 1) {
                 addMessage({ type: 'danger', text: 'Sample Control: ' + names[i] + ' must be 1 dimension or equal to dimension of X and Y Control' })
                 valid = false;
+            }
+            else{
+
+                //N and S Control values must be postive
+                control_type.forEach((value) => {
+                    
+                    if(value <= 0){
+                        addMessage({ type: 'danger', text: 'Sample Control: ' + names[i] + ' values must be positive' })
+                        valid = false;
+                    }
+                });
             }
             i += 1;
         })
