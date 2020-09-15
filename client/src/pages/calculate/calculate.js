@@ -28,7 +28,137 @@ export function Calculate({ match }) {
     /** Load results when match.params change */
     const { id } = match.params;
     const _loadResults = useCallback(loadResults, [id])
-    useEffect(_ => {_loadResults(id)}, [id, _loadResults]);
+    useEffect(_ => { _loadResults(id) }, [id, _loadResults]);
+
+    function validateInput(params) {
+
+        var valid = true;
+        var { samp_case, samp_control, x_origin, y_origin, width, height, x_case, y_case, x_control, y_control, n_case, n_control, s_case, r_case, s_control } = params;
+        var names = ["X Case", "Y Case", "X Control", "Y Control"]
+        var i = 0;
+
+        //X and Y Origin must be numeric
+        if (isNaN(x_origin) || isNaN(y_origin)) {
+            addMessage({ type: 'danger', text: 'Window Shape: X Origin and Y Origin must be numbers' })
+            valid = false;
+        }
+
+        //X and Y case must have the same dimension
+        if (x_case.length !== y_case.length) {
+            addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case must have the same number of inputs' })
+            valid = false;
+        }
+        //Determine if every coordinate is within the window
+        else {
+
+            if (params.win === 'unit_circle' || params.win === 'circle') {
+                for (var i = 0; i < x_case.length; i++) {
+
+                    const distance = Math.sqrt(Math.pow(x_case[i] - x_origin, 2) + Math.pow(y_case[i] - y_origin, 2));
+
+                    if (distance > params.radius) {
+                        addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case cannot be outside the window' })
+                        valid = false;
+                    }
+                }
+            }
+
+            else if (params.win === 'unit_square' || params.win === 'rectangle') {
+
+                if (params.win === 'unit_square') {
+                    x_origin = 0;
+                    y_origin = 0;
+                    width = 1;
+                    height = 1;
+                }
+
+                for (var i = 0; i < x_case.length; i++) {
+
+                    if (x_case[i] < x_origin || x_case[i] > x_origin + width || y_case[i] < y_origin || y_case[i] > y_origin + height) {
+                        addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case cannot be outside the window' })
+                        valid = false;
+                    }
+                }
+            }
+
+        }
+
+        //Only check X and Y control if samp_control is MVN
+        if (samp_control === 'MVN') {
+
+            //X and Y control must have the same dimension
+            if (x_control.length !== y_control.length) {
+                addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control must have the same number of inputs' })
+                valid = false;
+            }
+
+            //Determine if every coordinate is within bounds
+            else {
+
+                if (params.win === 'unit_circle' || params.win === 'circle') {
+                    for (var i = 0; i < x_control.length; i++) {
+    
+                        const distance = Math.sqrt(Math.pow(x_control[i] - x_origin, 2) + Math.pow(y_control[i] - y_origin, 2));
+    
+                        if (distance > params.radius) {
+                            addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control cannot be outside the window' })
+                            valid = false;
+                        }
+                    }
+                }
+    
+                else if (params.win === 'unit_square' || params.win === 'rectangle') {
+    
+                    if (params.win === 'unit_square') {
+                        x_origin = 0;
+                        y_origin = 0;
+                        width = 1;
+                        height = 1;
+                    }
+    
+                    for (var i = 0; i < x_case.length; i++) {
+    
+                        if (x_control[i] < x_origin || x_control[i] > x_origin + width || y_control[i] < y_origin || y_control[i] > y_origin + height) {
+                            addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control cannot be outside the window' })
+                            valid = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        /*The dimension of N Case, S Case, and R Case must be either:
+        *  -Equal to 1 
+        *  -Equal to the dimension of X and Y Case
+        */
+        names = ["N Case", "S Case", "R Case"];
+        [n_case, s_case, r_case].forEach((element) => {
+
+            if (element.length !== x_case.length && element.length !== 1) {
+                addMessage({ type: 'danger', text: 'Sample Case: ' + names[i] + ' must be 1 dimension or equal to dimension of X and Y Case' })
+                valid = false;
+            }
+            i += 1;
+        })
+
+        i = 0;
+
+        /*The dimension of N Control, S Control, and R Control must be either:
+        *  -Equal to 1 
+        *  -Equal to the dimension of X and Y Control
+        */
+        names = ["N Control", "S Control"];
+        [n_control, s_control].forEach((element) => {
+
+            if (element.length !== x_case.length && element.length !== 1) {
+                addMessage({ type: 'danger', text: 'Sample Control: ' + names[i] + ' must be 1 dimension or equal to dimension of X and Y Control' })
+                valid = false;
+            }
+            i += 1;
+        })
+
+        return valid;
+    }
 
     /**
      * Posts calculation parameters to the 'submit' endpoint and saves results to the store
@@ -40,21 +170,23 @@ export function Calculate({ match }) {
         resetResults();
         resetMessages();
         window.scrollTo(0, 0);
+        if (validateInput(params)) {
+            console.log('hi')
+            try {
+                mergeResults({ loading: true });
+                const response = await postJSON('api/submit', params);
 
-        try {
-            mergeResults({ loading: true });
-            const response = await postJSON('api/submit', params);
+                // If the request was enqueued, notify the user. Otherwise, save results to the store
+                params.queue
+                    ? addMessage({ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` })
+                    : mergeResults(response);
 
-            // If the request was enqueued, notify the user. Otherwise, save results to the store
-            params.queue
-                ? addMessage({ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` })
-                : mergeResults(response);
-
-        } catch (error) {
-            addMessage({ type: 'danger', text: error });
-        } finally {
-            const urlKey = new Date().getTime();
-            mergeResults({ loading: false, submitted: true, urlKey });
+            } catch (error) {
+                addMessage({ type: 'danger', text: error });
+            } finally {
+                const urlKey = new Date().getTime();
+                mergeResults({ loading: false, submitted: true, urlKey });
+            }
         }
     }
 
@@ -93,7 +225,7 @@ export function Calculate({ match }) {
         } finally {
             mergeResults({ loading: false });
         }
-    }    
+    }
 
     /**
      * Resets calculation parameters, results, and messages to their initial state
@@ -111,7 +243,7 @@ export function Calculate({ match }) {
     async function loadResults(id) {
         if (!id) return;
         handleReset();
-    
+
         try {
             mergeResults({ loading: true });
             const { params, results } = await fetchJSON(`api/fetch-results/${id}`);
@@ -155,7 +287,7 @@ export function Calculate({ match }) {
                     </Card> : <>
                         <Summary />
                         <PlotOptions onSubmit={handleReplot} />
-                        <Plots onExport={handleExportPlots}/>
+                        <Plots onExport={handleExportPlots} />
                     </>}
             </div>
         </div>

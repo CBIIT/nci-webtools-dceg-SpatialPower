@@ -51,16 +51,20 @@ export function InputForm({
         // set default parameters
         if ((name === 'win' || name === 'samp_case') && (newParams.win == 'unit_circle' || newParams.win == 'unit_square')) {
 
-            newParams.x_case = 0.5
-            newParams.y_case = 0.5
-            newParams.s_case = 0.33
-            newParams.r_case = 0.5
+            newParams.x_origin = 0.5;
+            newParams.y_origin = 0.5;
+            newParams.radius = 0.5;
+            
+            newParams.x_case = [0.5]
+            newParams.y_case = [0.5]
+            newParams.s_case = [0.33]
+            newParams.r_case = [0.5]
         }
 
         if ((name === 'win' || name === 'samp_control') && (newParams.win == 'unit_circle' || newParams.win == 'unit_square')) {
-            newParams.x_control = 0.5
-            newParams.y_control = 0.5
-            newParams.s_control = 0.33
+            newParams.x_control = [0.5]
+            newParams.y_control = [0.5]
+            newParams.s_control = [0.33]
         }
 
         if (newParams.win === 'rectangle' && name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'width' || name === 'height') {
@@ -72,14 +76,14 @@ export function InputForm({
                 newParams.height = 2
             }
 
-            newParams.x_case = newParams.width / 2
-            newParams.y_case = newParams.height / 2
-            newParams.r_case = Math.floor(Math.min(newParams.width / 2, newParams.height / 2) * 10) / 10
-            newParams.s_case = Math.floor(Math.min(newParams.width / 3, newParams.height / 3) * 10) / 10
+            newParams.x_case = [newParams.width / 2]
+            newParams.y_case = [newParams.height / 2]
+            newParams.r_case = [Math.floor(Math.min(newParams.width / 2, newParams.height / 2) * 10) / 10]
+            newParams.s_case = [Math.floor(Math.min(newParams.width / 3, newParams.height / 3) * 10) / 10]
 
-            newParams.x_control = newParams.width / 2
-            newParams.y_control = newParams.height / 2
-            newParams.s_control = Math.floor(Math.min(newParams.width / 3, newParams.height / 3) * 10) / 10
+            newParams.x_control = [newParams.width / 2]
+            newParams.y_control = [newParams.height / 2]
+            newParams.s_control = [Math.floor(Math.min(newParams.width / 3, newParams.height / 3) * 10) / 10]
         }
 
         else if (newParams.win === "circle" && name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'radius') {
@@ -90,14 +94,14 @@ export function InputForm({
                 newParams.radius = 1
             }
 
-            newParams.x_case = newParams.x_origin;
-            newParams.y_case = newParams.y_origin;
-            newParams.r_case = Math.floor((newParams.radius / 2) * 10) / 10
-            newParams.s_case = Math.floor((newParams.radius / 3) * 10) / 10
+            newParams.x_case = [newParams.x_origin]
+            newParams.y_case = [newParams.y_origin]
+            newParams.r_case = [Math.floor((newParams.radius / 2) * 10) / 10]
+            newParams.s_case = [Math.floor((newParams.radius / 3) * 10) / 10]
 
-            newParams.x_control = newParams.x_origin;
-            newParams.y_control = newParams.y_origin;
-            newParams.s_control = Math.floor((newParams.radius / 3) * 10) / 10
+            newParams.x_control = [newParams.x_origin]
+            newParams.y_control = [newParams.y_origin]
+            newParams.s_control = [Math.floor((newParams.radius / 3) * 10) / 10]
         }
 
         mergeParams(newParams);
