@@ -154,22 +154,28 @@ apiRouter.post('/export-plots', async (request, response) => {
         // generate plots
         const sourcePath = path.resolve(__dirname, 'app.R');
         let results = r(sourcePath, 'replot', [body]);
-        const format = request.body.format;
-        results.plots = ['simulated-data.' + format, 'local-power-continuous-scale.' + format, 'local-power-above-threshold.' + format];
-        console.log(results)
-        if (!Array.isArray(results)) results = [results];
+        const format = body.plot_format;
+        const filePath = body.directory + '\\';
+        const renamePlots = ['simulated-data.' + format, 'local-power-continuous-scale.' + format, 'local-power-above-threshold.' + format];
 
-        // zip exported plots
-        const zipFilePath = `${body.directory}.zip`;
-        const output = fs.createWriteStream(zipFilePath);
-        const archive = archiver('zip');
+        fs.rename(filePath + 'plot-1.' + format, filePath + renamePlots[0], () => { });
+        fs.rename(filePath + 'plot-2.' + format, filePath + renamePlots[1], () => { });
+        fs.rename(filePath + 'plot-3.' + format, filePath + renamePlots[2], () => {
 
-        // send generated zip file
-        output.on('close', () => response.json(path.basename(zipFilePath)));
-        archive.on('error', err => { throw err });
-        archive.pipe(output);
-        archive.directory(body.directory, false);
-        archive.finalize();
+            if (!Array.isArray(results)) results = [results];
+
+            // zip exported plots
+            const zipFilePath = `${body.directory}.zip`;
+            const output = fs.createWriteStream(zipFilePath);
+            const archive = archiver('zip');
+
+            // send generated zip file
+            output.on('close', () => response.json(path.basename(zipFilePath)));
+            archive.on('error', err => { throw err });
+            archive.pipe(output);
+            archive.directory(body.directory, false);
+            archive.finalize();
+        });
     } catch (error) {
         logger.error(error);
         response.status(500).json(error.toString());
