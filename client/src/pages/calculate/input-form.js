@@ -110,7 +110,7 @@ export function InputForm({
 
         if (dataset.type === 'number-array')
             newParams[name] = value.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
-        else if(dataset.type === 'number')
+        else if (dataset.type === 'number')
             newParams[name] = Number(value)
 
         mergeParams(newParams);
@@ -120,10 +120,10 @@ export function InputForm({
         event.preventDefault();
         if (onSubmit) {
 
-            if(!params.queue)
+            if (!params.queue)
                 setSubmit(true)
-            
-            const newParams = { ...params, ['final_sims']: params.sim_total }    
+
+            const newParams = { ...params, ['final_sims']: params.sim_total }
             mergeParams(newParams)
             onSubmit(newParams);
         }
@@ -173,7 +173,7 @@ export function InputForm({
                                 className="form-control"
                                 value={params.x_origin}
                                 onChange={handleChange}
-                                onBlur={handleBlur}/>
+                                onBlur={handleBlur} />
                         </OverlayTrigger>
                     </div>
 
@@ -188,8 +188,8 @@ export function InputForm({
                                 step="any"
                                 className="form-control"
                                 value={params.y_origin}
-                                onChange={handleChange} 
-                                onBlur={handleBlur}/>
+                                onChange={handleChange}
+                                onBlur={handleBlur} />
                         </OverlayTrigger>
                     </div>
                 </div>
@@ -239,8 +239,8 @@ export function InputForm({
                             step="any"
                             className="form-control"
                             value={params.x_origin}
-                            onChange={handleChange} 
-                            onBlur={handleBlur}/>
+                            onChange={handleChange}
+                            onBlur={handleBlur} />
                     </OverlayTrigger>
                 </div>
 
@@ -255,8 +255,8 @@ export function InputForm({
                             step="any"
                             className="form-control"
                             value={params.y_origin}
-                            onChange={handleChange} 
-                            onBlur={handleBlur}/>
+                            onChange={handleChange}
+                            onBlur={handleBlur} />
                     </OverlayTrigger>
                 </div>
 
@@ -463,6 +463,7 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="sim_total_tooltip">Specify the number of simulation iterations to perform.</Tooltip>}>
                 <input
                     type="number"
+                    min="0"
                     id="sim_total"
                     name="sim_total"
                     className="form-control"
@@ -489,7 +490,9 @@ export function InputForm({
             <OverlayTrigger overlay={<Tooltip id="lower_tail_tooltip">Optional. Specify a numeric value for the lower p-value threshold (default=0.025).</Tooltip>}>
                 <input
                     type="number"
-                    step="any"
+                    min="0"
+                    max="1"
+                    step="0.001"
                     id="lower_tail"
                     name="lower_tail"
                     className="form-control"

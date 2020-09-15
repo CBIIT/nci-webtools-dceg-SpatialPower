@@ -236,7 +236,9 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     <OverlayTrigger overlay={<Tooltip id="samp_case_tooltip">Specify a numeric value between 0 and 1 (default = 0.8) for the power threshold.</Tooltip>}>
                                         <input
                                             type="number"
-                                            step="any"
+                                            min="0"
+                                            max="1"
+                                            step="0.01"
                                             id="p_thresh"
                                             name="p_thresh"
                                             className="form-control"
@@ -250,7 +252,9 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     <OverlayTrigger overlay={<Tooltip id="upper_tail_tooltip">Optional. Specify a numeric value for the upper p-value threshold (default=0.975).</Tooltip>}>
                                         <input
                                             type="number"
-                                            step="any"
+                                            min="0"
+                                            max="1"
+                                            step="0.001"
                                             id="upper_tail"
                                             name="upper_tail"
                                             className="form-control"
