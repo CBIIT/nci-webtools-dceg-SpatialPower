@@ -54,7 +54,7 @@ export function InputForm({
             newParams.x_origin = 0.5;
             newParams.y_origin = 0.5;
             newParams.radius = 0.5;
-            
+
             newParams.x_case = [0.5]
             newParams.y_case = [0.5]
             newParams.s_case = [0.33]
@@ -483,6 +483,7 @@ export function InputForm({
                     type="number"
                     id="rand_seed"
                     name="rand_seed"
+                    min="0"
                     className="form-control"
                     value={params.rand_seed}
                     onChange={handleChange} />
