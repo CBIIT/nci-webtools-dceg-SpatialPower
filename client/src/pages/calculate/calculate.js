@@ -131,15 +131,24 @@ export function Calculate({ match }) {
         *  -Equal to 1 
         *  -Equal to the dimension of X and Y Case
         */
-        names = ["N Case", "S Case", "R Case"];
-        [n_case, s_case, r_case].forEach((element) => {
+        names = ["N Case", "S Case"];
+        [n_case, s_case].forEach((case_type) => {
 
-            if (element.length !== x_case.length && element.length !== 1) {
+            if (case_type.length !== x_case.length && case_type.length !== 1) {
                 addMessage({ type: 'danger', text: 'Sample Case: ' + names[i] + ' must be 1 dimension or equal to dimension of X and Y Case' })
                 valid = false;
             }
+            else{
+                case_type.forEach((value) => {
+                    
+                    if(value <= 0){
+                        addMessage({ type: 'danger', text: 'Sample Case: ' + names[i] + ' values must be positive' })
+                        valid = false;
+                    }
+                });
+            }
             i += 1;
-        })
+        });
 
         i = 0;
 
@@ -148,9 +157,9 @@ export function Calculate({ match }) {
         *  -Equal to the dimension of X and Y Control
         */
         names = ["N Control", "S Control"];
-        [n_control, s_control].forEach((element) => {
+        [n_control, s_control].forEach((control_type) => {
 
-            if (element.length !== x_case.length && element.length !== 1) {
+            if (control_type.length !== x_case.length && control_type.length !== 1) {
                 addMessage({ type: 'danger', text: 'Sample Control: ' + names[i] + ' must be 1 dimension or equal to dimension of X and Y Control' })
                 valid = false;
             }
