@@ -67,15 +67,6 @@ apiRouter.post('/submit', async (request, response) => {
             // perform calculation and return results
             const sourcePath = path.resolve(__dirname, 'app.R');
             const results = r(sourcePath, 'calculate', [body]);
-            const renamePlots = ['simulated-data.png', 'local-power-continuous-scale.png', 'local-power-above-threshold.png'];
-            const filePath = process.cwd() + '\\results\\' + results.id + '\\'
-
-            fs.rename(filePath + 'plot-1.png', filePath + renamePlots[0], () => { });
-            fs.rename(filePath + 'plot-2.png', filePath + renamePlots[1], () => { });
-            fs.rename(filePath + 'plot-3.png', filePath + renamePlots[2], () => { });
-
-            results.plots = renamePlots
-
             response.json(results);
         }
     } catch (error) {
@@ -103,14 +94,6 @@ apiRouter.post('/replot', async (request, response) => {
         });
         const sourcePath = path.resolve(__dirname, 'app.R');
         const results = r(sourcePath, 'replot', [body]);
-
-        const renamePlots = ['simulated-data.png', 'local-power-continuous-scale.png', 'local-power-above-threshold.png'];
-        const filePath = process.cwd() + '\\results\\' + request.body.id + '\\'
-
-        fs.rename(filePath + 'plot-1.png', filePath + renamePlots[0], () => { });
-        fs.rename(filePath + 'plot-2.png', filePath + renamePlots[1], () => { });
-        fs.rename(filePath + 'plot-3.png', filePath + renamePlots[2], () => { });
-        results.plots = renamePlots
 
         response.json(results);
     } catch (error) {
