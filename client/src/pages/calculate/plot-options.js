@@ -79,6 +79,19 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </OverlayTrigger>}
                                 </div>
 
+                                <div className="form-group custom-control custom-checkbox mr-3">
+                                    <input
+                                        type="checkbox"
+                                        className="custom-control-input"
+                                        id="axes"
+                                        name="axes"
+                                        checked={params.axes}
+                                        onChange={handleChange} />
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, the x and y axes will be displayed alongside the plot .</Tooltip>}>
+                                        <label className="custom-control-label" htmlFor="axes">Display Axes</label>
+                                    </OverlayTrigger>
+                                </div>
+
                                 {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox">
                                     <input
                                         type="checkbox"

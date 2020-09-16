@@ -28,6 +28,7 @@ export const getInitialState = () => ({
     p_thresh: 0.8,
     plot_pts: true,
     title: false,
+    axes: false,
     suff_color: 'green',
     insuff_color: 'blue',
     case_color: 'purple',
@@ -43,6 +44,7 @@ export const getInitialState = () => ({
     email: '',
     job_name: 'Spatial-Power',
 });
+
 
 export const { actions, reducer } = createSlice({
     name: 'params',

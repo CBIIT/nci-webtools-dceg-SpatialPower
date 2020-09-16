@@ -116,6 +116,7 @@ plot_results <- function(results, params) {
             plot_title = params$title, 
             cascon = as.logical(params$cascon),
             scale = scale,
+            axes = params$axes,
             cols = params$cols)
     dev.off()
 
