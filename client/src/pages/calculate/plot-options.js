@@ -146,6 +146,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     <input
                                         type="number"
                                         step="any"
+                                        min="0"
                                         id="case_size"
                                         name="case_size"
                                         className="form-control"
@@ -206,6 +207,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         <input
                                             type="number"
                                             step="any"
+                                            min="0"
                                             id="control_size"
                                             name="control_size"
                                             className="form-control"
