@@ -484,7 +484,7 @@ export function InputForm({
                     id="rand_seed"
                     name="rand_seed"
                     min="0"
-                    className="form-control"
+                    className="form-control no-spinner"
                     value={params.rand_seed}
                     onChange={handleChange} />
             </OverlayTrigger>
