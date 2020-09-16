@@ -145,7 +145,6 @@ export function Calculate({ match }) {
         names = ["N Case", "S Case"];
 
         cases.forEach((case_type) => {
-            console.log(names[i])
             if (case_type.length !== x_case.length && case_type.length !== 1) {
                 addMessage({ type: 'danger', text: 'Sample Case: ' + names[i] + ' must be 1 dimension or equal to dimension of X and Y Case' })
                 valid = false;
@@ -290,10 +289,12 @@ export function Calculate({ match }) {
             mergeResults({ loading: true });
             const filename = await postJSON('api/export-plots', { ...params, id });
             const exportUrl = `${process.env.REACT_APP_API_ROOT}/api/results/${id}/${filename}`;
+            
             window.location.href = exportUrl;
         } catch (error) {
             addMessage({ type: 'danger', text: error });
         } finally {
+
             mergeResults({ loading: false });
         }
     }
