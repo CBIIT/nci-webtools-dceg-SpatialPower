@@ -57,7 +57,7 @@ export function Calculate({ match }) {
                     const distance = Math.sqrt(Math.pow(x_case[i] - x_origin, 2) + Math.pow(y_case[i] - y_origin, 2));
 
                     if (distance > radius) {
-                        addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case cannot be outside the window. (Coordinate: ' + x_case[i] + ',' + y_case[i] + ')' })
+                        addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case cannot be outside the window. Coordinate: (' + x_case[i] + ',' + y_case[i] + ')' })
                         valid = false;
                     }
                 }
@@ -75,7 +75,7 @@ export function Calculate({ match }) {
                 for (var i = 0; i < x_case.length; i++) {
 
                     if (x_case[i] < x_origin || x_case[i] > x_origin + width || y_case[i] < y_origin || y_case[i] > y_origin + height) {
-                        addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case cannot be outside the window. (Coordinate: ' + x_case[i] + ',' + y_case[i] + ')' })
+                        addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case cannot be outside the window. Coordinate: (' + x_case[i] + ',' + y_case[i] + ')' })
                         valid = false;
                     }
                 }
@@ -101,7 +101,7 @@ export function Calculate({ match }) {
                         const distance = Math.sqrt(Math.pow(x_control[i] - x_origin, 2) + Math.pow(y_control[i] - y_origin, 2));
 
                         if (distance > radius) {
-                            addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control cannot be outside the window. (Coordinate: ' + x_control[i] + ',' + y_control[i] + ')' })
+                            addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control cannot be outside the window. Coordinate: (' + x_control[i] + ',' + y_control[i] + ')' })
                             valid = false;
                         }
                     }
@@ -119,7 +119,7 @@ export function Calculate({ match }) {
                     for (var i = 0; i < x_case.length; i++) {
 
                         if (x_control[i] < x_origin || x_control[i] > x_origin + width || y_control[i] < y_origin || y_control[i] > y_origin + height) {
-                            addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control cannot be outside the window. (Coordinate: ' + x_control[i] + ',' + y_control[i] + ')' })
+                            addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control cannot be outside the window. Coordinate: (' + x_control[i] + ',' + y_control[i] + ')' })
                             valid = false;
                         }
                     }
