@@ -214,7 +214,6 @@ export function Calculate({ match }) {
         resetMessages();
         window.scrollTo(0, 0);
         if (validateInput(params)) {
-            console.log('hi')
             try {
                 mergeResults({ loading: true });
                 const response = await postJSON('api/submit', params);
@@ -322,7 +321,7 @@ export function Calculate({ match }) {
                         {message.text}
                     </Alert>)}
 
-                {!results.submitted ?
+                {!results.submitted && messages.length === 0 ?
                     <Card className="shadow-sm h-100">
                         <Card.Body>
                             <Card.Text>Specify the sample case and control and provide simulation configuration on the left panel. The results will be displayed here once you click on the Submit button.</Card.Text>
