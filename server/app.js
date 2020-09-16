@@ -142,9 +142,20 @@ apiRouter.post('/export-plots', async (request, response) => {
         const filePath = body.directory + '\\';
         const renamePlots = ['simulated-data.' + format, 'local-power-continuous-scale.' + format, 'local-power-above-threshold.' + format];
 
-        fs.rename(filePath + 'plot-1.' + format, filePath + renamePlots[0], () => {
-            fs.rename(filePath + 'plot-2.' + format, filePath + renamePlots[1], () => {
-                fs.rename(filePath + 'plot-3.' + format, filePath + renamePlots[2], () => {
+        fs.rename(filePath + 'plot-1.' + format, filePath + renamePlots[0], (error) => {
+
+            if(error)
+                console.log(error)
+
+            fs.rename(filePath + 'plot-2.' + format, filePath + renamePlots[1], (error) => {
+
+                if(error)
+                    console.log(error)
+
+                fs.rename(filePath + 'plot-3.' + format, filePath + renamePlots[2], (error) => {
+
+                    if(error)
+                        console.log(error)
 
                     if (!Array.isArray(results)) results = [results];
 
