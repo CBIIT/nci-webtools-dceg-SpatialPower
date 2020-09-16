@@ -183,6 +183,11 @@ export function Calculate({ match }) {
                     addMessage({ type: 'danger', text: 'Sample Case: R Case values must be less than half the width of the window. (Value = ' + value + ')' })
                     valid = false;
                 }
+
+                if(value <= 0 ){
+                    addMessage({ type: 'danger', text: 'Sample Case: R Case values must be a positive. (Value = ' + value + ')' })
+                    valid = false;
+                }
             });
         }
 
