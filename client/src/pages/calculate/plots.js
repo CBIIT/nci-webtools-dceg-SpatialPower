@@ -19,7 +19,8 @@ export function Plots({ onExport = e => { } }) {
     const handleShow = () => setShow(true);
     if (!plots) return null;
     if (!Array.isArray(plots)) plots = [plots];
-
+    if (params.final_sims === 1) plots = [plots[0]];
+    
     function handleExport(event) {
         event.preventDefault();
         setShow(false);
