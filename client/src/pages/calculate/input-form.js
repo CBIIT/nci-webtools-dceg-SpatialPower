@@ -19,7 +19,6 @@ export function InputForm({
     const [submitted, setSubmit] = useState(false)
 
     function checkRequired() {
-        var valid = false;
 
         if (!params.samp_case || !params.samp_control)
             return false;
@@ -372,7 +371,7 @@ export function InputForm({
                         onBlur={handleBlur} />
                 </OverlayTrigger>
             </div>}
-            <div className="form-group">
+            {params.samp_case && <div className="form-group">
                 <label htmlFor="n_case" className="font-weight-bold required">N Case</label>
                 <OverlayTrigger overlay={<Tooltip id="n_case_tooltip">Specify the sample size for case locations in each cluster as a numeric value or vector.</Tooltip>}>
                     <input
@@ -385,7 +384,7 @@ export function InputForm({
                         onChange={handleChange}
                         onBlur={handleBlur} />
                 </OverlayTrigger>
-            </div>
+            </div>}
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
@@ -455,7 +454,7 @@ export function InputForm({
                         onBlur={handleBlur} />
                 </OverlayTrigger>
             </div>}
-            <div className="form-group">
+            {params.samp_control && <div className="form-group">
                 <label htmlFor="n_control" className="font-weight-bold required">N Control</label>
                 <OverlayTrigger overlay={<Tooltip id="n_control_tooltip">Specify the sample size for control locations in each cluster as a numeric value or vector.</Tooltip>}>
                     <input
@@ -468,7 +467,7 @@ export function InputForm({
                         onChange={handleChange}
                         onBlur={handleBlur} />
                 </OverlayTrigger>
-            </div>
+            </div>}
         </fieldset>
 
         <div className="form-group">
