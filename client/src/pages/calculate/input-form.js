@@ -19,20 +19,29 @@ export function InputForm({
     const [submitted, setSubmit] = useState(false)
 
     function checkRequired() {
+        var valid = false;
 
         if (!params.samp_case || !params.samp_control)
             return false;
 
-        if (params.queue)
-            return params.email && params.job_name;
+        if (params.queue){
+            if(!params.email || !params.job_name){
+                return false;
+            }
+        }
 
-        if (params.samp_case)
-            return params.x_case && params.y_case && params.r_case && params.s_case;
+        if (params.samp_case){
+            if(!params.x_case || !params.y_case || !params.r_case || !params.s_case || params.n_case <= 0){
+                return false;
+            }
+        }
+        if (params.samp_control){
+            if(!params.x_control || !params.y_control || !params.s_control || params.n_control <= 0){
+                return false;
+            }
+        }
 
-        if (params.samp_control)
-            return params.x_control && params.y_control && params.samp_control
-
-        return params.sim_total  && params.rand_seed && params.n_case && params.n_control && params.lower_tail;
+        return params.sim_total > 0  && params.rand_seed > 0 && params.lower_tail;
     }
 
     function handleChange(event) {
