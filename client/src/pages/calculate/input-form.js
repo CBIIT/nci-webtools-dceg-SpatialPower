@@ -32,7 +32,7 @@ export function InputForm({
         if (params.samp_control)
             return params.x_control && params.y_control && params.samp_control
 
-        return params.sim_total && params.rand_seed && params.n_case && params.n_control && params.lower_tail;
+        return params.sim_total  && params.rand_seed && params.n_case && params.n_control && params.lower_tail;
     }
 
     function handleChange(event) {
@@ -471,7 +471,7 @@ export function InputForm({
                     id="sim_total"
                     name="sim_total"
                     className="form-control"
-                    value={params.sim_total}
+                    value={params.sim_total === 0 ? '' : params.sim_total}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
@@ -485,7 +485,7 @@ export function InputForm({
                     name="rand_seed"
                     min="0"
                     className="form-control no-spinner"
-                    value={params.rand_seed}
+                    value={params.rand_seed  === 0 ? '' : params.rand_seed}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
