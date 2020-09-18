@@ -17,14 +17,14 @@ export function Home() {
     ];*/
 
     return <>
-        <div className="jumbotron jumbotron-fluid text-dark ">
-            <div className="container text-center" style={{zIndex: 1}}>
+        <div className="jumbotron jumbotron-fluid text-light ">
+            <div className="banner-text container text-center">
                 <h1 className="display-4 mb-4">
-                    <span className="d-inline-block py-4" style={{ borderBottom: '2px solid #343a40' }}>Spatial Power Web Tool</span>
+                    <span className="d-inline-block py-4" style={{ borderBottom: '2px solid white' }}>Spatial Power Web Tool</span>
                 </h1>
 
                 <p className="lead">Estimate statistical power of spatial clusters</p>
-                <NavLink className="btn btn-lg btn-outline-dark" to="sparrpowR">Run Calculation</NavLink>
+                <NavLink className="btn btn-lg btn-outline-light" to="sparrpowR">Run Calculation</NavLink>
             </div>
         </div>
         <div className="container lead mb-4">

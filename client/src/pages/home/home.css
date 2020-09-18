@@ -2,20 +2,25 @@
 .jumbotron {
     display: block;
     position: relative;
+    
+}
+
+.jumbotron .banner-text{
+    position: relative;
+    z-index: 1;
 }
 
 .jumbotron::after {
     content: "";
     background-image: url('spatial-power-banner.png');
-    background-position: center top 20px;
+    background-position: center bottom 40%;
     background-repeat: no-repeat;
     background-size: cover;
-    opacity: 0.20;
-    top: -6%;
+    top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    position: absolute;
-    z-index: 0;   
+    position: absolute; 
     pointer-events: none;
+    z-index: 0;
 }
