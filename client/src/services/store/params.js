@@ -22,7 +22,7 @@ export const getInitialState = () => ({
     r_case: '',
     s_case: '',
     s_control: '',
-    lower_tail: 0.025,
+    alpha: 0.05,
     upper_tail: 0.975,
     cascon: false,
     p_thresh: 0.8,

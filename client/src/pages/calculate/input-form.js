@@ -40,7 +40,7 @@ export function InputForm({
             }
         }
 
-        return params.sim_total > 0  && params.rand_seed > 0 && params.lower_tail;
+        return params.sim_total > 0  && params.rand_seed > 0 && params.alpha;
     }
 
     function handleChange(event) {
@@ -499,17 +499,17 @@ export function InputForm({
         </div>
 
         <div className="form-group">
-            <label htmlFor="lower_tail" className="font-weight-bold required">Lower Tail</label>
-            <OverlayTrigger overlay={<Tooltip id="lower_tail_tooltip">Optional. Specify a numeric value for the lower p-value threshold (default=0.025).</Tooltip>}>
+            <label htmlFor="alpha" className="font-weight-bold required">Alpha</label>
+            <OverlayTrigger overlay={<Tooltip id="alpha_tooltip">Specify a numeric value to calculate p-value thresholds (default=0.05).</Tooltip>}>
                 <input
                     type="number"
                     min="0"
                     max="1"
-                    step="0.001"
-                    id="lower_tail"
-                    name="lower_tail"
+                    step="0.01"
+                    id="alpha"
+                    name="alpha"
                     className="form-control"
-                    value={params.lower_tail}
+                    value={params.alpha}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>

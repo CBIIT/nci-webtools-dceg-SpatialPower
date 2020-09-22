@@ -40,8 +40,8 @@ calculate <- function(params) {
         r_control = as.double(unlist(params$r_control, use.names=FALSE)),
         s_case = as.double(unlist(params$s_case, use.names=FALSE)),
         s_control = as.double(unlist(params$s_control, use.names=FALSE)),
-        lower_tail = as.double(params$lower_tail),
-        upper_tail = as.double(params$upper_tail),
+        lower_tail = as.double(params$alpha/2),
+        upper_tail = as.double(1-(params$upper_tail/2)),
         n_core = 4
     )
 
