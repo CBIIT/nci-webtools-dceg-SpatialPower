@@ -50,10 +50,6 @@ apiRouter.post('/submit', async (request, response) => {
             if ([null, undefined, ''].includes(body[key]))
                 delete body[key];
 
-        // ensure working directory exists
-        body.directory = path.resolve(config.results.folder, id);
-        await fs.promises.mkdir(body.directory, { recursive: true });
-
         if (body.queue) {
             // enqueue message and send a response with the request id
             await new AWS.SQS().sendMessage({
@@ -63,13 +59,16 @@ apiRouter.post('/submit', async (request, response) => {
                 MessageBody: JSON.stringify(body)
             }).promise();
             response.json({ id });
-        } else {
-
-            // perform calculation and return results
-            const sourcePath = path.resolve(__dirname, 'app.R');
-            const results = r(sourcePath, 'calculate', [body]);
-            response.json(results);
         }
+        // ensure working directory exists
+        body.directory = path.resolve(config.results.folder, id);
+        await fs.promises.mkdir(body.directory, { recursive: true });
+
+        // perform calculation and return results
+        const sourcePath = path.resolve(__dirname, 'app.R');
+        const results = r(sourcePath, 'calculate', [body]);
+        response.json(results);
+
     } catch (error) {
         const errorText = String(error.stderr || error);
         logger.error(errorText);
