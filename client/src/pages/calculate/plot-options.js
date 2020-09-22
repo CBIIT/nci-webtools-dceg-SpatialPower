@@ -92,6 +92,32 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </OverlayTrigger>
                                 </div>
 
+                                <div className="form-group custom-control custom-checkbox mr-3">
+                                    <input
+                                        type="checkbox"
+                                        className="custom-control-input"
+                                        id="plot_square"
+                                        name="plot_square"
+                                        checked={params.plot_square}
+                                        onChange={handleChange} />
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, plot margins will forced to be square. Otherwise margins are based off the window.</Tooltip>}>
+                                        <label className="custom-control-label" htmlFor="plot_square">Plot Square</label>
+                                    </OverlayTrigger>
+                                </div>
+
+                                <div className="form-group custom-control custom-checkbox mr-3">
+                                    <input
+                                        type="checkbox"
+                                        className="custom-control-input"
+                                        id="horizontal"
+                                        name="horizontal"
+                                        checked={params.horizontal}
+                                        onChange={handleChange} />
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, color legend will be horizontal below the plot.</Tooltip>}>
+                                        <label className="custom-control-label" htmlFor="horizontal">Horizontal</label>
+                                    </OverlayTrigger>
+                                </div>
+
                                 {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox">
                                     <input
                                         type="checkbox"
@@ -261,22 +287,6 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                             onChange={handleChange} />
                                     </OverlayTrigger>
                                 </div>
-
-                                {params.cascon && <div className="col-lg form-group">
-                                    <label htmlFor="upper_tail" className="font-weight-bold required">Upper Tail</label>
-                                    <OverlayTrigger overlay={<Tooltip id="upper_tail_tooltip">Optional. Specify a numeric value for the upper p-value threshold (default=0.975).</Tooltip>}>
-                                        <input
-                                            type="number"
-                                            min="0"
-                                            max="1"
-                                            step="0.001"
-                                            id="upper_tail"
-                                            name="upper_tail"
-                                            className="form-control"
-                                            value={params.upper_tail}
-                                            onChange={handleChange} />
-                                    </OverlayTrigger>
-                                </div>}
 
                                 <div className="col-lg form-group">
                                     <label htmlFor="suff_color" className="font-weight-bold text-nowrap">Sufficiently Powered</label>
