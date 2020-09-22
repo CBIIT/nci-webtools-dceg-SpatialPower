@@ -59,16 +59,16 @@ apiRouter.post('/submit', async (request, response) => {
                 MessageBody: JSON.stringify(body)
             }).promise();
             response.json({ id });
-        } else {
-            // ensure working directory exists
-            body.directory = path.resolve(config.results.folder, id);
-            await fs.promises.mkdir(body.directory, { recursive: true });
-
-            // perform calculation and return results
-            const sourcePath = path.resolve(__dirname, 'app.R');
-            const results = r(sourcePath, 'calculate', [body]);
-            response.json(results);
         }
+        // ensure working directory exists
+        body.directory = path.resolve(config.results.folder, id);
+        await fs.promises.mkdir(body.directory, { recursive: true });
+
+        // perform calculation and return results
+        const sourcePath = path.resolve(__dirname, 'app.R');
+        const results = r(sourcePath, 'calculate', [body]);
+        response.json(results);
+
     } catch (error) {
         const errorText = String(error.stderr || error);
         logger.error(errorText);
