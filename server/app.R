@@ -99,7 +99,7 @@ plot_results <- function(results, params) {
     # svg files are rather large compared to other formats due to a large number of paths
     # svg width/heights are specified in inches, not pixels
 
-    scale <- sqrt(params$plot_width ^ 2 + params$plot_height ^ 2)/sqrt(400 ^ 2 + 400 ^ 2)
+    scale <- sqrt(params$plot_width ^ 2 + params$plot_height ^ 2)/sqrt(420 ^ 2 + 420 ^ 2)
 
     # set up graphics device
     do.call(params$plot_format, list(
