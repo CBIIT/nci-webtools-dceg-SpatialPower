@@ -89,17 +89,17 @@ plot_results <- function(results, params) {
     # cols[1:3] do not match the order of colors in the documentation
     params$cols <- c(params$insuff_color, params$suff_color, params$case_color, params$control_color)
     params$chars <- as.integer(c(params$case_symbol, params$control_symbol))
-    params$sizes <- as.integer(c(params$case_size, params$control_size))
+    params$sizes <- as.double(c(params$case_size, params$control_size))
 
     # todo: specifying width and height above default makes plotting area collide with legend
     if (!'plot_format' %in% names(params)) params$plot_format <- "png"
-    if (!'plot_width' %in% names(params)) params$plot_width <- 480
-    if (!'plot_height' %in% names(params)) params$plot_height <- 480
+    if (!'plot_width' %in% names(params)) params$plot_width <- 720
+    if (!'plot_height' %in% names(params)) params$plot_height <- 720
 
     # svg files are rather large compared to other formats due to a large number of paths
     # svg width/heights are specified in inches, not pixels
 
-    scale <- sqrt(params$plot_width ^ 2 + params$plot_height ^ 2)/sqrt(480 ^ 2 + 480 ^ 2)
+    scale <- sqrt(params$plot_width ^ 2 + params$plot_height ^ 2)/sqrt(400 ^ 2 + 400 ^ 2)
 
     # set up graphics device
     do.call(params$plot_format, list(
