@@ -189,7 +189,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         id="case_size"
                                         name="case_size"
                                         className="form-control"
-                                        value={params.case_size}
+                                        value={params.case_size === 0 ? '' : params.case_size}
                                         onChange={handleChange} />
                                 </OverlayTrigger>
                             </div>
@@ -250,7 +250,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                             id="control_size"
                                             name="control_size"
                                             className="form-control"
-                                            value={params.control_size}
+                                            value={params.control_size === 0 ? '' : params.control_size}
                                             onChange={handleChange} />
                                     </OverlayTrigger>
                                 </div>

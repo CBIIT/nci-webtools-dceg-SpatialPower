@@ -85,7 +85,7 @@ export function Plots({ onExport = e => { } }) {
                                         id="plot_width"
                                         name="plot_width"
                                         className="form-control"
-                                        value={params.plot_width}
+                                        value={params.plot_width === 0 ? '' : params.plot_width}
                                         onChange={handleChange} />
                                 </div>
                                 <div className="col-lg form-group">
@@ -96,7 +96,7 @@ export function Plots({ onExport = e => { } }) {
                                         id="plot_height"
                                         name="plot_height"
                                         className="form-control"
-                                        value={params.plot_height}
+                                        value={params.plot_height === 0 ? '' : params.plot_height}
                                         onChange={handleChange} />
                                 </div>
                             </div>
