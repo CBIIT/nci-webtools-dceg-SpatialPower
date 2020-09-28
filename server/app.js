@@ -58,7 +58,7 @@ apiRouter.post('/submit', async (request, response) => {
                 MessageGroupId: id,
                 MessageBody: JSON.stringify(body)
             }).promise();
-            response.json({ id });
+            response.json({ id });  
         }
         // ensure working directory exists
         body.directory = path.resolve(config.results.folder, id);
@@ -89,8 +89,8 @@ apiRouter.post('/replot', async (request, response) => {
             directory: path.resolve(config.results.folder, request.body.id),
             rds_file: 'results.rds',
             plot_format: 'png',
-            plot_width: 480,
-            plot_height: 480,
+            plot_width: 720,
+            plot_height: 720,
         });
         const sourcePath = path.resolve(__dirname, 'app.R');
         const results = r(sourcePath, 'replot', [body]);
@@ -109,8 +109,8 @@ apiRouter.post('/export-plots', async (request, response) => {
         // override default parameters
         const body = Object.assign({
             plot_format: 'png',
-            plot_width: 480,
-            plot_height: 480,
+            plot_width: 720,
+            plot_height: 720,
         }, request.body);
 
         // validate id format
