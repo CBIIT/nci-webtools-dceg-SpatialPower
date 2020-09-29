@@ -176,7 +176,7 @@ async function receiveMessage() {
             
             // if message was not processed successfully, send it to the
             // error queue (add metadata in future if needed)
-            if (!status) {
+            if (!status && config.queue.errorUrl) {
                 // generate new unique id for error message
                 const id = crypto.randomBytes(16).toString('hex');
                 await sqs.sendMessage({
