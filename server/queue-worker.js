@@ -3,7 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 const AWS = require('aws-sdk');
 const nodemailer = require('nodemailer');
-const r = require('r-wrapper');
+const r = require('r-wrapper').async;
 const config = require('./config.json');
 const logger = require('./utils/logger');
 
@@ -64,7 +64,7 @@ async function processMessage(params) {
         const directory = path.resolve(config.results.folder, params.id);
         const sourcePath = path.resolve(__dirname, 'app.R');
         await fs.promises.mkdir(directory, {recursive: true});
-        const results = r(sourcePath, 'calculate', [{...params, directory}]);
+        const results = await r(sourcePath, 'calculate', [{...params, directory}]);
 
         // upload parameters
         await s3.upload({
@@ -168,7 +168,7 @@ async function receiveMessage() {
                 QueueUrl: config.queue.url,
                 ReceiptHandle: message.ReceiptHandle,
                 VisibilityTimeout: config.queue.visibilityTimeout
-            }), 1000 * 60);
+            }), Math.min(1000 * config.queue.visibilityTimeout - 1));
 
             // processMessage should return a boolean status indicating success or failure
             const status = await processMessage(params);
@@ -198,7 +198,7 @@ async function receiveMessage() {
         logger.error(e);
     } finally {
         // schedule receiving next message
-        setTimeout(receiveMessage, 1000 * config.queue.pollInterval);
+        setTimeout(receiveMessage, 1000 * (config.queue.pollInterval || 60));
     }
 }
 

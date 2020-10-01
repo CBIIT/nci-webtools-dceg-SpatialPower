@@ -5,7 +5,7 @@ const express = require('express');
 const compression = require('compression');
 const archiver = require('archiver');
 const AWS = require('aws-sdk');
-const r = require('r-wrapper');
+const r = require('r-wrapper').async;
 const config = require('./config.json');
 const logger = require('./utils/logger');
 const process = require('process')
@@ -66,7 +66,7 @@ apiRouter.post('/submit', async (request, response) => {
 
         // perform calculation and return results
         const sourcePath = path.resolve(__dirname, 'app.R');
-        const results = r(sourcePath, 'calculate', [body]);
+        const results = await r(sourcePath, 'calculate', [body]);
         response.json(results);
 
     } catch (error) {
@@ -93,7 +93,7 @@ apiRouter.post('/replot', async (request, response) => {
             plot_height: 720,
         });
         const sourcePath = path.resolve(__dirname, 'app.R');
-        const results = r(sourcePath, 'replot', [body]);
+        const results = await r(sourcePath, 'replot', [body]);
 
         response.json(results);
     } catch (error) {
@@ -136,7 +136,7 @@ apiRouter.post('/export-plots', async (request, response) => {
 
         // generate plots
         const sourcePath = path.resolve(__dirname, 'app.R');
-        let results = r(sourcePath, 'replot', [body]);
+        let results = await r(sourcePath, 'replot', [body]);
         if (!Array.isArray(results)) results = [results];
 
         // zip exported plots
