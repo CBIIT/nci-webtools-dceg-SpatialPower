@@ -155,20 +155,23 @@ async function receiveMessage() {
         // fetch one message at a time
         const data = await sqs.receiveMessage({
             QueueUrl: config.queue.url,
+            MaxNumberOfMessages: 1,
             VisibilityTimeout: config.queue.visibilityTimeout,
-            MaxNumberOfMessages: 1
+            WaitTimeSeconds: 20,
         }).promise();
 
         if (data.Messages && data.Messages.length > 0) {
             const message = data.Messages[0];
             const params = JSON.parse(message.Body);
 
+            logger.info(`Received Message : ${message.Body}`);
+            
             // while processing is not complete, update the message's visibilityTimeout
             const intervalId = setInterval(_ => sqs.changeMessageVisibility({
                 QueueUrl: config.queue.url,
                 ReceiptHandle: message.ReceiptHandle,
                 VisibilityTimeout: config.queue.visibilityTimeout
-            }), Math.min(1000 * config.queue.visibilityTimeout - 1));
+            }).send(), 1000 * (config.queue.visibilityTimeout - 1));
 
             // processMessage should return a boolean status indicating success or failure
             const status = await processMessage(params);
