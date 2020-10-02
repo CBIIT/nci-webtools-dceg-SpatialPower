@@ -49,19 +49,6 @@ export function PlotOptions({ onSubmit = e => { } }) {
                         <div className="row mb-2">
 
                             <div className="col-lg form-inline mt-lg-3 mb-lg-0 mb-3">
-                                {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox mr-3">
-                                    <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="plot_pts"
-                                        name="plot_pts"
-                                        checked={params.plot_pts}
-                                        onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
-                                    </OverlayTrigger>
-                                </div>}
-
                                 <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
                                         type="checkbox"
@@ -118,6 +105,19 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </OverlayTrigger>
                                 </div>
 
+                                {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox mr-3">
+                                    <input
+                                        type="checkbox"
+                                        className="custom-control-input"
+                                        id="plot_pts"
+                                        name="plot_pts"
+                                        checked={params.plot_pts}
+                                        onChange={handleChange} />
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
+                                        <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
+                                    </OverlayTrigger>
+                                </div>}
+
                                 {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox">
                                     <input
                                         type="checkbox"
@@ -136,7 +136,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                         <div className="row" style={{ width: '85%' }}>
 
                             <div className="col-lg form-group">
-                                <label htmlFor="case_symbol" className="font-weight-bold text-nowrap">Case Symbol</label>
+                                <label htmlFor="case_symbol" className="text-nowrap">Case Symbol</label>
                                 <OverlayTrigger overlay={<Tooltip id="case_symbol_tooltip">Select the case symbol</Tooltip>}>
                                     {/* Use unicode icons as fallbacks, since native Mac OS selects in Safari/Chrome do not support custom webfonts in select options */}
                                     <select
@@ -157,7 +157,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                             </div>
 
                             <div className="col-lg form-group">
-                                <label htmlFor="case_color" className="font-weight-bold text-nowrap">Case Symbol Color</label>
+                                <label htmlFor="case_color" className="text-nowrap">Case Symbol Color</label>
                                 <OverlayTrigger overlay={<Tooltip id="case_color_tooltip">Select the color of case symbols</Tooltip>}>
                                     <select
                                         id="case_color"
@@ -180,7 +180,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                             </div>
 
                             <div className="col-lg form-group">
-                                <label htmlFor="case_size" className="font-weight-bold text-nowrap">Case Symbol Size</label>
+                                <label htmlFor="case_size" className="text-nowrap">Case Symbol Size</label>
                                 <OverlayTrigger overlay={<Tooltip id="case_size_tooltip">Specify a numeric value for the size of case symbols</Tooltip>}>
                                     <input
                                         type="number"
@@ -198,7 +198,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                         <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
                             <div className="row" style={{ width: '85%' }}>
                                 <div className="col-lg form-group">
-                                    <label htmlFor="control_symbol" className="font-weight-bold text-nowrap">Control Symbol</label>
+                                    <label htmlFor="control_symbol" className="text-nowrap">Control Symbol</label>
                                     <OverlayTrigger overlay={<Tooltip id="control_symbol_tooltip">Select the control symbol</Tooltip>}>
                                         {/* Use unicode icons as fallbacks, since native Mac OS selects in Safari/Chrome do not support custom webfonts in select options */}
                                         <select
@@ -218,7 +218,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </OverlayTrigger>
                                 </div>
                                 <div className="col-lg form-group">
-                                    <label htmlFor="control_color" className="font-weight-bold text-nowrap">Control Symbol Color</label>
+                                    <label htmlFor="control_color" className="text-nowrap">Control Symbol Color</label>
                                     <OverlayTrigger overlay={<Tooltip id="control_color_tooltip">Select the color of control symbols</Tooltip>}>
                                         <select
                                             id="control_color"
@@ -241,7 +241,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </div>
 
                                 <div className="col-lg form-group">
-                                    <label htmlFor="control_size" className="font-weight-bold text-nowrap">Control Symbol Size</label>
+                                    <label htmlFor="control_size" className="text-nowrap">Control Symbol Size</label>
                                     <OverlayTrigger overlay={<Tooltip id="control_size_tooltip">Specify a numeric value for the size of control symbols</Tooltip>}>
                                         <input
                                             type="number"
@@ -273,7 +273,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                         {params.final_sims > 1 && <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
                             <div className="row" style={{ width: '85%' }}>
                                 <div className="col-lg form-group">
-                                    <label htmlFor="p_thresh" className="font-weight-bold text-nowrap">Power Threshold</label>
+                                    <label htmlFor="p_thresh" className="text-nowrap">Power Threshold</label>
                                     <OverlayTrigger overlay={<Tooltip id="samp_case_tooltip">Specify a numeric value between 0 and 1 (default = 0.8) for the power threshold.</Tooltip>}>
                                         <input
                                             type="number"
@@ -289,7 +289,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </div>
 
                                 <div className="col-lg form-group">
-                                    <label htmlFor="suff_color" className="font-weight-bold text-nowrap">Sufficiently Powered</label>
+                                    <label htmlFor="suff_color" className="text-nowrap">Sufficiently Powered</label>
                                     <OverlayTrigger overlay={<Tooltip id="suff_color_tooltip">Select the color of sufficiently powered regions</Tooltip>}>
                                         <select
                                             id="suff_color"
@@ -312,7 +312,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </div>
 
                                 <div className="col-lg form-group">
-                                    <label htmlFor="insuff_color" className="font-weight-bold text-nowrap">Insufficiently Powered</label>
+                                    <label htmlFor="insuff_color" className="text-nowrap">Insufficiently Powered</label>
                                     <OverlayTrigger overlay={<Tooltip id="insuff_color_tooltip">Select the color of insufficiently powered regions</Tooltip>}>
                                         <select
                                             id="insuff_color"
