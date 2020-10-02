@@ -505,10 +505,10 @@ export function InputForm({
                     type="number"
                     min="0"
                     max="1"
-                    step="0.01"
+                    step="any"
                     id="alpha"
                     name="alpha"
-                    className="form-control"
+                    className="form-control no-spinner"
                     value={params.alpha}
                     onChange={handleChange} />
             </OverlayTrigger>
