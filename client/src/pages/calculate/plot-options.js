@@ -92,7 +92,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </OverlayTrigger>
                                 </div>
 
-                                <div className="form-group custom-control custom-checkbox mr-3">
+                                {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
                                         type="checkbox"
                                         className="custom-control-input"
@@ -103,7 +103,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, color legend will be horizontal below the plot.</Tooltip>}>
                                         <label className="custom-control-label" htmlFor="horizontal">Horizontal</label>
                                     </OverlayTrigger>
-                                </div>
+                                </div>}
 
                                 {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
