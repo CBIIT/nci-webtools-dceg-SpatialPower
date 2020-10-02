@@ -36,10 +36,15 @@ apiRouter.post('/submit', async (request, response) => {
         // generate unique id for response
         const id = crypto.randomBytes(16).toString('hex');
 
+        const date = new Date();
+        const isoDate = new Date(date.getTime() -(date.getTimezoneOffset() * 60000)).toISOString();
+        const day = isoDate.split("T")[0];
+        const time = isoDate.split("T")[1].split("Z")[0].substring(0,5);
+
         // assign id to body
         let body = Object.assign(request.body, {
             id,
-            timestamp: new Date().toISOString(),
+            timestamp: day + ' ' + time,
             plot_format: 'png',
             plot_width: 720,
             plot_height: 720,

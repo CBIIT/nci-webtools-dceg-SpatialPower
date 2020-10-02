@@ -10,11 +10,23 @@
 
 <body>
     Dear SparrpowR User, <br>
-    <p>The job you submitted on {originalTimestamp} has been processed. Download your results using the links below:</p>
+    <p>The job you submitted to the Spatial-Power queue has been processed successfully using the sparrpowR R package.
+    </p>
+    <b>Job Information</b>
+    <ul style="list-style-type:none;">
+        <li href="{jobName}">Job Name: {jobName}</li>
+        <li href="{numSims}">Number of Simulations: {numSims}</li>
+        <li href="{originalTimestamp}">Submitted Time: {originalTimestamp}</li>
+        <li>Execution Time:</li>
+    </ul>
+    <b>Results:</b><br>
     <a href="{resultsUrl}">{resultsUrl}</a>
+    <p>The results will be available for the next 7 days.</p>
+    <p>Please contact us at NCISpatialPowerWebAdmin@mail.nih.gov for more information or if you have any questions.</p>
+
     <p>
-        Please do not reply to this email. If you need assistance, please contact <a href="mailto:{supportEmail}">{supportEmail}</a>. 
-        Include the following job id in your email: {id}
+        Respectfully, <br>
+        Spatial-Power Web Tool
     </p>
 </body>
 

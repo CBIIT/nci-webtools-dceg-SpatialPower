@@ -92,6 +92,8 @@ async function processMessage(params) {
 
         // specify email template variables
         const templateData = {
+            jobName: params.job_name,
+            numSims: params.final_sims,
             originalTimestamp: params.timestamp,
             resultsUrl: `${config.email.baseUrl}/#/sparrpowR/${params.id}`
         };
