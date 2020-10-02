@@ -113,7 +113,7 @@ async function processMessage(params) {
         const userEmailResults = await email.sendMail({
             from: config.email.sender,
             to: params.email,
-            subject: 'SparrpowR Results: ' + params.job_name,
+            subject: 'SparrpowR Simulation Results - ' + params.job_name + "- " + params.timestamp,
             html: await readTemplate(__dirname + '/templates/user-success-email.html', templateData),
         });
 
