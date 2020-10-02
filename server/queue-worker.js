@@ -63,8 +63,17 @@ async function processMessage(params) {
         // get calculation results
         const directory = path.resolve(config.results.folder, params.id);
         const sourcePath = path.resolve(__dirname, 'app.R');
-        await fs.promises.mkdir(directory, {recursive: true});
+        await fs.promises.mkdir(directory, {recursive: true}); 
+
+        const start = new Date().getTime();
         const results = await r(sourcePath, 'calculate', [{...params, directory}]);
+        const end = new Date().getTime();
+
+        const time = start - end;
+        const minutes = Math.floor(time / 60000);
+        var seconds = ((time % 60000) / 1000).toFixed(0);
+        
+        const runtime = (minutes > 0 ? minutes + " min " : '') + seconds + " secs"
 
         // upload parameters
         await s3.upload({
@@ -95,6 +104,7 @@ async function processMessage(params) {
             jobName: params.job_name,
             numSims: params.final_sims,
             originalTimestamp: params.timestamp,
+            runTime: runtime,
             resultsUrl: `${config.email.baseUrl}/#/sparrpowR/${params.id}`
         };
 

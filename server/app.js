@@ -37,14 +37,14 @@ apiRouter.post('/submit', async (request, response) => {
         const id = crypto.randomBytes(16).toString('hex');
 
         const date = new Date();
-        const isoDate = new Date(date.getTime() -(date.getTimezoneOffset() * 60000)).toISOString();
+        const isoDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString();
         const day = isoDate.split("T")[0];
         const time = isoDate.split("T")[1].split("Z")[0].substring(0,5);
 
         // assign id to body
         let body = Object.assign(request.body, {
             id,
-            timestamp: day + ' ' + time,
+            timestamp: day + ' ' + time + ' UTC',
             plot_format: 'png',
             plot_width: 720,
             plot_height: 720,
