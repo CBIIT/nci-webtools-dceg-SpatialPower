@@ -3,8 +3,12 @@ import { mergeObject } from './utils';
 
 export const getInitialState = () => ({
     win: '',
+    gis: false,
     x_origin: 0,
     y_origin: 0,
+    latitude: 38.9072,
+    longitude: 77.0369,
+    unit: '',
     width: 1,
     height: 2,
     radius: 1,
