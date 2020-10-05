@@ -278,7 +278,7 @@ export function InputForm({
 
                 <div className="row">
                     <div className="col-md-6 form-group">
-                        <label htmlFor="width">Width {params.unit ? "(in " + params.unit + ")" : ''}</label>
+                        <label htmlFor="width">Width {params.gis && params.unit ? "(in " + params.unit + ")" : ''}</label>
                         <OverlayTrigger overlay={<Tooltip id="width_tooltip">Enter the width of the rectangle</Tooltip>}>
                             <input
                                 type="number"
@@ -293,7 +293,7 @@ export function InputForm({
                     </div>
 
                     <div className="col-md-6 form-group">
-                        <label htmlFor="height">Height {params.unit ? "(in " + params.unit + ")" : ''}</label>
+                        <label htmlFor="height">Height {params.gis && params.unit ? "(in " + params.unit + ")" : ''}</label>
                         <OverlayTrigger overlay={<Tooltip id="height_tooltip">Enter the height of the rectangle</Tooltip>}>
                             <input
                                 type="number"
@@ -375,7 +375,7 @@ export function InputForm({
                 </div>}
 
                 <div className="col-md-4 form-group">
-                    <label htmlFor="radius">Radius {params.unit ? "(in " + params.unit + ")" : ''}</label>
+                    <label htmlFor="radius">Radius {params.gis && params.unit ? "(in " + params.unit + ")" : ''}</label>
                     <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Enter the radius of the circle</Tooltip>}>
                         <input
                             type="number"
