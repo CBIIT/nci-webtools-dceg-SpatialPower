@@ -46,8 +46,8 @@ apiRouter.post('/submit', async (request, response) => {
             id,
             timestamp: day + ' ' + time + ' UTC',
             plot_format: 'png',
-            plot_width: 720,
-            plot_height: 720,
+            plot_width: 480,
+            plot_height: 480,
         });
 
         // remove empty values from body

@@ -93,13 +93,13 @@ plot_results <- function(results, params) {
 
     # todo: specifying width and height above default makes plotting area collide with legend
     if (!'plot_format' %in% names(params)) params$plot_format <- "png"
-    if (!'plot_width' %in% names(params)) params$plot_width <- 720
-    if (!'plot_height' %in% names(params)) params$plot_height <- 720
+    if (!'plot_width' %in% names(params)) params$plot_width <- 480
+    if (!'plot_height' %in% names(params)) params$plot_height <- 480
 
     # svg files are rather large compared to other formats due to a large number of paths
     # svg width/heights are specified in inches, not pixels
 
-    scale <- sqrt(params$plot_width ^ 2 + params$plot_height ^ 2)/sqrt(420 ^ 2 + 420 ^ 2)
+    scale <- sqrt(params$plot_width ^ 2 + params$plot_height ^ 2)/sqrt(480 ^ 2 + 480 ^ 2)
 
     # set up graphics device
     do.call(params$plot_format, list(
