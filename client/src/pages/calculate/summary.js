@@ -36,8 +36,8 @@ export function Summary() {
                             {summary.slice(0, 3).map(({ title, mean, standardDeviation }, i) =>
                                 <tr key={`results-summary-item-${i}`}>
                                     <td>{title}</td>
-                                    <td>{mean}</td>
-                                    <td>{standardDeviation}</td>
+                                    <td>{mean.toFixed(3)/1}</td>
+                                    <td>{standardDeviation.toFixed(3)/1}</td>
                                 </tr>)}
                         </tbody>
                     </table>
@@ -57,8 +57,8 @@ export function Summary() {
                             {summary.slice(3, 5).map(({ title, testStat, pValue }, i) =>
                                 <tr key={`results-summary-item-${i + 3}`}>
                                     <td>{title}</td>
-                                    <td>{testStat}</td>
-                                    <td>{pValue}</td>
+                                    <td>{testStat.toFixed(3)/1}</td>
+                                    <td>{pValue.toFixed(3)/1}</td>
                                 </tr>)}
                         </tbody>
                     </table>
