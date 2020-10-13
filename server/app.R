@@ -117,7 +117,7 @@ plot_results <- function(results, params) {
             cascon = as.logical(params$cascon),
             scale = scale,
             plot_axes = params$axes,
-            plot_square = params$plot_square,
+            plot_square = TRUE,
             horizontal = params$horizontal,
             cols = params$cols)
     dev.off()

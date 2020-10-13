@@ -79,19 +79,6 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </OverlayTrigger>
                                 </div>
 
-                                <div className="form-group custom-control custom-checkbox mr-3">
-                                    <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="plot_square"
-                                        name="plot_square"
-                                        checked={params.plot_square}
-                                        onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, plot margins will forced to be square. Otherwise margins are based off the window.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="plot_square">Plot Square</label>
-                                    </OverlayTrigger>
-                                </div>
-
                                 {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
                                         type="checkbox"
