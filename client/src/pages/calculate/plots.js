@@ -36,9 +36,9 @@ export function Plots({ onExport = e => { } }) {
     }
 
     const plotNames = [
-        'Simulated Data (First Iteration)',
-        'Local Power (Continuous Scale)',
-        'Local Power (Above Threshold)'
+        'Data Simulation',
+        'Continuous Power',
+        'Categorical Power'
     ];
 
     return <Tab.Container id="plots-container" defaultActiveKey="plot-0">
