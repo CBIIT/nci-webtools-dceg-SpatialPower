@@ -60,6 +60,9 @@ export function InputForm({
             newParams.queue = true;
         }
 
+        if(name === 'gis' && (newParams.win === 'unit_circle' || newParams.win === 'unit_square'))
+            newParams.win = '';
+
         // set default parameters
         if ((name === 'win' || name === 'samp_case') && (newParams.win == 'unit_circle' || newParams.win == 'unit_square')) {
 
@@ -168,8 +171,8 @@ export function InputForm({
                             value={params.win}
                             onChange={handleChange}>
                             <option value="" hidden>(select option)</option>
-                            <option value="unit_circle">Unit Circle</option>
-                            <option value="unit_square">Unit Square</option>
+                            {!params.gis && <option value="unit_circle">Unit Circle</option>}
+                            {!params.gis && <option value="unit_square">Unit Square</option>}
                             <option value="rectangle">Rectangle</option>
                             <option value="circle">Circle</option>
                         </select>
@@ -183,7 +186,7 @@ export function InputForm({
                         className="custom-control-input"
                         id="gis"
                         name="gis"
-                        checked={params.GIS}
+                        checked={params.gis}
                         onChange={handleChange} />
 
                     <OverlayTrigger overlay={<Tooltip id="gis_tooltip">If checked, display 4th plot with map and plot overlays</Tooltip>}>
@@ -202,8 +205,7 @@ export function InputForm({
                         value={params.unit}
                         onChange={handleChange}>
                         <option value="" hidden>(select option)</option>
-                        <option value="km">Kilometers</option>
-                        <option value="m">Meters</option>
+                        <option value="degrees">Degrees</option>
                     </select>
                 </OverlayTrigger>
             </div>}
@@ -278,7 +280,7 @@ export function InputForm({
 
                 <div className="row">
                     <div className="col-md-6 form-group">
-                        <label htmlFor="width">Width {params.gis && params.unit ? "(in " + params.unit + ")" : ''}</label>
+                        <label htmlFor="width">Width {params.gis && params.unit ? "(" + params.unit + ")" : ''}</label>
                         <OverlayTrigger overlay={<Tooltip id="width_tooltip">Enter the width of the rectangle</Tooltip>}>
                             <input
                                 type="number"
@@ -293,7 +295,7 @@ export function InputForm({
                     </div>
 
                     <div className="col-md-6 form-group">
-                        <label htmlFor="height">Height {params.gis && params.unit ? "(in " + params.unit + ")" : ''}</label>
+                        <label htmlFor="height">Height {params.gis && params.unit ? "(" + params.unit + ")" : ''}</label>
                         <OverlayTrigger overlay={<Tooltip id="height_tooltip">Enter the height of the rectangle</Tooltip>}>
                             <input
                                 type="number"
@@ -375,7 +377,7 @@ export function InputForm({
                 </div>}
 
                 <div className="col-md-4 form-group">
-                    <label htmlFor="radius">Radius {params.gis && params.unit ? "(in " + params.unit + ")" : ''}</label>
+                    <label htmlFor="radius">Radius {params.gis && params.unit ? "(" + params.unit + ")" : ''}</label>
                     <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Enter the radius of the circle</Tooltip>}>
                         <input
                             type="number"
