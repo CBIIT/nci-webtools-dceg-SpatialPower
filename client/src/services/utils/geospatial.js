@@ -69,7 +69,7 @@ export function sphericalDistance(source, target, globalRadius = 6371e3) {
   * @param {number} globalRadius - radius of global spheroid (in meters)
   */
 export function getTargetCoordinates(longitude, latitude, bearingDegrees, distance, globalRadius = 6371e3) {
-    [latitude, longitude] = normalizeCoordinates([latitude, longitude]).map(radians);
+    [longitude, latitude] = normalizeCoordinates([longitude, latitude]).map(radians);
     const bearing = radians(bearingDegrees);
     const angularDistance = distance / globalRadius;
 
@@ -96,7 +96,7 @@ export function getTargetCoordinates(longitude, latitude, bearingDegrees, distan
  * @returns {[longitude: number, latitude: number][]} An array of valid GeoJSON coordinates
  */
 export function getRectangularCoordinates(longitude, latitude, horizontalDistance, verticalDistance, globalRadius = 6371e3) {
-    const topLeft = [longitude, latitude];
+    const topLeft = normalizeCoordinates([longitude, latitude]);
     const bottomLeft = getTargetCoordinates(longitude, latitude, 180, verticalDistance, globalRadius)
     const topRight = getTargetCoordinates(longitude, latitude, 90, horizontalDistance, globalRadius);
     const bottomRight = getTargetCoordinates(topRight[0], topRight[1], 180, verticalDistance)
