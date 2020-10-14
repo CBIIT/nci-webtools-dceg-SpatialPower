@@ -122,9 +122,9 @@ plot_results <- function(results, params) {
             cols = params$cols)
     dev.off()
 
-    file.rename(paste0("plot-1.",params$plot_format),paste0("simulated-data.",params$plot_format))
-    file.rename(paste0("plot-2.",params$plot_format),paste0("local-power-continuous-scale.",params$plot_format))
-    file.rename(paste0("plot-3.",params$plot_format),paste0("local-power-above-threshold.",params$plot_format))
+    file.rename(paste0("plot-1.",params$plot_format),paste0("data-simulation.",params$plot_format))
+    file.rename(paste0("plot-2.",params$plot_format),paste0("continuous-power.",params$plot_format))
+    file.rename(paste0("plot-3.",params$plot_format),paste0("categorical-power.",params$plot_format))
 
     # add generated plots
     files <- list(paste0("simulated-data.",params$plot_format),paste0("local-power-continuous-scale.",params$plot_format),paste0("local-power-above-threshold.",params$plot_format))
