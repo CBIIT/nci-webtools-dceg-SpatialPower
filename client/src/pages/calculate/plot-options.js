@@ -30,10 +30,6 @@ export function PlotOptions({ onSubmit = e => { } }) {
     }
 
     function checkRequired() {
-
-        if (params.cascon)
-            return params.upper_tail
-
         return true;
     }
 
@@ -57,13 +53,9 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         name="title"
                                         checked={params.title}
                                         onChange={handleChange} />
-                                    {params.final_sims > 1 && <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plot titles.</Tooltip>}>
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plot titles.</Tooltip>}>
                                         <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
-                                    </OverlayTrigger>}
-
-                                    {params.final_sims === 1 && <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plot titles.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="title">Display Plot Title</label>
-                                    </OverlayTrigger>}
+                                    </OverlayTrigger>
                                 </div>
 
                                 <div className="form-group custom-control custom-checkbox mr-3">
@@ -79,7 +71,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </OverlayTrigger>
                                 </div>
 
-                                {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox mr-3">
+                                {params.sim_total > 1 && <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
                                         type="checkbox"
                                         className="custom-control-input"
@@ -88,11 +80,11 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         checked={params.horizontal}
                                         onChange={handleChange} />
                                     <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display legend horizontally below each plot.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="horizontal">Horizontal</label>
+                                        <label className="custom-control-label" htmlFor="horizontal">Display Horizontal Legend</label>
                                     </OverlayTrigger>
                                 </div>}
 
-                                {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox mr-3">
+                                {params.sim_total > 1 && <div className="form-group custom-control custom-checkbox mr-3">
                                     <input
                                         type="checkbox"
                                         className="custom-control-input"
@@ -105,7 +97,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                     </OverlayTrigger>
                                 </div>}
 
-                                {params.final_sims > 1 && <div className="form-group custom-control custom-checkbox">
+                                {params.sim_total > 1 && <div className="form-group custom-control custom-checkbox">
                                     <input
                                         type="checkbox"
                                         className="custom-control-input"
@@ -176,7 +168,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         id="case_size"
                                         name="case_size"
                                         className="form-control"
-                                        value={params.case_size === 0 ? '' : params.case_size}
+                                        value={params.case_size}
                                         onChange={handleChange} />
                                 </OverlayTrigger>
                             </div>
@@ -237,12 +229,12 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                             id="control_size"
                                             name="control_size"
                                             className="form-control"
-                                            value={params.control_size === 0 ? '' : params.control_size}
+                                            value={params.control_size}
                                             onChange={handleChange} />
                                     </OverlayTrigger>
                                 </div>
                             </div>
-                            {params.final_sims === 1 && <div className="form-group">
+                            {params.sim_total === 1 && <div className="form-group">
                                 <label htmlFor="replot" className="d-block">&nbsp;</label>
                                 <div className="text-center">
                                     <button
@@ -257,7 +249,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                             </div>}
                         </div>
 
-                        {params.final_sims > 1 && <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
+                        {params.sim_total > 1 && <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
                             <div className="row" style={{ width: '85%' }}>
                                 <div className="col-lg form-group">
                                     <label htmlFor="p_thresh" className="text-nowrap">Power Threshold</label>
