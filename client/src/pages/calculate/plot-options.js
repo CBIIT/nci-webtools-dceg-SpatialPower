@@ -74,7 +74,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         name="axes"
                                         checked={params.axes}
                                         onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, the x and y axes will be displayed alongside the plot .</Tooltip>}>
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display x and y axes alongside the plot.</Tooltip>}>
                                         <label className="custom-control-label" htmlFor="axes">Display Axes</label>
                                     </OverlayTrigger>
                                 </div>
@@ -87,7 +87,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         name="horizontal"
                                         checked={params.horizontal}
                                         onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, color legend will be horizontal below the plot.</Tooltip>}>
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display legend horizontally below each plot.</Tooltip>}>
                                         <label className="custom-control-label" htmlFor="horizontal">Horizontal</label>
                                     </OverlayTrigger>
                                 </div>}
@@ -100,8 +100,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         name="plot_pts"
                                         checked={params.plot_pts}
                                         onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, the points from the first simulation iteration will be added to second plot.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="plot_pts">Plot Points</label>
+                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display points from the first simulation iteration on the second plot.</Tooltip>}>
+                                        <label className="custom-control-label" htmlFor="plot_pts">Display Simulated Points</label>
                                     </OverlayTrigger>
                                 </div>}
 
@@ -113,8 +113,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                         name="cascon"
                                         checked={params.cascon}
                                         onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="cascon_tooltip">If checked, computes the statistical power to detect case clusters and control clusters. If not, computes the statistical power to detect case clusters only.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="cascon">Detect Control Clusters</label>
+                                    <OverlayTrigger overlay={<Tooltip id="cascon_tooltip">If checked, display statistical power for both case and control clusters. If not, display power for case clusters only.</Tooltip>}>
+                                        <label className="custom-control-label" htmlFor="cascon">Display Control Clusters</label>
                                     </OverlayTrigger>
                                 </div>}
                             </div>
