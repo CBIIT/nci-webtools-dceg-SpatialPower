@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
-import { actions, getInitialState } from '../../services/store/params';
+import { getInitialState } from '../../services/store/params';
+import { getRectangularCoordinates, getRegularPolygonalCoordinates } from '../../services/utils/geospatial';
 
 
 export function InputForm({
+    params: storeParams,
     className = '',
     onSubmit = e => { },
     onReset = e => { }
 }) {
-    const dispatch = useDispatch();
-    const params = useSelector(state => state.params);
-    const mergeParams = value => dispatch(actions.mergeParams(value));
-    const resetParams = _ => dispatch(actions.resetParams());
+    const [params, setParams] = useState(storeParams)
+    const mergeParams = value => setParams({...params, ...value});
+    const resetParams = _ => setParams(getInitialState());
     const simQueueCutoff = 100;
-    const [submitted, setSubmit] = useState(false)
+    const [submitted, setSubmitted] = useState(false)
 
     function checkRequired() {
 
@@ -29,7 +29,7 @@ export function InputForm({
             }
         }
 
-        if(params.gis){
+        if(params.gis) {
             return params.unit;
         }
 
@@ -50,7 +50,7 @@ export function InputForm({
     function handleChange(event) {
         const { name, value } = getInputEventValue(event);
         const newParams = { ...params, [name]: value };
-        setSubmit(false)
+        setSubmitted(false)
 
         // cap maximum number of simulations
         newParams.sim_total = Math.min(50000, newParams.sim_total);
@@ -64,7 +64,7 @@ export function InputForm({
             newParams.win = '';
 
         // set default parameters
-        if ((name === 'win' || name === 'samp_case') && (newParams.win == 'unit_circle' || newParams.win == 'unit_square')) {
+        if ((name === 'win' || name === 'samp_case') && (newParams.win === 'unit_circle' || newParams.win === 'unit_square')) {
 
             newParams.x_origin = 0.5;
             newParams.y_origin = 0.5;
@@ -76,7 +76,7 @@ export function InputForm({
             newParams.r_case = [0.5]
         }
 
-        if ((name === 'win' || name === 'samp_control') && (newParams.win == 'unit_circle' || newParams.win == 'unit_square')) {
+        if ((name === 'win' || name === 'samp_control') && (newParams.win === 'unit_circle' || newParams.win === 'unit_square')) {
             newParams.x_control = [0.5]
             newParams.y_control = [0.5]
             newParams.s_control = [0.33]
@@ -119,13 +119,35 @@ export function InputForm({
             newParams.s_control = [Math.floor((newParams.radius / 3) * 10) / 10]
         }
 
+        // todo: use isDefined (eg: not '', undefined, null) to allow using (0, 0) coordinates
+        if (newParams.gis && newParams.unit && newParams.longitude && newParams.latitude) {
+            const multiplier = {
+                meters: 1,
+                kilometers: 1e3
+            }[newParams.unit];
+            
+            if (newParams.win === 'rectangle' && newParams.width && newParams.height) {
+                const width = +newParams.width * multiplier;
+                const height = +newParams.height * multiplier;
+                const coordinates = getRectangularCoordinates(newParams.longitude, newParams.latitude, width, height);
+                newParams.geojson = JSON.stringify({type: 'Polygon', coordinates: [coordinates]});
+            }
+            else if (newParams.win === 'circle' && newParams.radius) {
+                const radius = +newParams.radius * multiplier;
+                const coordinates = getRegularPolygonalCoordinates(newParams.longitude, newParams.latitude, radius);
+                newParams.geojson = {type: 'Polygon', coordinates: [coordinates]};
+            } else {
+                newParams.geojson = '';
+            }
+
+        }
+
         mergeParams(newParams);
     }
 
     function handleBlur(event) {
         const { name, value, dataset } = event.target;
         const newParams = { ...params, [name]: value };
-
 
         if (dataset.type === 'number-array')
             newParams[name] = value.split(/[\s,]+/g).map(Number).filter(n => !isNaN(n));
@@ -138,19 +160,14 @@ export function InputForm({
     function handleSubmit(event) {
         event.preventDefault();
         if (onSubmit) {
-
+            onSubmit(params);
             if (!params.queue)
-                setSubmit(true)
-
-            const newParams = { ...params, ['final_sims']: params.sim_total }
-            mergeParams(newParams)
-            onSubmit(newParams);
+                setSubmitted(true);
         }
     }
 
     function handleReset(event) {
         event.preventDefault();
-        window.scrollTo(0, 0);
         resetParams();
         if (onReset) {
             onReset(getInitialState());
@@ -205,7 +222,9 @@ export function InputForm({
                         value={params.unit}
                         onChange={handleChange}>
                         <option value="" hidden>(select option)</option>
-                        <option value="degrees">Degrees</option>
+                        <option value="kilometers">Kilometers</option>
+                        <option value="meters">Meters</option>
+                        <option value="degrees" disabled>Degrees</option>
                     </select>
                 </OverlayTrigger>
             </div>}
@@ -247,21 +266,6 @@ export function InputForm({
 
                 {params.gis && <div className="row">
                     <div className="col-md-6 form-group">
-                        <label htmlFor="latitude">Latitude</label>
-                        <OverlayTrigger overlay={<Tooltip id="latitude_tooltip">Enter the latitude of the lower left corner</Tooltip>}>
-                            <input
-                                type="text"
-                                data-type="number"
-                                id="latitude"
-                                name="latitude"
-                                step="any"
-                                className="form-control"
-                                value={params.latitude}
-                                onChange={handleChange}
-                                onBlur={handleBlur} />
-                        </OverlayTrigger>
-                    </div>
-                    <div className="col-md-6 form-group">
                         <label htmlFor="longitude">Longitude</label>
                         <OverlayTrigger overlay={<Tooltip id="latitude_tooltip">Enter the longitude of the lower left corner</Tooltip>}>
                             <input
@@ -276,12 +280,28 @@ export function InputForm({
                                 onBlur={handleBlur} />
                         </OverlayTrigger>
                     </div>
+
+                    <div className="col-md-6 form-group">
+                        <label htmlFor="latitude">Latitude</label>
+                        <OverlayTrigger overlay={<Tooltip id="latitude_tooltip">Enter the latitude of the lower left corner</Tooltip>}>
+                            <input
+                                type="text"
+                                data-type="number"
+                                id="latitude"
+                                name="latitude"
+                                step="any"
+                                className="form-control"
+                                value={params.latitude}
+                                onChange={handleChange}
+                                onBlur={handleBlur} />
+                        </OverlayTrigger>
+                    </div>                    
                 </div>}
 
                 <div className="row">
                     <div className="col-md-6 form-group">
-                        <label htmlFor="width">Width {params.gis && params.unit ? "(" + params.unit + ")" : ''}</label>
-                        <OverlayTrigger overlay={<Tooltip id="width_tooltip">Enter the width of the rectangle</Tooltip>}>
+                        <label htmlFor="width">Width {params.gis && params.unit && `(${params.unit})`}</label>
+                        <OverlayTrigger overlay={<Tooltip id="width_tooltip">Enter the width of the rectangular area</Tooltip>}>
                             <input
                                 type="number"
                                 id="width"
@@ -289,14 +309,14 @@ export function InputForm({
                                 step="any"
                                 min="0"
                                 className="form-control"
-                                value={params.width || ''}
+                                value={params.width}
                                 onChange={handleChange} />
                         </OverlayTrigger>
                     </div>
 
                     <div className="col-md-6 form-group">
-                        <label htmlFor="height">Height {params.gis && params.unit ? "(" + params.unit + ")" : ''}</label>
-                        <OverlayTrigger overlay={<Tooltip id="height_tooltip">Enter the height of the rectangle</Tooltip>}>
+                        <label htmlFor="height">Height {params.gis && params.unit && `(${params.unit})`}</label>
+                        <OverlayTrigger overlay={<Tooltip id="height_tooltip">Enter the height of the rectangular area</Tooltip>}>
                             <input
                                 type="number"
                                 id="height"
@@ -304,7 +324,7 @@ export function InputForm({
                                 step="any"
                                 min="0"
                                 className="form-control"
-                                value={params.height || ''}
+                                value={params.height}
                                 onChange={handleChange} />
                         </OverlayTrigger>
                     </div>
@@ -377,7 +397,7 @@ export function InputForm({
                 </div>}
 
                 <div className="col-md-4 form-group">
-                    <label htmlFor="radius">Radius {params.gis && params.unit ? "(" + params.unit + ")" : ''}</label>
+                    <label htmlFor="radius">Radius {params.gis && params.unit && `(${params.unit})`}</label>
                     <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Enter the radius of the circle</Tooltip>}>
                         <input
                             type="number"
@@ -386,7 +406,7 @@ export function InputForm({
                             step="any"
                             min="0"
                             className="form-control"
-                            value={params.radius || ''}
+                            value={params.radius}
                             onChange={handleChange} />
                     </OverlayTrigger>
                 </div>
@@ -422,7 +442,7 @@ export function InputForm({
                         id="x_case"
                         name="x_case"
                         className="form-control"
-                        value={params.x_case || ''}
+                        value={params.x_case}
                         onChange={handleChange}
                         onBlur={handleBlur} />
                 </OverlayTrigger>
@@ -484,7 +504,7 @@ export function InputForm({
                         id="n_case"
                         name="n_case"
                         className="form-control"
-                        value={params.n_case || ''}
+                        value={params.n_case}
                         onChange={handleChange}
                         onBlur={handleBlur} />
                 </OverlayTrigger>
@@ -567,7 +587,7 @@ export function InputForm({
                         id="n_control"
                         name="n_control"
                         className="form-control"
-                        value={params.n_control || ''}
+                        value={params.n_control}
                         onChange={handleChange}
                         onBlur={handleBlur} />
                 </OverlayTrigger>
@@ -583,7 +603,7 @@ export function InputForm({
                     id="sim_total"
                     name="sim_total"
                     className="form-control"
-                    value={params.sim_total === 0 ? '' : params.sim_total}
+                    value={params.sim_total}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
@@ -597,7 +617,7 @@ export function InputForm({
                     name="rand_seed"
                     min="0"
                     className="form-control no-spinner"
-                    value={params.rand_seed === 0 ? '' : params.rand_seed}
+                    value={params.rand_seed}
                     onChange={handleChange} />
             </OverlayTrigger>
         </div>
