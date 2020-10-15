@@ -1,32 +1,67 @@
-import React, { useState } from 'react';
+import React, { createRef, useRef, useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Nav from 'react-bootstrap/Nav';
 import Tab from 'react-bootstrap/Tab';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button'
 import { useSelector, useDispatch } from 'react-redux';
+import JSZip from 'jszip'
+import saveAs from 'file-saver';
+
 import { getInputEventValue } from './utils';
 import { actions } from '../../services/store/params';
 
-export function Plots({ onExport = e => { } }) {
+export function Plots() {
     const dispatch = useDispatch();
     let { id, plots, urlKey } = useSelector(state => state.results);
     const params = useSelector(state => state.params);
     const mergeParams = value => dispatch(actions.mergeParams(value));
-    const [show, setShow] = useState(false)
+    const plotRefs = useRef(plots.map(_ => createRef()));
 
+    const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    if (!plots) return null;
-    if (!Array.isArray(plots)) plots = [plots];
-    if (params.final_sims === 1) plots = [plots[0]];
-    
-    function handleExport(event) {
+
+    if (!plots || !plots.length) return null;
+
+    async function handleExport(event) {
         event.preventDefault();
         setShow(false);
-        if (onExport) {
-            onExport(params);
+
+        const archive = new JSZip();
+        const images = plotRefs.current.map(el => el.current);
+
+        for (let i = 0; i < images.length; i ++) {
+            const filename = `${[
+                'data-simulation', 
+                'continuous-power', 
+                'categorical-power'
+            ][i]}.${params.plot_format}`;
+            const image = images[i];
+
+            // create canvas to export image
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = params.plot_width;
+            canvas.height = params.plot_height;
+
+            context.fillStyle = 'white';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            // preserve square aspect ratio
+            const imageSize = Math.min(canvas.width, canvas.height);
+            const xOffset = (canvas.width - imageSize) / 2;
+            const yOffset = (canvas.height - imageSize) / 2;
+            context.drawImage(image, xOffset, yOffset, imageSize, imageSize);
+
+            // add image to archive
+            const contents = canvas.toDataURL().replace(/^data:.*base64,/, '')
+            archive.file(filename, contents, {base64: true});
         }
+
+        const content = await archive.generateAsync({type: 'blob'});
+        saveAs(content, 'export.zip');
         return false;
     }
 
@@ -73,7 +108,6 @@ export function Plots({ onExport = e => { } }) {
                                         <option value="" hidden>(select option)</option>
                                         <option value="png">png</option>
                                         <option value="jpeg">jpeg</option>
-                                        <option value="tiff">tiff</option>
                                         <option value="bmp">bmp</option>
                                     </select>
                                 </div>
@@ -115,7 +149,7 @@ export function Plots({ onExport = e => { } }) {
             <Card.Body>
                 <Tab.Content className="text-center">
                     {plots.map((plot, i) => <Tab.Pane key={`plot-tab-container-${i}`} eventKey={`plot-${i}`}>
-                        <img className="img-fluid" style={{maxWidth: '480px',maxHeight: '480px'}} src={`api/results/${id}/${plot}?key=${urlKey}`} alt={`Plot ${i + 1}`} />
+                        <img ref={plotRefs.current[i]} id={`plot-${i}`} className="img-fluid" src={`api/results/${id}/${plot}?key=${urlKey}`} alt={`Plot ${i + 1}`} />
                     </Tab.Pane>)}
                 </Tab.Content>
             </Card.Body>
