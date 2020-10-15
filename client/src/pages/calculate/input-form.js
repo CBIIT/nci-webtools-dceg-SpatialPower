@@ -159,7 +159,7 @@ export function InputForm({
 
     return <form className={className} onSubmit={handleSubmit} onReset={handleReset}>
         <fieldset className="border px-3 mb-4">
-            <legend className="legend font-weight-bold" style={{ width: '26%' }}>Spatial Window</legend>
+            <legend className="legend font-weight-bold">Spatial Window</legend>
             <div className="row">
                 <div className="col-md-9 form-group">
                     <label htmlFor="win" className="required">Window Shape</label>
@@ -394,7 +394,7 @@ export function InputForm({
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
-            <legend className="legend font-weight-bold" style={{ width: '24%' }}>Sample Case</legend>
+            <legend className="legend font-weight-bold">Sample Case</legend>
             <div className="form-group">
                 <label htmlFor="samp_case" className="required">Case Type</label>
                 <OverlayTrigger overlay={<Tooltip id="samp_case_tooltip">Specify how case locations are randomized.</Tooltip>}>
@@ -492,7 +492,7 @@ export function InputForm({
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
-            <legend className="legend font-weight-bold" style={{ width: '28%' }}>Sample Control</legend>
+            <legend className="legend font-weight-bold">Sample Control</legend>
             <div className="form-group">
                 <label htmlFor="samp_control" className="required">Control Type</label>
                 <OverlayTrigger overlay={<Tooltip id="samp_control_tooltip">Specify how control locations are randomized.</Tooltip>}>
@@ -621,7 +621,7 @@ export function InputForm({
         <hr className="mt-4" />
 
         <fieldset className="border px-3 mb-4">
-            <legend className="legend font-weight-bold" style={{ width: '15%' }}>Queue</legend>
+            <legend className="legend font-weight-bold">Queue</legend>
             <div className="form-group custom-control custom-checkbox">
                 <input
                     type="checkbox"
