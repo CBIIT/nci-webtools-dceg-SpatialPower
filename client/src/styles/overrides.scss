@@ -16,6 +16,10 @@ hr {
     border-top: 1px solid #dee2e6;
 }
 
+legend {
+    width: inherit;
+}
+
 .bg-primary-darker {
     background-color: $primary-darker !important;
 }
