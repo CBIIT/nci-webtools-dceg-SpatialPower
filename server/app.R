@@ -91,23 +91,8 @@ plot_results <- function(results, params) {
     params$chars <- as.integer(c(params$case_symbol, params$control_symbol))
     params$sizes <- as.double(c(params$case_size, params$control_size))
 
-    # todo: specifying width and height above default makes plotting area collide with legend
-    if (!'plot_format' %in% names(params)) params$plot_format <- "png"
-    if (!'plot_width' %in% names(params)) params$plot_width <- 480
-    if (!'plot_height' %in% names(params)) params$plot_height <- 480
-
     # svg files are rather large compared to other formats due to a large number of paths
-    # svg width/heights are specified in inches, not pixels
-
-    scale <- sqrt(params$plot_width ^ 2 + params$plot_height ^ 2)/sqrt(480 ^ 2 + 480 ^ 2)
-
-    # set up graphics device
-    do.call(params$plot_format, list(
-        filename = paste0("plot-%d.", params$plot_format),
-        width = params$plot_width, 
-        height = params$plot_height
-    ))
-
+    svg(filename = "%d.svg")
     sparrpowR::spatial_plots(results,
             p_thresh = params$p_thresh,
             chars = params$chars,
@@ -115,18 +100,10 @@ plot_results <- function(results, params) {
             plot_pts = params$plot_pts,
             plot_title = params$title, 
             cascon = as.logical(params$cascon),
-            scale = scale,
             plot_axes = params$axes,
             plot_square = TRUE,
             horizontal = params$horizontal,
             cols = params$cols)
     dev.off()
-
-    file.rename(paste0("plot-1.",params$plot_format),paste0("data-simulation.",params$plot_format))
-    file.rename(paste0("plot-2.",params$plot_format),paste0("continuous-power.",params$plot_format))
-    file.rename(paste0("plot-3.",params$plot_format),paste0("categorical-power.",params$plot_format))
-
-    # add generated plots
-    files <- list(paste0("data-simulation.",params$plot_format),paste0("continuous-power.",params$plot_format),paste0("categorical-power.",params$plot_format))
-    files
+    list.files(pattern = "^\\d+.svg$")
 }
