@@ -11,7 +11,7 @@ RUN yum -y install udunits2-devel geos geos-devel libcurl-devel protobuf-devel g
 RUN yum -y install https://download.fedoraproject.org/pub/epel/7/x86_64/Packages/j/jq-1.6-2.el7.x86_64.rpm
 RUN yum -y install https://download.fedoraproject.org/pub/epel/7/x86_64/Packages/j/jq-devel-1.6-2.el7.x86_64.rpm
 
-RUN RScript -e "install.packages(c('geojsonio', 'tibble'), repos='https://cloud.r-project.org/')"
+RUN Rscript -e "install.packages(c('geojsonio', 'tibble'), repos='https://cloud.r-project.org/')"
 
 COPY . /deploy
 
