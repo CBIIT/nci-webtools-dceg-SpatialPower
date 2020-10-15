@@ -4,6 +4,7 @@ import { mergeObject } from './utils';
 export const getInitialState = () => ({
     win: '',
     gis: false,
+    geojson: '',
     x_origin: 0,
     y_origin: 0,
     latitude: 38.9072,
@@ -13,7 +14,6 @@ export const getInitialState = () => ({
     height: 2,
     radius: 1,
     sim_total: 2,
-    final_sims: 2,
     x_case: '',
     y_case: '',
     samp_case: '',
