@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import Alert from 'react-bootstrap/Alert';
 import Card from 'react-bootstrap/Card';
-import { useSelector, useDispatch, useStore } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { LoadingOverlay } from '@cbiitss/react-components';
 import { actions as paramsActions } from '../../services/store/params';
 import { actions as resultsActions } from '../../services/store/results';
@@ -33,10 +33,10 @@ export function Calculate({ match }) {
 
     function validateInput(params) {
 
-        var valid = true;
-        var { samp_case, samp_control, x_origin, y_origin, radius, width, height, x_case, y_case, x_control, y_control, n_case, n_control, s_case, r_case, s_control } = params;
-        var names = ["X Case", "Y Case", "X Control", "Y Control"]
-        var i = 0;
+        let valid = true;
+        let { samp_case, samp_control, x_origin, y_origin, radius, width, height, x_case, y_case, x_control, y_control, n_case, n_control, s_case, r_case, s_control } = params;
+        let names = ["X Case", "Y Case", "X Control", "Y Control"]
+        let i = 0;
 
         //X and Y Origin must be numeric
         if (isNaN(x_origin) || isNaN(y_origin)) {
@@ -50,10 +50,10 @@ export function Calculate({ match }) {
             valid = false;
         }
         //Determine if every coordinate is within the window
-        else {
+        else if (!params.gis) {
 
             if (params.win === 'unit_circle' || params.win === 'circle') {
-                for (var i = 0; i < x_case.length; i++) {
+                for (let i = 0; i < x_case.length; i++) {
 
                     const distance = Math.sqrt(Math.pow(x_case[i] - x_origin, 2) + Math.pow(y_case[i] - y_origin, 2));
 
@@ -73,7 +73,7 @@ export function Calculate({ match }) {
                     height = 1;
                 }
 
-                for (var i = 0; i < x_case.length; i++) {
+                for (let i = 0; i < x_case.length; i++) {
 
                     if (x_case[i] < x_origin || x_case[i] > x_origin + width || y_case[i] < y_origin || y_case[i] > y_origin + height) {
                         addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case cannot be outside the window. Coordinate: (' + x_case[i] + ',' + y_case[i] + ')' })
@@ -94,10 +94,10 @@ export function Calculate({ match }) {
             }
 
             //Determine if every coordinate is within bounds
-            else {
+            else if (!params.gis) {
 
                 if (params.win === 'unit_circle' || params.win === 'circle') {
-                    for (var i = 0; i < x_control.length; i++) {
+                    for (let i = 0; i < x_control.length; i++) {
 
                         const distance = Math.sqrt(Math.pow(x_control[i] - x_origin, 2) + Math.pow(y_control[i] - y_origin, 2));
 
@@ -117,7 +117,7 @@ export function Calculate({ match }) {
                         height = 1;
                     }
 
-                    for (var i = 0; i < x_case.length; i++) {
+                    for (let i = 0; i < x_case.length; i++) {
 
                         if (x_control[i] < x_origin || x_control[i] > x_origin + width || y_control[i] < y_origin || y_control[i] > y_origin + height) {
                             addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control cannot be outside the window. Coordinate: (' + x_control[i] + ',' + y_control[i] + ')' })
@@ -129,7 +129,7 @@ export function Calculate({ match }) {
         }
 
         i = 0;
-        var cases;
+        let cases;
 
         /*The dimension of N Case, S Case, and R Case must be either:
         *  -Equal to 1 
@@ -170,7 +170,7 @@ export function Calculate({ match }) {
                 valid = false;
             }
 
-            var half;
+            let half;
             if (params.win === 'circle' || params.win === 'unit_circle')
                 half = radius;
             else
@@ -192,7 +192,7 @@ export function Calculate({ match }) {
         }
 
         i = 0;
-        var control;
+        let control;
 
         /*The dimension of N Control, S Control, and R Control must be either:
         *  -Equal to 1 
@@ -234,6 +234,7 @@ export function Calculate({ match }) {
     async function handleSubmit(params) {
         console.log(params);
 
+        mergeParams(params);
         resetResults();
         resetMessages();
         window.scrollTo(0, 0);
@@ -280,26 +281,6 @@ export function Calculate({ match }) {
     }
 
     /**
-     * Generates and downloads an archive containing exported plots
-     * @param {object} params 
-     */
-    async function handleExportPlots(params) {
-        try {
-            const { id } = results;
-            mergeResults({ loading: true });
-            const filename = await postJSON('api/export-plots', { ...params, id });
-            const exportUrl = `${process.env.REACT_APP_API_ROOT}/api/results/${id}/${filename}`;
-            
-            window.location.href = exportUrl;
-        } catch (error) {
-            addMessage({ type: 'danger', text: error });
-        } finally {
-
-            mergeResults({ loading: false });
-        }
-    }
-
-    /**
      * Resets calculation parameters, results, and messages to their initial state
      */
     function handleReset() {
@@ -336,7 +317,7 @@ export function Calculate({ match }) {
             <div className="col-xl-4 col-lg-4 col-md-5 mb-3">
                 <Card className="shadow-sm h-100">
                     <Card.Body>
-                        <InputForm onSubmit={handleSubmit} onReset={handleReset} />
+                        <InputForm params={params} onSubmit={handleSubmit} onReset={handleReset} />
                     </Card.Body>
                 </Card>
             </div>
@@ -359,7 +340,7 @@ export function Calculate({ match }) {
                     </Card> : <>
                         <Summary />
                         <PlotOptions onSubmit={handleReplot} />
-                        <Plots onExport={handleExportPlots} />
+                        <Plots />
                     </>}
             </div>
         </div>
