@@ -18,7 +18,7 @@ export function Summary() {
     return <Card className="shadow-sm mb-3">
         <Card.Header>
             <h2 className="h6 d-inline-block mr-1 my-1">Summary Statistics</h2>
-            <small>(Number of Simulations: {params.final_sims.toLocaleString()})</small>
+            <small>(Number of Simulations: {params.sim_total.toLocaleString()})</small>
         </Card.Header>
 
         <Card.Body>
