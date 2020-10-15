@@ -36,18 +36,10 @@ apiRouter.post('/submit', async (request, response) => {
         // generate unique id for response
         const id = crypto.randomBytes(16).toString('hex');
 
-        const date = new Date();
-        const isoDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString();
-        const day = isoDate.split("T")[0];
-        const time = isoDate.split("T")[1].split("Z")[0].substring(0,5);
-
         // assign id to body
         let body = Object.assign(request.body, {
             id,
-            timestamp: day + ' ' + time + ' UTC',
-            plot_format: 'png',
-            plot_width: 480,
-            plot_height: 480,
+            timestamp: new Date().toLocaleString(),
         });
 
         // remove empty values from body
@@ -72,6 +64,7 @@ apiRouter.post('/submit', async (request, response) => {
         // perform calculation and return results
         const sourcePath = path.resolve(__dirname, 'app.R');
         const results = await r(sourcePath, 'calculate', [body]);
+        if (!Array.isArray(results.plots)) results.plots = [results.plots];
         response.json(results);
 
     } catch (error) {
@@ -93,72 +86,16 @@ apiRouter.post('/replot', async (request, response) => {
         const body = Object.assign(request.body, {
             directory: path.resolve(config.results.folder, request.body.id),
             rds_file: 'results.rds',
-            plot_format: 'png',
-            plot_width: 480,
-            plot_height: 480,
         });
         const sourcePath = path.resolve(__dirname, 'app.R');
         const results = await r(sourcePath, 'replot', [body]);
+        if (!Array.isArray(results.plots)) results.plots = [results.plots];
 
         response.json(results);
     } catch (error) {
         const errorText = String(error.stderr || error);
         logger.error(errorText);
         response.status(500).json(errorText);
-    }
-});
-
-// generates a zip file containing exported plots
-apiRouter.post('/export-plots', async (request, response) => {
-    try {
-        // override default parameters
-        const body = Object.assign({
-            plot_format: 'png',
-            plot_width: 480,
-            plot_height: 480,
-        }, request.body);
-
-        // validate id format
-        if (!/^[a-z0-9]+$/i.test(body.id)) {
-            throw ('Invalid id');
-        }
-
-        // validate image format
-        if (!['bmp', 'jpeg', 'png', 'tiff'].includes(body.plot_format))
-            throw ('Invalid format')
-
-        // create temporary directory
-        const basePath = path.resolve(config.results.folder, body.id);
-        body.rds = path.resolve(basePath, 'results.rds');
-        body.directory = await fs.promises.mkdtemp(
-            path.resolve(basePath, `export-`)
-        );
-
-        // clamp dimensions between 100 x 100 and 10,000 x 10,000
-        const [min, max] = [100, 10000];
-        body.plot_width = Math.max(min, Math.min(max, body.plot_width));
-        body.plot_height = Math.max(min, Math.min(max, body.plot_height));
-
-        // generate plots
-        const sourcePath = path.resolve(__dirname, 'app.R');
-        let results = await r(sourcePath, 'replot', [body]);
-        if (!Array.isArray(results)) results = [results];
-
-        // zip exported plots
-        const zipFilePath = `${body.directory}.zip`;
-        const output = fs.createWriteStream(zipFilePath);
-        const archive = archiver('zip');
-
-        // send generated zip file
-        output.on('close', () => response.json(path.basename(zipFilePath)));
-        archive.on('error', err => { throw err });
-        archive.pipe(output);
-        archive.directory(body.directory, false);
-        archive.finalize();
-
-    } catch (error) {
-        logger.error(error);
-        response.status(500).json(error.toString());
     }
 });
 
@@ -209,6 +146,7 @@ apiRouter.get('/fetch-results/:id', async (request, response) => {
         if (fs.existsSync(resultsFilePath) && fs.existsSync(paramsFilePath)) {
             const params = JSON.parse(String(await fs.promises.readFile(paramsFilePath)));
             const results = JSON.parse(String(await fs.promises.readFile(resultsFilePath)));
+            if (!Array.isArray(results.plots)) results.plots = [results.plots];
             response.json({ params, results });
         } else {
             throw (`Invalid id`);
