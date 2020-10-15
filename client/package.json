@@ -6,6 +6,8 @@
     "@cbiitss/react-components": "^0.1.4",
     "@reduxjs/toolkit": "^1.4.0",
     "bootstrap": "^4.5.0",
+    "file-saver": "^2.0.2",
+    "jszip": "^3.5.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-bootstrap-table-next": "^4.0.3",
