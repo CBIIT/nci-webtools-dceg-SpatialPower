@@ -53,10 +53,14 @@ export function Plots() {
             const imageSize = Math.min(canvas.width, canvas.height);
             const xOffset = (canvas.width - imageSize) / 2;
             const yOffset = (canvas.height - imageSize) / 2;
+
+            // draw image to canvas
+            // note: IE will mark the canvas as tainted if an svg is used as the source
+            // regardless of whether the image is from the same origin or not
             context.drawImage(image, xOffset, yOffset, imageSize, imageSize);
 
             // add image to archive
-            const contents = canvas.toDataURL().replace(/^data:.*base64,/, '')
+            const contents = canvas.toDataURL().replace(/^data:.*base64,/, '');
             archive.file(filename, contents, {base64: true});
         }
 
