@@ -5,8 +5,8 @@ FROM ${BASE_IMAGE}
 ARG SPARRPOWR_TAG
 
 # todo: move these into the base dockerfile once dependencies are finalized
-RUN yum module reset nodejs
-RUN -y module enable nodejs:13
+RUN yum -y module reset nodejs
+RUN yum -y module enable nodejs:13
 RUN yum -y install udunits2-devel geos geos-devel libcurl-devel protobuf-devel gdal-devel v8-devel proj-devel sqlite-devel
 RUN yum -y install https://download.fedoraproject.org/pub/epel/7/x86_64/Packages/j/jq-1.6-2.el7.x86_64.rpm
 RUN yum -y install https://download.fedoraproject.org/pub/epel/7/x86_64/Packages/j/jq-devel-1.6-2.el7.x86_64.rpm
