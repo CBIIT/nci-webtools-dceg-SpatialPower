@@ -6,6 +6,7 @@ install.packages(
         'dotCall64',
         'fields',
         'foreach',
+        'geojsonio',
         'goftest',
         'iterators',
         'jsonlite',
@@ -22,6 +23,7 @@ install.packages(
         'spatstat.data',
         'spatstat.utils',
         'tensor'
+        'tibble',
     ), 
     lib = .Library, 
     repos='https://cloud.r-project.org/'
