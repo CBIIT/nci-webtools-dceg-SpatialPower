@@ -4,6 +4,8 @@ FROM ${BASE_IMAGE}
 
 ARG SPARRPOWR_TAG
 
+RUN RScript -e "install.packages(c('geojsonio', 'tibble'), repos='https://cloud.r-project.org/')"
+
 COPY . /deploy
 
 # always install latest version of spatstat.core
