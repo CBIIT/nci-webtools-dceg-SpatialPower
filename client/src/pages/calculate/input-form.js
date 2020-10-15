@@ -3,7 +3,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
 import { getInitialState } from '../../services/store/params';
-import { getRectangularCoordinates, getRegularPolygonalCoordinates } from '../../services/utils/geospatial';
+import { getRectangularCoordinates, getRegularPolygonalCoordinates, getTargetCoordinates } from '../../services/utils/geospatial';
 
 
 export function InputForm({
@@ -13,7 +13,7 @@ export function InputForm({
     onReset = e => { }
 }) {
     const [params, setParams] = useState(storeParams)
-    const mergeParams = value => setParams({...params, ...value});
+    const mergeParams = value => setParams({ ...params, ...value });
     const resetParams = _ => setParams(getInitialState());
     const simQueueCutoff = 100;
     const [submitted, setSubmitted] = useState(false)
@@ -29,7 +29,7 @@ export function InputForm({
             }
         }
 
-        if(params.gis) {
+        if (params.gis) {
             return params.unit;
         }
 
@@ -60,7 +60,7 @@ export function InputForm({
             newParams.queue = true;
         }
 
-        if(name === 'gis' && (newParams.win === 'unit_circle' || newParams.win === 'unit_square'))
+        if (name === 'gis' && (newParams.win === 'unit_circle' || newParams.win === 'unit_square'))
             newParams.win = '';
 
         // set default parameters
@@ -125,17 +125,30 @@ export function InputForm({
                 meters: 1,
                 kilometers: 1e3
             }[newParams.unit];
-            
+
             if (newParams.win === 'rectangle' && newParams.width && newParams.height) {
                 const width = +newParams.width * multiplier;
                 const height = +newParams.height * multiplier;
                 const coordinates = getRectangularCoordinates(newParams.longitude, newParams.latitude, width, height);
-                newParams.geojson = JSON.stringify({type: 'Polygon', coordinates: [coordinates]});
+                newParams.geojson = JSON.stringify({ type: 'Polygon', coordinates: [coordinates] });
+
+                newParams.x_case = [getTargetCoordinates(newParams.longitude, newParams.latitude, 90, width / 2)[0]];
+                newParams.y_case = [getTargetCoordinates(newParams.longitude, newParams.latitude, 180, width / 2)[1]];
+
+                newParams.x_control = [getTargetCoordinates(newParams.longitude, newParams.latitude, 90, width / 2)[0]];
+                newParams.y_control = [getTargetCoordinates(newParams.longitude, newParams.latitude, 180, width / 2)[1]];
             }
             else if (newParams.win === 'circle' && newParams.radius) {
                 const radius = +newParams.radius * multiplier;
                 const coordinates = getRegularPolygonalCoordinates(newParams.longitude, newParams.latitude, radius);
-                newParams.geojson = {type: 'Polygon', coordinates: [coordinates]};
+                newParams.geojson = { type: 'Polygon', coordinates: [coordinates] };
+
+                newParams.x_case = [newParams.longitude];
+                newParams.y_case = [newParams.latitude];
+
+                newParams.x_control = [newParams.longitude];
+                newParams.y_control = [newParams.latitude];
+
             } else {
                 newParams.geojson = '';
             }
@@ -295,7 +308,7 @@ export function InputForm({
                                 onChange={handleChange}
                                 onBlur={handleBlur} />
                         </OverlayTrigger>
-                    </div>                    
+                    </div>
                 </div>}
 
                 <div className="row">
