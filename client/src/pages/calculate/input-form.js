@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
@@ -16,7 +16,8 @@ export function InputForm({
     const mergeParams = value => setParams({ ...params, ...value });
     const resetParams = _ => setParams(getInitialState());
     const simQueueCutoff = 100;
-    const [submitted, setSubmitted] = useState(false)
+    const [submitted, setSubmitted] = useState(false);
+    useEffect(_ => setParams(storeParams), [storeParams]);
 
     function checkRequired() {
 
@@ -141,7 +142,7 @@ export function InputForm({
             else if (newParams.win === 'circle' && newParams.radius) {
                 const radius = +newParams.radius * multiplier;
                 const coordinates = getRegularPolygonalCoordinates(newParams.longitude, newParams.latitude, radius);
-                newParams.geojson = { type: 'Polygon', coordinates: [coordinates] };
+                newParams.geojson = JSON.stringify({ type: 'Polygon', coordinates: [coordinates] });
 
                 newParams.x_case = [newParams.longitude];
                 newParams.y_case = [newParams.latitude];
