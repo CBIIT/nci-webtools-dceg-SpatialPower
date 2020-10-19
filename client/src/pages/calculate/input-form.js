@@ -121,7 +121,7 @@ export function InputForm({
         }
 
         // todo: use isDefined (eg: not '', undefined, null) to allow using (0, 0) coordinates
-        if (newParams.gis && newParams.unit && newParams.longitude && newParams.latitude) {
+        if (name === 'win' || name === 'gis' || name === 'unit' || name === 'longitude' || name === 'latitude' || name === 'width' || name === 'height' || name === 'radius') {
             const multiplier = {
                 meters: 1,
                 kilometers: 1e3
@@ -139,7 +139,8 @@ export function InputForm({
                 newParams.x_control = [getTargetCoordinates(newParams.longitude, newParams.latitude, 90, width / 2)[0]];
                 newParams.y_control = [getTargetCoordinates(newParams.longitude, newParams.latitude, 180, width / 2)[1]];
 
-                newParams.r_case = [(Math.floor(Math.min(newParams.width / 2, newParams.height / 2) * 10) / 10) * multiplier];
+                newParams.r_case = [(Math.floor(Math.min(width / 2, height / 2) * 10) / 10)];
+                newParams.s_case = [(Math.floor(Math.min(width / 3, height / 3) * 10) / 10)];
             }
             else if (newParams.win === 'circle' && newParams.radius) {
                 const radius = +newParams.radius * multiplier;
@@ -152,7 +153,9 @@ export function InputForm({
                 newParams.x_control = [newParams.longitude];
                 newParams.y_control = [newParams.latitude];
 
-                newParams.r_case = [(Math.floor((newParams.radius / 2) * 10) / 10) * multiplier];
+                newParams.r_case = [(Math.floor(radius / 2) * 10) / 10];
+                newParams.s_case = [Math.floor((radius / 3) * 10) / 10];
+               
             } else {
                 newParams.geojson = '';
             }
@@ -507,7 +510,7 @@ export function InputForm({
                         id="s_case"
                         name="s_case"
                         className="form-control"
-                        value={params.s_case}
+                        value={params.unit === 'kilometers' ? params.s_case/1000 : params.s_case}
                         onChange={handleChange}
                         onBlur={handleBlur} />
                 </OverlayTrigger>
