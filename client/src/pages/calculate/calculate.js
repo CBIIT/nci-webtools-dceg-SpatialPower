@@ -34,7 +34,7 @@ export function Calculate({ match }) {
     function validateInput(params) {
 
         let valid = true;
-        let { samp_case, samp_control, x_origin, y_origin, radius, width, height, x_case, y_case, x_control, y_control, n_case, n_control, s_case, r_case, s_control } = params;
+        let { samp_case, unit, samp_control, x_origin, y_origin, radius, width, height, x_case, y_case, x_control, y_control, n_case, n_control, s_case, r_case, s_control } = params;
         let names = ["X Case", "Y Case", "X Control", "Y Control"]
         let i = 0;
 
@@ -174,17 +174,21 @@ export function Calculate({ match }) {
             if (params.win === 'circle' || params.win === 'unit_circle')
                 half = radius;
             else
-                half = width / 2;
+                half = Math.min(width / 2, height / 2);
 
             //R Case values must be less than half the width of the window
             r_case.forEach((value) => {
+
+                //R Case stored in meters, must convert to km for validation
+                if(unit === 'kilometers')
+                    value = value / 1000;
 
                 if (value > half) {
                     addMessage({ type: 'danger', text: 'Sample Case: R Case values must be less than half the width of the window. (Value = ' + value + ')' })
                     valid = false;
                 }
 
-                if(value <= 0 ){
+                if (value <= 0) {
                     addMessage({ type: 'danger', text: 'Sample Case: R Case values must be a positive. (Value = ' + value + ')' })
                     valid = false;
                 }

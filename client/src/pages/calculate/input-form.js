@@ -138,6 +138,8 @@ export function InputForm({
 
                 newParams.x_control = [getTargetCoordinates(newParams.longitude, newParams.latitude, 90, width / 2)[0]];
                 newParams.y_control = [getTargetCoordinates(newParams.longitude, newParams.latitude, 180, width / 2)[1]];
+
+                newParams.r_case = [(Math.floor(Math.min(newParams.width / 2, newParams.height / 2) * 10) / 10) * multiplier];
             }
             else if (newParams.win === 'circle' && newParams.radius) {
                 const radius = +newParams.radius * multiplier;
@@ -150,6 +152,7 @@ export function InputForm({
                 newParams.x_control = [newParams.longitude];
                 newParams.y_control = [newParams.latitude];
 
+                newParams.r_case = [(Math.floor((newParams.radius / 2) * 10) / 10) * multiplier];
             } else {
                 newParams.geojson = '';
             }
@@ -488,7 +491,7 @@ export function InputForm({
                         id="r_case"
                         name="r_case"
                         className="form-control"
-                        value={params.r_case}
+                        value={params.unit === 'kilometers' ? params.r_case/1000 : params.r_case}
                         onChange={handleChange}
                         onBlur={handleBlur} />
                 </OverlayTrigger>
