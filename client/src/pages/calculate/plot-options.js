@@ -42,73 +42,77 @@ export function PlotOptions({ onSubmit = e => { } }) {
             <Accordion.Collapse eventKey="0">
                 <Card.Body>
                     <form>
-                        <div className="row mb-2">
+                        <div className="row mb-2" style={{ marginLeft: '0', marginRight: '0' }}>
+                            <div style={{ width: '80%' }}>
+                                <fieldset className="border px-3 pb-3">
+                                    <legend className="legend font-weight-bold">Display Settings</legend>
+                                    <div className="col-lg form-inline mt-lg-3 mb-lg-0 mb-3">
+                                        <div className="form-group custom-control custom-checkbox mr-3">
+                                            <input
+                                                type="checkbox"
+                                                className="custom-control-input"
+                                                id="title"
+                                                name="title"
+                                                checked={params.title}
+                                                onChange={handleChange} />
+                                            <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plot titles.</Tooltip>}>
+                                                <label className="custom-control-label" htmlFor="title">Plot Titles</label>
+                                            </OverlayTrigger>
+                                        </div>
 
-                            <div className="col-lg form-inline mt-lg-3 mb-lg-0 mb-3">
-                                <div className="form-group custom-control custom-checkbox mr-3">
-                                    <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="title"
-                                        name="title"
-                                        checked={params.title}
-                                        onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display plot titles.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="title">Display Plot Titles</label>
-                                    </OverlayTrigger>
-                                </div>
+                                        <div className="form-group custom-control custom-checkbox mr-3">
+                                            <input
+                                                type="checkbox"
+                                                className="custom-control-input"
+                                                id="axes"
+                                                name="axes"
+                                                checked={params.axes}
+                                                onChange={handleChange} />
+                                            <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display x and y axes alongside the plot.</Tooltip>}>
+                                                <label className="custom-control-label" htmlFor="axes">X-Y Axes</label>
+                                            </OverlayTrigger>
+                                        </div>
 
-                                <div className="form-group custom-control custom-checkbox mr-3">
-                                    <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="axes"
-                                        name="axes"
-                                        checked={params.axes}
-                                        onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display x and y axes alongside the plot.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="axes">Display Axes</label>
-                                    </OverlayTrigger>
-                                </div>
+                                        {params.sim_total > 1 && <div className="form-group custom-control custom-checkbox mr-3">
+                                            <input
+                                                type="checkbox"
+                                                className="custom-control-input"
+                                                id="horizontal"
+                                                name="horizontal"
+                                                checked={params.horizontal}
+                                                onChange={handleChange} />
+                                            <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display legend horizontally below each plot.</Tooltip>}>
+                                                <label className="custom-control-label" htmlFor="horizontal">Horizontal Legend</label>
+                                            </OverlayTrigger>
+                                        </div>}
 
-                                {params.sim_total > 1 && <div className="form-group custom-control custom-checkbox mr-3">
-                                    <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="horizontal"
-                                        name="horizontal"
-                                        checked={params.horizontal}
-                                        onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display legend horizontally below each plot.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="horizontal">Display Horizontal Legend</label>
-                                    </OverlayTrigger>
-                                </div>}
+                                        {params.sim_total > 1 && <div className="form-group custom-control custom-checkbox mr-3">
+                                            <input
+                                                type="checkbox"
+                                                className="custom-control-input"
+                                                id="plot_pts"
+                                                name="plot_pts"
+                                                checked={params.plot_pts}
+                                                onChange={handleChange} />
+                                            <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display points from the first simulation iteration on the second plot.</Tooltip>}>
+                                                <label className="custom-control-label" htmlFor="plot_pts">Simulated Points</label>
+                                            </OverlayTrigger>
+                                        </div>}
 
-                                {params.sim_total > 1 && <div className="form-group custom-control custom-checkbox mr-3">
-                                    <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="plot_pts"
-                                        name="plot_pts"
-                                        checked={params.plot_pts}
-                                        onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display points from the first simulation iteration on the second plot.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="plot_pts">Display Simulated Points</label>
-                                    </OverlayTrigger>
-                                </div>}
-
-                                {params.sim_total > 1 && <div className="form-group custom-control custom-checkbox">
-                                    <input
-                                        type="checkbox"
-                                        className="custom-control-input"
-                                        id="cascon"
-                                        name="cascon"
-                                        checked={params.cascon}
-                                        onChange={handleChange} />
-                                    <OverlayTrigger overlay={<Tooltip id="cascon_tooltip">If checked, display statistical power for both case and control clusters. If not, display power for case clusters only.</Tooltip>}>
-                                        <label className="custom-control-label" htmlFor="cascon">Display Control Clusters</label>
-                                    </OverlayTrigger>
-                                </div>}
+                                        {params.sim_total > 1 && <div className="form-group custom-control custom-checkbox">
+                                            <input
+                                                type="checkbox"
+                                                className="custom-control-input"
+                                                id="cascon"
+                                                name="cascon"
+                                                checked={params.cascon}
+                                                onChange={handleChange} />
+                                            <OverlayTrigger overlay={<Tooltip id="cascon_tooltip">If checked, display statistical power for both case and control clusters. If not, display power for case clusters only.</Tooltip>}>
+                                                <label className="custom-control-label" htmlFor="cascon">Control Clusters</label>
+                                            </OverlayTrigger>
+                                        </div>}
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
 
