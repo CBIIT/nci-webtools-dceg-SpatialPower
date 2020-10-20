@@ -123,7 +123,7 @@ export function InputForm({
         }
 
         // todo: use isDefined (eg: not '', undefined, null) to allow using (0, 0) coordinates
-        if (name === 'win' || name === 'gis' || name === 'unit' || name === 'longitude' || name === 'latitude' || name === 'width' || name === 'height' || name === 'radius') {
+        if (params.gis && (name === 'win' || name === 'gis' || name === 'unit' || name === 'longitude' || name === 'latitude' || name === 'width' || name === 'height' || name === 'radius')) {
             const multiplier = {
                 meters: 1,
                 kilometers: 1e3
@@ -203,7 +203,7 @@ export function InputForm({
     function handleSubmit(event) {
         event.preventDefault();
 
-        if(params.unit !== 'meters')
+        if(params.gis && params.unit !== 'meters')
             convertToMeters();
 
         if (onSubmit) {
