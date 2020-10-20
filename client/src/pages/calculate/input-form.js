@@ -181,9 +181,26 @@ export function InputForm({
         mergeParams(newParams);
     }
 
+    function convertToMeters(){
+
+        const multiplier = {
+            kilometers: 1e3
+        }[params.unit];
+
+        const {r_case, s_case, s_control} = params;
+
+        [r_case,s_case,s_control].forEach(type => {
+            for(var i = 0;i < type.length;i++){
+                type[i] *= multiplier;
+            }
+        });
+    }
 
     function handleSubmit(event) {
         event.preventDefault();
+
+        if(params.unit !== 'meters')
+            convertToMeters();
 
         if (onSubmit) {
             onSubmit(params);
