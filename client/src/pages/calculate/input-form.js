@@ -64,7 +64,7 @@ export function InputForm({
         if (name === 'gis' && (newParams.win === 'unit_circle' || newParams.win === 'unit_square'))
             newParams.win = '';
 
-        // set default parameters
+        // set default parameters for unit windows
         if ((name === 'win' || name === 'samp_case') && (newParams.win === 'unit_circle' || newParams.win === 'unit_square')) {
 
             newParams.x_origin = 0.5;
@@ -83,6 +83,7 @@ export function InputForm({
             newParams.s_control = [0.33]
         }
 
+        //Defaults for rectangle windows, updates with window, x_origin, y_origin, width, and height
         if (newParams.win === 'rectangle' && (name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'width' || name === 'height')) {
 
             if (name === 'win') {
@@ -102,6 +103,7 @@ export function InputForm({
             newParams.s_control = [Math.floor(Math.min(newParams.width / 3, newParams.height / 3) * 10) / 10]
         }
 
+        //Defaults for circular windows, updates with window, x_origin, y_origin, and radius
         else if (newParams.win === "circle" && (name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'radius')) {
 
             if (name === 'win') {
@@ -139,6 +141,7 @@ export function InputForm({
                 newParams.x_control = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 90, width / 2)[0]).toFixed(4)];
                 newParams.y_control = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 180, width / 2)[1]).toFixed(4)];
 
+                //Parameters are in the unit selected, converted to meters on submit
                 newParams.r_case = [(Math.floor(Math.min(newParams.width / 2, newParams.height / 2) * 10) / 10)];
                 newParams.s_case = [(Math.floor(Math.min(newParams.width / 3, newParams.height / 3) * 10) / 10)];
 
@@ -155,6 +158,7 @@ export function InputForm({
                 newParams.x_control = [newParams.longitude];
                 newParams.y_control = [newParams.latitude];
 
+                //Parameters are in the unit selected, converted to meters on submit
                 newParams.r_case = [Math.floor((newParams.radius / 2) * 10) / 10];
                 newParams.s_case = [Math.floor((newParams.radius / 3) * 10) / 10];
 
