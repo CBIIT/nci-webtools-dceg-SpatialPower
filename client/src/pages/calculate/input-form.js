@@ -130,7 +130,7 @@ export function InputForm({
             if (newParams.win === 'rectangle' && newParams.width && newParams.height) {
                 const width = +newParams.width * multiplier;
                 const height = +newParams.height * multiplier;
-                const coordinates = getRectangularCoordinates(newParams.longitude, newParams.latitude, width, height);
+                const coordinates = getRectangularCoordinates(Number(newParams.longitude), Number(newParams.latitude), width, height);
                 newParams.geojson = JSON.stringify({ type: 'Polygon', coordinates: [coordinates] });
 
                 newParams.x_case = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 90, width / 2)[0]).toFixed(4)];
