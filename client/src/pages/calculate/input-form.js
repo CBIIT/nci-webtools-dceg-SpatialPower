@@ -136,10 +136,10 @@ export function InputForm({
                 newParams.geojson = JSON.stringify({ type: 'Polygon', coordinates: [coordinates] });
 
                 newParams.x_case = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 90, width / 2)[0]).toFixed(4)];
-                newParams.y_case = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 180, width / 2)[1]).toFixed(4)];
+                newParams.y_case = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 180, height / 2)[1]).toFixed(4)];
 
                 newParams.x_control = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 90, width / 2)[0]).toFixed(4)];
-                newParams.y_control = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 180, width / 2)[1]).toFixed(4)];
+                newParams.y_control = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 180, height / 2)[1]).toFixed(4)];
 
                 //Parameters are in the unit selected, converted to meters on submit
                 newParams.r_case = [(Math.floor(Math.min(newParams.width / 2, newParams.height / 2) * 10) / 10)];
@@ -192,22 +192,28 @@ export function InputForm({
         }[params.unit];
 
         const {r_case, s_case, s_control} = params;
+        const newParams = {...params};
 
-        [r_case,s_case,s_control].forEach(type => {
-            for(var i = 0;i < type.length;i++){
-                type[i] *= multiplier;
+
+        ['r_case','s_case','s_control'].forEach(type => {
+            const convert = []
+            for(var i = 0;i < params[type].length;i++){
+                convert[i] = params[type][i] * multiplier;
             }
+            newParams[type] = convert;
         });
+        
+        return newParams;
     }
 
     function handleSubmit(event) {
         event.preventDefault();
-
+        let convertParams;
         if(params.gis && params.unit !== 'meters')
-            convertToMeters();
+            convertParams = convertToMeters();
 
         if (onSubmit) {
-            onSubmit(params);
+            onSubmit(convertParams);
             if (!params.queue)
                 setSubmitted(true);
         }
