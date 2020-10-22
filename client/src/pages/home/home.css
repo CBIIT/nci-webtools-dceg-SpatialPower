@@ -12,7 +12,7 @@
 
 .jumbotron::after {
     content: "";
-    background-image: url('spatial-power-banner.png');
+    background-image: url('spatial-power-banner.jpeg');
     background-position: center bottom 40%;
     background-repeat: no-repeat;
     background-size: cover;
