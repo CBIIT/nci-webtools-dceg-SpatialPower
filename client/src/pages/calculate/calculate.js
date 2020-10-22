@@ -179,10 +179,6 @@ export function Calculate({ match }) {
             //R Case values must be less than half the width of the window
             r_case.forEach((value) => {
 
-                //R Case stored in meters, must convert to km for validation
-                if(unit === 'kilometers')
-                    value = value / 1000;
-
                 if (value > half) {
                     addMessage({ type: 'danger', text: 'Sample Case: R Case values must be less than half the width of the window. (Value = ' + value + ')' })
                     valid = false;
@@ -216,7 +212,6 @@ export function Calculate({ match }) {
                 valid = false;
             }
 
-
             //N and S Control values must be postive
             control_type.forEach((value) => {
 
@@ -231,6 +226,24 @@ export function Calculate({ match }) {
         return valid;
     }
 
+    function convertToMeters(params){
+        const multiplier = {
+            kilometers: 1e3
+        }[params.unit];
+
+        const newParams = {...params};
+
+        ['r_case','s_case','s_control'].forEach(type => {
+            const convert = []
+            for(var i = 0;i < params[type].length;i++){
+                convert[i] = params[type][i] * multiplier;
+            }
+            newParams[type] = convert;
+        });
+
+        return newParams;
+    }
+
     /**
      * Posts calculation parameters to the 'submit' endpoint and saves results to the store
      * @param {object} params 
@@ -242,10 +255,16 @@ export function Calculate({ match }) {
         resetResults();
         resetMessages();
         window.scrollTo(0, 0);
+
         if (validateInput(params)) {
             try {
+
+                let convertParams = params;
+                if(params.gis && params.unit !== 'meters')
+                    convertParams = convertToMeters(params);
+
                 mergeResults({ loading: true });
-                const response = await postJSON('api/submit', params);
+                const response = await postJSON('api/submit', convertParams);
 
                 // If the request was enqueued, notify the user. Otherwise, save results to the store
                 params.queue

@@ -185,35 +185,13 @@ export function InputForm({
         mergeParams(newParams);
     }
 
-    function convertToMeters(){
-
-        const multiplier = {
-            kilometers: 1e3
-        }[params.unit];
-
-        const {r_case, s_case, s_control} = params;
-        const newParams = {...params};
-
-
-        ['r_case','s_case','s_control'].forEach(type => {
-            const convert = []
-            for(var i = 0;i < params[type].length;i++){
-                convert[i] = params[type][i] * multiplier;
-            }
-            newParams[type] = convert;
-        });
-        
-        return newParams;
-    }
+ 
 
     function handleSubmit(event) {
         event.preventDefault();
-        let convertParams;
-        if(params.gis && params.unit !== 'meters')
-            convertParams = convertToMeters();
 
         if (onSubmit) {
-            onSubmit(convertParams);
+            onSubmit(params);
             if (!params.queue)
                 setSubmitted(true);
         }
