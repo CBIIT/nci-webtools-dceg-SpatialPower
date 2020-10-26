@@ -58,7 +58,7 @@ export function Summary() {
                                 <tr key={`results-summary-item-${i + 3}`}>
                                     <td>{title}</td>
                                     <td>{testStat.toFixed(3)/1}</td>
-                                    <td>{pValue.toFixed(3)/1}</td>
+                                    <td>{pValue.toFixed(3)/1 >= .001 ? pValue.toFixed(3)/1 : '<0.001'}</td>
                                 </tr>)}
                         </tbody>
                     </table>
