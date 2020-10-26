@@ -94,7 +94,6 @@ calculate <- function(params) {
         n_case = as.integer(unlist(params$n_case, use.names=FALSE)),
         n_control = as.integer(unlist(params$n_control, use.names=FALSE)),
         r_case = as.double(unlist(params$r_case, use.names=FALSE)),
-        r_control = as.double(unlist(params$r_control, use.names=FALSE)),
         s_case = as.double(unlist(params$s_case, use.names=FALSE)),
         s_control = as.double(unlist(params$s_control, use.names=FALSE)),
         lower_tail = as.double(params$alpha/2),
@@ -105,70 +104,31 @@ calculate <- function(params) {
 
     if (params$gis) {
         # determine local coordinate reference system from starting coordinates
-        local_crs <- sp::CRS(paste0("+proj=webmerc +datum=WGS84 +lon_0=", params$longitude, " +y_0=", params$latitude))
+        local_crs <- sp::CRS(paste0("+proj=eqearth +datum=WGS84 +lon_0=", params$longitude, " +y_0=", params$latitude))
         global_crs <- sp::CRS("+init=EPSG:4326")
 
-        # example procedure (may not work)
-        # transform geojson string into a spatial dataframe
-        # geojson_sp <- geojsonio::geojson_sp(params$geojson)
+        geojson_sp <- geojsonio::geojson_sp(params$geojson)
+        sp_area_union <- maptools::unionSpatialPolygons(geojson_sp, IDs = rep(1, length(geojson_sp)))
+        sp_area_proj <- sp::spTransform(sp_area_union, CRSobj = local_crs)
+        sp_params$win <- spatstat::as.owin(sp_area_proj)
 
-        # project the spatial area to the local coordinate reference system
-        # sp_area_projected <- sp::spTransform(geojson_sp, CRSobj = local_crs)
-
-        # convert spatial data frame to window
-        #sp_params$win <- spatstat::as.owin(sp_area_projected)
-
-        # case_coords <- transform_coords(
-        #     data.frame(x = sp_params$x_case, y = sp_params$y_case),
-        #     coordinate_columns = c('x', 'y'),
-        #     from_crs = global_crs, 
-        #     to_crs = local_crs
-        # )@coords
-
-        # control_coords <- transform_coords(
-        #     data.frame(x = sp_params$x_control, y = sp_params$y_control),
-        #     coordinate_columns = c('x', 'y'),
-        #     from_crs = global_crs, 
-        #     to_crs = local_crs
-        # )@coords
-
-        #todo: convert r_case and r_control from metric units to transformed local coordinates
-
-        # sp_params$x_case = case_coords[,1]
-        # sp_params$y_case = case_coords[,2]
-        # sp_params$x_control = control_coords[,1]
-        # sp_params$y_control = control_coords[,2]
-
-
-        # working example (vignette)
-        us_east_crs <- sp::CRS("+proj=eqearth +lon_0=-77.0028527 +y_0=38.8766482")
-        geojson_source <- "https://opendata.arcgis.com/datasets/faea4d66e7134e57bf8566197f25b3a8_0.geojson"
-        sp_area <- geojsonio::geojson_read(geojson_source,  what = "sp")
-        sp_area_union <- maptools::unionSpatialPolygons(sp_area, IDs = rep(1, length(sp_area)))
-        sp_area_proj <- sp::spTransform(sp_area_union, CRSobj = us_east_crs)
-        window <- spatstat::as.owin(sp_area_proj)
-
-        navy <- transform_coords(
-            data.frame(-77.0028527,38.8766482),
+        case <- transform_coords(
+            data.frame(x = sp_params$x_case,y = sp_params$y_case),
             from_crs=global_crs,
-            to_crs=us_east_crs
+            to_crs=local_crs
         )@coords
 
-        sp_params = list(x_case = navy[[1]], y_case = navy[[2]], # center of cluster
-            x_control = navy[[1]], y_control = navy[[2]], # center of cluster
-            n_case = 50, n_control = 950, # sample size of case/control
-            samp_case = "MVN", samp_control = "MVN", # samplers
-            s_case = 1000, s_control = 2000, # approximate size of clusters
-            # cascon = FALSE, # power for case cluster(s) only
-            lower_tail = 0.025, upper_tail = 0.975, # two-tailed alpha
-            sim_total = 2, # number of iterations
-            win = window, # study area
-            resolution = 128, # number gridded knots on x-axis
-            edge = "diggle", # correct for edge effects
-            adapt = FALSE, # fixed-bandwidth
-            h0 = NULL, # automatically select bandwidth for each iteration
-            n_core = 8,
-            verbose = T) # no printout
+        control <- transform_coords(
+            data.frame(x = sp_params$x_control, y = sp_params$y_control),
+            coordinate_columns = c('x', 'y'),
+            from_crs = global_crs, 
+            to_crs = local_crs
+        )@coords
+
+        sp_params$x_case = case[,1]
+        sp_params$y_case = case[,2]
+        sp_params$x_control = control[,1]
+        sp_params$y_control = control[,2]
 
     } else {
         if (params$win == "unit_circle") {
@@ -222,7 +182,7 @@ calculate <- function(params) {
         sp::gridded(lrr_narm) <- TRUE # gridded
         pvalprop_raster <- raster::raster(lrr_narm) # convert to raster
 
-        raster::crs(pvalprop_raster) <- us_east_crs # todo: change to local crs
+        raster::crs(pvalprop_raster) <- local_crs # todo: change to local crs
 
         pvalprop_raster_poly <- raster::rasterToPolygons(pvalprop_raster, dissolve = T) # convert to polygons
         pvalprop_poly_global_proj <- sp::spTransform(pvalprop_raster_poly, global_crs) # unproject (WGS84) 
