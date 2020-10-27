@@ -337,14 +337,14 @@ export function Calculate({ match }) {
         <h1 className="sr-only">SparrpowR</h1>
         <LoadingOverlay active={results.loading} />
         <div className="row">
-            <div className="col-xl-4 col-lg-4 col-md-5 mb-3">
+            <div className="col-xl-7 col-lg-7 col-md-8 mb-3">
                 <Card className="shadow-sm h-100">
                     <Card.Body>
                         <InputForm params={params} onSubmit={handleSubmit} onReset={handleReset} />
                     </Card.Body>
                 </Card>
             </div>
-            <div className="col-xl-8 col-lg-8 col-md-7 mb-3">
+            <div className="col-xl-17 col-lg-17 col-md-16 mb-3">
                 {messages.map((message, i) =>
                     <Alert
                         className="white-space-pre-wrap"
