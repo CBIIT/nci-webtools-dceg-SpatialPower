@@ -44,10 +44,13 @@ legend {
 
 .navbar-dark .navbar-nav .nav-link {
     color: white;
-    &.active, &:hover {
+    &.active{
         color: #2e2e2e;
         border-bottom-color: #14819B;
-        background-color: white;
+        background-color: #F1F1F1;
+    }
+    &:hover{
+        color: #14819B;
     }
 }
 
