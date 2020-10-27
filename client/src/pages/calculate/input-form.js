@@ -209,7 +209,7 @@ export function InputForm({
         <fieldset className="border px-3 mb-4">
             <legend className="legend font-weight-bold">Spatial Window</legend>
             <div className="row">
-                <div className="col-md-9 form-group">
+                <div className="col-md-18 form-group">
                     <label htmlFor="win" className="required">Window Shape</label>
                     <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the shape of the window</Tooltip>}>
                         <select
@@ -227,7 +227,7 @@ export function InputForm({
                     </OverlayTrigger>
                 </div>
 
-                <div className="col-md-3 pt-2 form-group custom-control custom-checkbox">
+                <div className="col-md-6 pt-2 form-group custom-control custom-checkbox">
                     <label htmlFor="replot" className="d-block">&nbsp;</label>
                     <input
                         type="checkbox"
@@ -262,7 +262,7 @@ export function InputForm({
 
             {params.win === "rectangle" && <>
                 {!params.gis && <div className="row">
-                    <div className="col-md-6 form-group">
+                    <div className="col-md-12 form-group">
                         <label htmlFor="x_origin">X Origin</label>
                         <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the lower left corner</Tooltip>}>
                             <input
@@ -278,7 +278,7 @@ export function InputForm({
                         </OverlayTrigger>
                     </div>
 
-                    <div className="col-md-6 form-group">
+                    <div className="col-md-12 form-group">
                         <label htmlFor="y_origin">Y Origin</label>
                         <OverlayTrigger overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the lower left corner</Tooltip>}>
                             <input
@@ -296,7 +296,7 @@ export function InputForm({
                 </div>}
 
                 {params.gis && <div className="row">
-                    <div className="col-md-6 form-group">
+                    <div className="col-md-12 form-group">
                         <label htmlFor="longitude">Longitude</label>
                         <OverlayTrigger overlay={<Tooltip id="latitude_tooltip">Enter the longitude of the lower left corner</Tooltip>}>
                             <input
@@ -312,7 +312,7 @@ export function InputForm({
                         </OverlayTrigger>
                     </div>
 
-                    <div className="col-md-6 form-group">
+                    <div className="col-md-12 form-group">
                         <label htmlFor="latitude">Latitude</label>
                         <OverlayTrigger overlay={<Tooltip id="latitude_tooltip">Enter the latitude of the lower left corner</Tooltip>}>
                             <input
@@ -330,7 +330,7 @@ export function InputForm({
                 </div>}
 
                 <div className="row">
-                    <div className="col-md-6 form-group">
+                    <div className="col-md-12 form-group">
                         <label htmlFor="width">Width {params.gis && params.unit && `(${params.unit})`}</label>
                         <OverlayTrigger overlay={<Tooltip id="width_tooltip">Enter the width of the rectangular area</Tooltip>}>
                             <input
@@ -345,7 +345,7 @@ export function InputForm({
                         </OverlayTrigger>
                     </div>
 
-                    <div className="col-md-6 form-group">
+                    <div className="col-md-12 form-group">
                         <label htmlFor="height">Height {params.gis && params.unit && `(${params.unit})`}</label>
                         <OverlayTrigger overlay={<Tooltip id="height_tooltip">Enter the height of the rectangular area</Tooltip>}>
                             <input
@@ -363,7 +363,7 @@ export function InputForm({
             </>}
 
             {params.win === "circle" && <div className="row">
-                {!params.gis && <div className="col-md-4 form-group">
+                {!params.gis && <div className="col-md-8 form-group">
                     <label htmlFor="x_origin">X Origin</label>
                     <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the center of the circle</Tooltip>}>
                         <input
@@ -379,7 +379,7 @@ export function InputForm({
                     </OverlayTrigger>
                 </div>}
 
-                {!params.gis && <div className="col-md-4 form-group">
+                {!params.gis && <div className="col-md-8 form-group">
                     <label htmlFor="y_origin">Y Origin</label>
                     <OverlayTrigger overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the center of the circle</Tooltip>}>
                         <input
@@ -395,7 +395,7 @@ export function InputForm({
                     </OverlayTrigger>
                 </div>}
 
-                {params.gis && <div className="col-md-4 form-group">
+                {params.gis && <div className="col-md-8 form-group">
                     <label htmlFor="latitude">Latitude</label>
                     <OverlayTrigger overlay={<Tooltip id="latitude_tooltip">Enter the latitude of the lower left corner</Tooltip>}>
                         <input
@@ -411,7 +411,7 @@ export function InputForm({
                     </OverlayTrigger>
                 </div>}
 
-                {params.gis && <div className="col-md-4 form-group">
+                {params.gis && <div className="col-md-8 form-group">
                     <label htmlFor="longitude">Longitude</label>
                     <OverlayTrigger overlay={<Tooltip id="latitude_tooltip">Enter the longitude of the lower left corner</Tooltip>}>
                         <input
@@ -427,7 +427,7 @@ export function InputForm({
                     </OverlayTrigger>
                 </div>}
 
-                <div className="col-md-4 form-group">
+                <div className="col-md-8 form-group">
                     <label htmlFor="radius">Radius {params.gis && params.unit && `(${params.unit})`}</label>
                     <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Enter the radius of the circle</Tooltip>}>
                         <input
