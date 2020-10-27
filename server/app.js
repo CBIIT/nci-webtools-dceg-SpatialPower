@@ -39,7 +39,7 @@ apiRouter.post('/submit', async (request, response) => {
         // assign id to body
         let body = Object.assign(request.body, {
             id,
-            timestamp: new Date().toLocaleString("en-US", {timeZone: "EST"}),
+            timestamp: new Date().toLocaleString("en-US", {timeZone: "America/New_York"}),
         });
 
         // remove empty values from body
