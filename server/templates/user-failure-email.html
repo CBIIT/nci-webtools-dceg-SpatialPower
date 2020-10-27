@@ -11,11 +11,15 @@
 <body>
     Dear SparrpowR User, <br>
     <p>
-        The job you submitted on {originalTimestamp} could not be processed due to an internal error. 
-        Please contact <a href="mailto:{supportEmail}">{supportEmail}</a> if this issue continues to occur. 
-        Include the following job id in your email: {id}
+        The job you submitted to the Spatial-Power queue failed to be processed using the SparrPowr R Package. Please correct your settings and resubmit or contact us at NCISpatialPowerWebAdmin@mail.nih.gov for more information or if you have any questions.
     </p>
-
+    <b>Job Information</b>
+    <ul style="list-style-type:none;">
+        <li href="{jobName}">Job Name: {jobName}</li>
+        <li href="{numSims}">Number of Simulations: {numSims}</li>
+        <li href="{originalTimestamp}">Submitted Time: {originalTimestamp} EST</li>
+        <li href="{runTime}">Execution Time: {runTime}</li>
+    </ul>
     <p>
         Respectfully, <br>
         Spatial-Power Web Tool
