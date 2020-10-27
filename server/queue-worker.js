@@ -73,7 +73,7 @@ async function processMessage(params) {
         const minutes = Math.floor(time / 60000);
         var seconds = ((time % 60000) / 1000).toFixed(0);
         
-        const runtime = (minutes > 0 ? minutes + " min " : '') + seconds + " secs"
+        var runtime = (minutes > 0 ? minutes + " min " : '') + seconds + " secs"
 
         // upload parameters
         await s3.upload({
@@ -113,7 +113,7 @@ async function processMessage(params) {
         const userEmailResults = await email.sendMail({
             from: config.email.sender,
             to: params.email,
-            subject: 'SparrpowR Simulation Results - ' + params.job_name + " - " + params.timestamp,
+            subject: 'SparrpowR Simulation Results - ' + params.job_name + " - " + params.timestamp + "EST",
             html: await readTemplate(__dirname + '/templates/user-success-email.html', templateData),
         });
 
@@ -123,9 +123,12 @@ async function processMessage(params) {
 
         // template variables
         const templateData = {
+            jobName: params.job_name,
+            numSims: params.sim_total,
             id: params.id,
             parameters: JSON.stringify(params, null, 4),
             originalTimestamp: params.timestamp,
+            runTime: runtime,
             exception: e.toString(),
             processOutput: e.stdout ? e.stdout.toString() : null,
             supportEmail: config.email.admin,
@@ -136,7 +139,7 @@ async function processMessage(params) {
         const adminEmailResults = await email.sendMail({
             from: config.email.sender,
             to: config.email.admin,
-            subject: `SparrpowR Error: ${params.id}`, // searchable calculation error subject
+            subject: 'SparrpowR Simulation Results - ' + params.job_name + " - " + params.timestamp + "EST", // searchable calculation error subject
             html: await readTemplate(__dirname + '/templates/admin-failure-email.html', templateData),
         });
 
