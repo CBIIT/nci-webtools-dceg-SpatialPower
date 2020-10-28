@@ -224,7 +224,7 @@ export function Plots() {
                                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
                                     maxZoom={19}
                                 />
-                                {polygons.map(p => <Polygon positions={p.paths} color={p.color} opacity={0.8} fillOpacity={0.4} />)}
+                                {polygons.map(p => <Polygon positions={p.paths} color={p.color} opacity={0} fillOpacity={0.4} />)}
                             </Map>
                             {categories.map(({ label, color }) => <span className="d-inline-block mx-3 mt-1">
                                 <span className="d-inline-block mr-1" style={{
