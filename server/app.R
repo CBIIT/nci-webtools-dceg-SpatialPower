@@ -104,7 +104,7 @@ calculate <- function(params) {
 
     if (params$gis) {
         # determine local coordinate reference system from starting coordinates
-        local_crs <- sp::CRS(paste0("+proj=eqearth +datum=WGS84 +lon_0=", params$longitude, " +y_0=", params$latitude))
+        local_crs <- sp::CRS(paste0("+proj=webmerc +datum=WGS84 +lon_0=", params$longitude, " +y_0=", params$latitude))
         global_crs <- sp::CRS("+init=EPSG:4326")
 
         geojson_sp <- geojsonio::geojson_sp(params$geojson)
