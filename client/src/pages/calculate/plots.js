@@ -126,7 +126,7 @@ export function Plots() {
     const polygons = (mapData ? mapData.polygons : []).map(({ Polygons }, i) => {
         const data = mapData.data[i];
         const category = categories.find(e => e.value === data.z);
-        const color = category ? category.color : 'transparent';
+        const color = category ? category.color : params.insuff_color;
         const paths = Polygons.map(p => p.coords.map(([lng, lat]) => [lat, lng]))
         return { paths, color };
     });
