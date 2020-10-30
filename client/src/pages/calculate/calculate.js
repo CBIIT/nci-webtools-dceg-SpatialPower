@@ -226,16 +226,16 @@ export function Calculate({ match }) {
         return valid;
     }
 
-    function convertToMeters(params){
+    function convertToMeters(params) {
         const multiplier = {
             kilometers: 1e3
         }[params.unit];
 
-        const newParams = {...params};
+        const newParams = { ...params };
 
-        ['r_case','s_case','s_control'].forEach(type => {
+        ['r_case', 's_case', 's_control'].forEach(type => {
             const convert = []
-            for(var i = 0;i < params[type].length;i++){
+            for (var i = 0; i < params[type].length; i++) {
                 convert[i] = params[type][i] * multiplier;
             }
             newParams[type] = convert;
@@ -260,7 +260,7 @@ export function Calculate({ match }) {
             try {
 
                 let convertParams = params;
-                if(params.gis && params.unit !== 'meters')
+                if (params.gis && params.unit !== 'meters')
                     convertParams = convertToMeters(params);
 
                 mergeResults({ loading: true });
@@ -335,7 +335,7 @@ export function Calculate({ match }) {
 
     return <div className="container py-4">
         <h1 className="sr-only">SparrpowR</h1>
-        <LoadingOverlay active={results.loading} />
+        <LoadingOverlay active={results.loading} overlayStyle={{position:'fixed'}} />
         <div className="row">
             <div className="col-xl-7 col-lg-7 col-md-8 mb-3">
                 <Card className="shadow-sm h-100">
