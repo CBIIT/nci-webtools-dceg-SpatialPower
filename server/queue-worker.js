@@ -139,7 +139,7 @@ async function processMessage(params) {
         const adminEmailResults = await email.sendMail({
             from: config.email.sender,
             to: config.email.admin,
-            subject: 'SparrpowR Simulation Results - ' + params.job_name + " - " + params.timestamp + "EST", // searchable calculation error subject
+            subject: `SparrpowR Error: ${params.id}`, // searchable calculation error subject
             html: await readTemplate(__dirname + '/templates/admin-failure-email.html', templateData),
         });
 
@@ -149,7 +149,7 @@ async function processMessage(params) {
             const userEmailResults = await email.sendMail({
                 from: config.email.sender,
                 to: params.email,
-                subject: 'SparrpowR Error',
+                subject: 'SparrpowR Simulation Results - ' + params.job_name + " - " + params.timestamp + " UTC",
                 html: await readTemplate(__dirname + '/templates/user-failure-email.html', templateData),
             });
         }
