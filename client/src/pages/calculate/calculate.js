@@ -31,6 +31,70 @@ export function Calculate({ match }) {
     const _loadResults = useCallback(loadResults, [id])
     useEffect(_ => { _loadResults(id) }, [id, _loadResults]);
 
+    function isNumber(value, field) {
+
+        if (isNaN(value)) {
+            addMessage({ type: 'danger', text: 'Window Shape: ' + field + ' must be a number' })
+        }
+    }
+
+    function equalLength(x, y, field) {
+
+        if (x.length !== y.length)
+            addMessage({ type: 'danger', text: field + ' must have the same number of inputs' })
+    }
+
+    function inWindow(x, y, params, field) {
+
+        let { win, x_origin, y_origin, width, height, radius } = params;
+
+        if (win === 'unit_circle' || win === 'circle') {
+            for (let i = 0; i < x.length; i++) {
+
+                const distance = Math.sqrt(Math.pow(x[i] - x_origin, 2) + Math.pow(y[i] - y_origin, 2));
+
+                if (distance > radius) {
+                    addMessage({ type: 'danger', text: field + ' cannot be outside the window. Coordinate: (' + x[i] + ',' + y[i] + ')' })
+                }
+            }
+        }
+
+        if (win === 'unit_square' || win === 'rectangle') {
+
+            if (win === 'unit_square') {
+                x_origin = 0;
+                y_origin = 0;
+                width = 1;
+                height = 1;
+            }
+
+            for (let i = 0; i < x.length; i++) {
+
+                if (x[i] < x_origin || x[i] > x_origin + width || y[i] < y_origin || y[i] > y_origin + height)
+                    addMessage({ type: 'danger', text: field + ' cannot be outside the window. Coordinate: (' + x[i] + ',' + y[i] + ')' })
+                
+            }
+        }
+    }
+
+    function validation(params) {
+
+        const rules = {
+            x_origin: [isNumber(params.x_origin, 'X Origin')],
+            y_origin: [isNumber(params.y_origin, 'Y Origin')],
+            xy_case: [
+                equalLength(params.x_case, params.y_case, 'Sample Case: X Case and Y Case'),
+                inWindow(params.x_case, params.y_case, params, 'Sample Case: X Case and Y Case')]
+        }
+
+        for (let [validationRules] of Object.entries(rules)) {
+            for (let validationFunction of validationRules) {
+                try { validationFunction() }
+                catch (e) { console.log(e) }
+            }
+        }
+    }
+
     function validateInput(params) {
 
         let valid = true;
@@ -255,29 +319,30 @@ export function Calculate({ match }) {
         resetResults();
         resetMessages();
         window.scrollTo(0, 0);
+        validation(params);
 
-        if (validateInput(params)) {
-            try {
-
-                let convertParams = params;
-                if (params.gis && params.unit !== 'meters')
-                    convertParams = convertToMeters(params);
-
-                mergeResults({ loading: true });
-                const response = await postJSON('api/submit', convertParams);
-
-                // If the request was enqueued, notify the user. Otherwise, save results to the store
-                params.queue
-                    ? addMessage({ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` })
-                    : mergeResults(response);
-
-            } catch (error) {
-                addMessage({ type: 'danger', text: error });
-            } finally {
-                const urlKey = new Date().getTime();
-                mergeResults({ loading: false, submitted: true, urlKey });
-            }
-        }
+        /*if (validateInput(params)) {
+             try {
+ 
+                 let convertParams = params;
+                 if (params.gis && params.unit !== 'meters')
+                     convertParams = convertToMeters(params);
+ 
+                 mergeResults({ loading: true });
+                 const response = await postJSON('api/submit', convertParams);
+ 
+                 // If the request was enqueued, notify the user. Otherwise, save results to the store
+                 params.queue
+                     ? addMessage({ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` })
+                     : mergeResults(response);
+ 
+             } catch (error) {
+                 addMessage({ type: 'danger', text: error });
+             } finally {
+                 const urlKey = new Date().getTime();
+                 mergeResults({ loading: false, submitted: true, urlKey });
+             }
+         }*/
     }
 
     /**
@@ -335,7 +400,7 @@ export function Calculate({ match }) {
 
     return <div className="container py-4">
         <h1 className="sr-only">SparrpowR</h1>
-        <LoadingOverlay active={results.loading} overlayStyle={{position:'fixed'}} />
+        <LoadingOverlay active={results.loading} overlayStyle={{ position: 'fixed' }} />
         <div className="row">
             <div className="col-xl-7 col-lg-7 col-md-8 mb-3">
                 <Card className="shadow-sm h-100">
