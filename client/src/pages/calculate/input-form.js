@@ -35,12 +35,12 @@ export function InputForm({
         }
 
         if (params.samp_case) {
-            if (!params.x_case || !params.y_case || !params.r_case || !params.s_case || params.n_case <= 0) {
+            if (!params.x_case || !params.y_case || !params.r_case || params.s_case < 0 || params.n_case <= 0) {
                 return false;
             }
         }
         if (params.samp_control) {
-            if (!params.x_control || !params.y_control || !params.s_control || params.n_control <= 0) {
+            if (!params.x_control || !params.y_control || !params.s_control < 0 || params.n_control <= 0) {
                 return false;
             }
         }

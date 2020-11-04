@@ -31,22 +31,33 @@ export function Calculate({ match }) {
     const _loadResults = useCallback(loadResults, [id])
     useEffect(_ => { _loadResults(id) }, [id, _loadResults]);
 
+    // Valid if value is a number
     function isNumber(value, field) {
 
         if (isNaN(value)) {
             addMessage({ type: 'danger', text: 'Window Shape: ' + field + ' must be a number' })
+            return 1;
         }
+
+        return 0;
     }
 
-    function equalLength(x, y, field) {
+    // Valid if first and second input have same dimensions 
+    function equalLength(first, second, field) {
 
-        if (x.length !== y.length)
-            addMessage({ type: 'danger', text: field + ' must have the same number of inputs' })
+        if (first.length !== second.length) {
+            addMessage({ type: 'danger', text: field })
+            return 1;
+        }
+
+        return 0;
     }
 
+    // Valid if all (x,y) coordinates are within the bounds of the window
     function inWindow(x, y, params, field) {
 
         let { win, x_origin, y_origin, width, height, radius } = params;
+        let valid = 0;
 
         if (win === 'unit_circle' || win === 'circle') {
             for (let i = 0; i < x.length; i++) {
@@ -55,11 +66,12 @@ export function Calculate({ match }) {
 
                 if (distance > radius) {
                     addMessage({ type: 'danger', text: field + ' cannot be outside the window. Coordinate: (' + x[i] + ',' + y[i] + ')' })
+                    valid = 1;
                 }
             }
         }
 
-        if (win === 'unit_square' || win === 'rectangle') {
+        else if (win === 'unit_square' || win === 'rectangle') {
 
             if (win === 'unit_square') {
                 x_origin = 0;
@@ -70,224 +82,94 @@ export function Calculate({ match }) {
 
             for (let i = 0; i < x.length; i++) {
 
-                if (x[i] < x_origin || x[i] > x_origin + width || y[i] < y_origin || y[i] > y_origin + height)
+                if (x[i] < x_origin || x[i] > x_origin + width || y[i] < y_origin || y[i] > y_origin + height){
                     addMessage({ type: 'danger', text: field + ' cannot be outside the window. Coordinate: (' + x[i] + ',' + y[i] + ')' })
-                
+                    valid = 1;
+                }    
             }
         }
+
+        return valid;
     }
+
+    // Valid if all values in param are less than min
+    function min(param, min, field) {
+
+        let valid = 0;
+
+        for (let i = 0; i < param.length; i++) {
+
+            if (param[i] > min){
+                addMessage({ type: 'danger', text: field + ' (Value = ' + param[i] + ')' })
+                valid = 1;
+            }
+        }
+        return valid;
+    }
+
 
     function validation(params) {
 
-        const rules = {
-            x_origin: [isNumber(params.x_origin, 'X Origin')],
-            y_origin: [isNumber(params.y_origin, 'Y Origin')],
-            xy_case: [
-                equalLength(params.x_case, params.y_case, 'Sample Case: X Case and Y Case'),
-                inWindow(params.x_case, params.y_case, params, 'Sample Case: X Case and Y Case')]
-        }
+        const { win, gis, samp_case, samp_control,
+                x_origin, y_origin, x_case, y_case, n_case, s_case, r_case, 
+                x_control, y_control, s_control, n_control,
+                radius, width, height } = params;
 
-        for (let [validationRules] of Object.entries(rules)) {
-            for (let validationFunction of validationRules) {
-                try { validationFunction() }
-                catch (e) { console.log(e) }
-            }
-        }
-    }
+        let errors = 0;
+        
+        // Window origin coordinates must be numeric
+        errors += isNumber(x_origin, 'X Origin')
+        errors += isNumber(y_origin, 'Y Origin');
 
-    function validateInput(params) {
-
-        let valid = true;
-        let { samp_case, unit, samp_control, x_origin, y_origin, radius, width, height, x_case, y_case, x_control, y_control, n_case, n_control, s_case, r_case, s_control } = params;
-        let names = ["X Case", "Y Case", "X Control", "Y Control"]
-        let i = 0;
-
-        //X and Y Origin must be numeric
-        if (isNaN(x_origin) || isNaN(y_origin)) {
-            addMessage({ type: 'danger', text: 'Window Shape: X Origin and Y Origin must be numbers' })
-            valid = false;
-        }
-
-        //X and Y case must have the same dimension
-        if (x_case.length !== y_case.length) {
-            addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case must have the same number of inputs' })
-            valid = false;
-        }
-        //Determine if every coordinate is within the window
-        else if (!params.gis) {
-
-            if (params.win === 'unit_circle' || params.win === 'circle') {
-                for (let i = 0; i < x_case.length; i++) {
-
-                    const distance = Math.sqrt(Math.pow(x_case[i] - x_origin, 2) + Math.pow(y_case[i] - y_origin, 2));
-
-                    if (distance > radius) {
-                        addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case cannot be outside the window. Coordinate: (' + x_case[i] + ',' + y_case[i] + ')' })
-                        valid = false;
-                    }
-                }
-            }
-
-            else if (params.win === 'unit_square' || params.win === 'rectangle') {
-
-                if (params.win === 'unit_square') {
-                    x_origin = 0;
-                    y_origin = 0;
-                    width = 1;
-                    height = 1;
-                }
-
-                for (let i = 0; i < x_case.length; i++) {
-
-                    if (x_case[i] < x_origin || x_case[i] > x_origin + width || y_case[i] < y_origin || y_case[i] > y_origin + height) {
-                        addMessage({ type: 'danger', text: 'Sample Case: X Case and Y Case cannot be outside the window. Coordinate: (' + x_case[i] + ',' + y_case[i] + ')' })
-                        valid = false;
-                    }
-                }
-            }
-
-        }
-
-        //Only check X and Y control if samp_control is MVN
-        if (samp_control === 'MVN') {
-
-            //X and Y control must have the same dimension
-            if (x_control.length !== y_control.length) {
-                addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control must have the same number of inputs' })
-                valid = false;
-            }
-
-            //Determine if every coordinate is within bounds
-            else if (!params.gis) {
-
-                if (params.win === 'unit_circle' || params.win === 'circle') {
-                    for (let i = 0; i < x_control.length; i++) {
-
-                        const distance = Math.sqrt(Math.pow(x_control[i] - x_origin, 2) + Math.pow(y_control[i] - y_origin, 2));
-
-                        if (distance > radius) {
-                            addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control cannot be outside the window. Coordinate: (' + x_control[i] + ',' + y_control[i] + ')' })
-                            valid = false;
-                        }
-                    }
-                }
-
-                else if (params.win === 'unit_square' || params.win === 'rectangle') {
-
-                    if (params.win === 'unit_square') {
-                        x_origin = 0;
-                        y_origin = 0;
-                        width = 1;
-                        height = 1;
-                    }
-
-                    for (let i = 0; i < x_case.length; i++) {
-
-                        if (x_control[i] < x_origin || x_control[i] > x_origin + width || y_control[i] < y_origin || y_control[i] > y_origin + height) {
-                            addMessage({ type: 'danger', text: 'Sample Control: X Control and Y Control cannot be outside the window. Coordinate: (' + x_control[i] + ',' + y_control[i] + ')' })
-                            valid = false;
-                        }
-                    }
-                }
-            }
-        }
-
-        i = 0;
-        let cases;
-
-        /*The dimension of N Case, S Case, and R Case must be either:
-        *  -Equal to 1 
-        *  -Equal to the dimension of X and Y Case
-        * 
-        * S Case only needs to be checked when Sample Case is MVN
+        // X and Y Case must have equal dimensions. If not a gis plot, ensure coordinates are in the window
+        errors += equalLength(x_case, y_case, 'Sample Case: X Case and Y Case must have the same number of inputs')
+        if(!gis)
+            errors += inWindow(x_case, y_case, params, 'Sample Case: X Case and Y Case')
+        
+        /* 
+        * Only check X and Y control if sample control is MVN
+        * X and Y Control must have equal dimensions. If not a gis plot, ensure coordinates are in the window
         */
-        if (samp_case === 'MVN')
-            cases = [n_case, s_case];
-        else
-            cases = [n_case];
+        if(samp_control === 'MVN'){
+            errors += equalLength(x_control, y_control, 'Sample Control: X Control and Y Control must have the same number of inputs')
+            if(!gis)
+                errors += inWindow(x_control, y_control, params, 'Sample Control: X Control and Y Control')
+        }
+        
+        // N Case must have either 1 or equal number of dimensions as X and Y case
+        if(n_case.length !== 1)
+            errors += equalLength(n_case, x_case, 'Sample Case: N Case must be 1 dimension or equal to dimension of X and Y Case')
 
-        names = ["N Case", "S Case"];
+        // Only check S Case if sample case is MVN. S Case must have either 1 or equal number of dimensions as X and Y case
+        if (samp_case === 'MVN' && s_case.length !== 1)
+            errors += equalLength(s_case, x_case, 'Sample Case: S Case must be 1 dimension or equal to dimension of X and Y Case')
 
-        cases.forEach((case_type) => {
-            if (case_type.length !== x_case.length && case_type.length !== 1) {
-                addMessage({ type: 'danger', text: 'Sample Case: ' + names[i] + ' must be 1 dimension or equal to dimension of X and Y Case' })
-                valid = false;
-            }
+        /*
+        *  Only check R Case if sample case is MVN
+        *  R Case must equal to or less than half the width of the window
+        *  For rectangular windows, width = min(height,width)
+        */
+        if(samp_case !== 'MVN'){
 
-            //N and S Case Values must be positive
-            case_type.forEach((value) => {
+            if(r_case.length !== 1)
+                errors += equalLength(r_case, x_case, 'Sample Case: R Case must be 1 dimension or equal to dimension of X and Y Case')
 
-                if (value <= 0) {
-                    addMessage({ type: 'danger', text: 'Sample Case: ' + names[i] + ' values must be positive. (Value = ' + value + ')' })
-                    valid = false;
-                }
-            });
+            if(win === 'circle' || win === 'unit_circle')
+                errors +=  min(r_case, radius, 'Sample Case: R Case values must be less than half the width of the window.')
 
-            i += 1;
-        });
-
-        //Only check R Case if needed
-        if (samp_case === 'uniform' || samp_case === 'CSR') {
-
-            if (r_case.length !== x_case.length && r_case.length !== 1) {
-                addMessage({ type: 'danger', text: 'Sample Case: R Case must be 1 dimension or equal to dimension of X and Y Case' })
-                valid = false;
-            }
-
-            let half;
-            if (params.win === 'circle' || params.win === 'unit_circle')
-                half = radius;
-            else
-                half = Math.min(width / 2, height / 2);
-
-            //R Case values must be less than half the width of the window
-            r_case.forEach((value) => {
-
-                if (value > half) {
-                    addMessage({ type: 'danger', text: 'Sample Case: R Case values must be less than half the width of the window. (Value = ' + value + ')' })
-                    valid = false;
-                }
-
-                if (value <= 0) {
-                    addMessage({ type: 'danger', text: 'Sample Case: R Case values must be a positive. (Value = ' + value + ')' })
-                    valid = false;
-                }
-            });
+            else if(win === 'rectangle' || win === 'unit_square')
+                errors += min(r_case, Math.min(width / 2, height / 2), 'Sample Case: R Case values must be less than half the width of the window.')
         }
 
-        i = 0;
-        let control;
+        // N Control must have either 1 or equal number of dimensions as X and Y control
+        if(n_control.length !== 1)
+            errors += equalLength(n_control, x_control, 'Sample Case: N Control must be 1 dimension or equal to dimension of X and Y Control')
 
-        /*The dimension of N Control, S Control, and R Control must be either:
-        *  -Equal to 1 
-        *  -Equal to the dimension of X and Y Control
-        */
-        if (samp_control === 'MVN')
-            control = [n_control, s_control];
-        else
-            control = [n_control];
+              // Only check S Control if sample case is MVN. S Control must have either 1 or equal number of dimensions as X and Y Control
+        if(samp_control === 'MVN' && s_control.length !== 1)
+            errors += equalLength(s_control, x_control, 'Sample Control: S Control must be 1 dimension or equal to dimension of X and Y Control')
 
-        names = ["N Control", "S Control"];
-
-        control.forEach((control_type) => {
-
-            if (control_type.length !== x_case.length && control_type.length !== 1) {
-                addMessage({ type: 'danger', text: 'Sample Control: ' + names[i] + ' must be 1 dimension or equal to dimension of X and Y Control' })
-                valid = false;
-            }
-
-            //N and S Control values must be postive
-            control_type.forEach((value) => {
-
-                if (value <= 0) {
-                    addMessage({ type: 'danger', text: 'Sample Control: ' + names[i] + ' values must be positive. (Value = ' + value + ')' })
-                    valid = false;
-                }
-            });
-            i += 1;
-        })
-
-        return valid;
+        return errors === 0
     }
 
     function convertToMeters(params) {
@@ -319,9 +201,8 @@ export function Calculate({ match }) {
         resetResults();
         resetMessages();
         window.scrollTo(0, 0);
-        validation(params);
-
-        /*if (validateInput(params)) {
+       
+        if (validation(params)) {
              try {
  
                  let convertParams = params;
@@ -342,7 +223,7 @@ export function Calculate({ match }) {
                  const urlKey = new Date().getTime();
                  mergeResults({ loading: false, submitted: true, urlKey });
              }
-         }*/
+         }
     }
 
     /**
