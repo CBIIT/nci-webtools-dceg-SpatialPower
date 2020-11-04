@@ -145,7 +145,7 @@ export function InputForm({
                 newParams.r_case = [(Math.floor(Math.min(newParams.width / 2, newParams.height / 2) * 10) / 10)];
                 newParams.s_case = [(Math.floor(Math.min(newParams.width / 3, newParams.height / 3) * 10) / 10)];
 
-                newParams.s_control = [Math.floor((newParams.radius / 3) * 10) / 10]
+                newParams.s_control = [Math.floor(Math.min(newParams.width / 3, newParams.height / 3) * 10) / 10]
             }
             else if (newParams.win === 'circle' && newParams.radius) {
                 const radius = +newParams.radius * multiplier;
@@ -228,7 +228,7 @@ export function InputForm({
                 </div>
 
                 <div className="col-md-6 pt-2 form-group custom-control custom-checkbox">
-                    <label htmlFor="replot" className="d-block">&nbsp;</label>
+                    <div className="d-block pt-2">&nbsp;</div>
                     <input
                         type="checkbox"
                         className="custom-control-input"
@@ -473,6 +473,7 @@ export function InputForm({
                         id="x_case"
                         name="x_case"
                         className="form-control"
+                        aria-describedby="x_case_tooltip"
                         value={params.x_case}
                         onChange={handleChange}
                         onBlur={handleBlur} />
@@ -634,6 +635,7 @@ export function InputForm({
                     id="sim_total"
                     name="sim_total"
                     className="form-control"
+                    aria-describedby="sim_total_tooltip"
                     value={params.sim_total}
                     onChange={handleChange} />
             </OverlayTrigger>
