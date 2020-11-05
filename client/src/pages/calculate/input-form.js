@@ -209,7 +209,7 @@ export function InputForm({
         <fieldset className="border px-3 mb-4">
             <legend className="legend font-weight-bold">Spatial Window</legend>
             <div className="row">
-                <div className="col-md-18 form-group">
+                <div className="col-18 form-group">
                     <label htmlFor="win" className="required">Window Shape</label>
                     <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the shape of the window</Tooltip>}>
                         <select
@@ -227,8 +227,8 @@ export function InputForm({
                     </OverlayTrigger>
                 </div>
 
-                <div className="col-md-6 pt-2 form-group custom-control custom-checkbox">
-                    <div className="d-block pt-2">&nbsp;</div>
+                <div className="col-6 pt-3 pt-1-xs form-group custom-control custom-checkbox">
+                    <div className="d-block">&nbsp;</div>
                     <input
                         type="checkbox"
                         className="custom-control-input"

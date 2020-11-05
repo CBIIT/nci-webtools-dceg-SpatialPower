@@ -115,6 +115,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                             </fieldset>
                         </div>
 
+                        
+
                         <div className="row">
 
                             <div className="col-lg form-group">
@@ -177,6 +179,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                             </div>
                         </div>
 
+                        <hr className="d-md-none mt-1" />
+
                         <div className="row">
                             <div className="col-lg form-group">
                                 <label htmlFor="control_symbol" className="text-nowrap">Control Symbol</label>
@@ -236,6 +240,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                 </OverlayTrigger>
                             </div>
                         </div>
+
+                        <hr className="d-md-none mt-1" />
 
                         {params.sim_total > 1 && <div className="row">
                             <div className="col-lg form-group">
