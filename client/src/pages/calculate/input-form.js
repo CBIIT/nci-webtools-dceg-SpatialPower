@@ -255,7 +255,6 @@ export function InputForm({
                         <option value="" hidden>(select option)</option>
                         <option value="kilometers">Kilometers</option>
                         <option value="meters">Meters</option>
-                        <option value="degrees" disabled>Degrees</option>
                     </select>
                 </OverlayTrigger>
             </div>}
