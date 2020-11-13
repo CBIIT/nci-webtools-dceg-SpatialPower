@@ -29,11 +29,7 @@ export function Home() {
         </div>
         <div className="container lead mb-4">
             <p>
-                The Spatial Power Web Tool serves as a frontend interface for the <a className="font-weight-bold" href="https://cran.r-project.org/web/packages/sparrpowR/index.html">sparrpowR package</a>. The webtool has the same functionality as the package, but allows users to easily input their study parameters into an online form instead of interacting directly with R.
-            </p>
-
-            <p>
-                The web tool displays the calculated power in tabular form as well as graphically, with the same graphics directly produced by the R package. Users are  able to download their power results and visualizations directly from the webtool for implementation in presentations, grant applications, or even publications.
+            Spatial Power is a suite of web-based applications designed to easily and efficiently perform power calculations for select spatial statistics. Each included application is specialized for a specific statistic. Spatial data are randomly generated using study-specific parameters and a statistic is calculated iteratively to assess statistical power. The applications provide graphical presentations of both simulated data and power -- including a Geographic Information System overlay.
             </p>
         </div>
         {/*
