@@ -304,7 +304,7 @@ export function Calculate({ match }) {
                 {!results.submitted && messages.length === 0 ?
                     <Card className="shadow-sm h-100">
                         <Card.Body>
-                            <Card.Text>Specify the sample case and control and provide simulation configuration on the left panel. The results will be displayed here once you click on the Submit button.</Card.Text>
+                            <Card.Text>Calculate statistical power for the spatial relative risk (SRR) function, which is a spatial cluster detection technique that compares two groups of point-level data. Specify the study-design simulation configurations on the left panel. The results will be displayed here once you click on the Submit button.</Card.Text>
                         </Card.Body>
                     </Card> : <>
                         <Summary />
