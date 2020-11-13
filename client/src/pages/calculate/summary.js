@@ -10,9 +10,9 @@ export function Summary() {
     const summary = [
         { title: 'Control locations', mean: results.summary.mean_n_con, standardDeviation: results.summary.sd_n_con, },
         { title: 'Case locations', mean: results.summary.mean_n_cas, standardDeviation: results.summary.sd_n_cas, },
-        { title: 'Numerator bandwidth', mean: results.summary.mean_bandw, standardDeviation: results.summary.sd_bandw, },
-        { title: 'Global S statistic length', testStat: results.summary.s_test_stat, pValue: results.summary.s_pval, },
-        { title: 'Global T statistic length', testStat: results.summary.t_test_stat, pValue: results.summary.t_pval, },
+        { title: 'Bandwidth', mean: results.summary.mean_bandw, standardDeviation: results.summary.sd_bandw, },
+        { title: 'Global S statistic', testStat: results.summary.s_test_stat, pValue: results.summary.s_pval, },
+        { title: 'Global T statistic', testStat: results.summary.t_test_stat, pValue: results.summary.t_pval, },
     ];
 
     return <Card className="shadow-sm mb-3">
