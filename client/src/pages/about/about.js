@@ -8,11 +8,7 @@ export function About() {
         <h1 className="h4">About</h1>
 
         <hr />
-
-        <p>
-            The Spatial Power Web Tool serves as a frontend interface for the <a className="font-weight-bold" href="https://cran.r-project.org/web/packages/sparrpowR/index.html">sparrpowR package</a>. The webtool has the same functionality as the package, but allows users to easily input their study parameters into an online form instead of interacting directly with R.
-        </p>
-
+        
         <p>
             Spatial Power is designed to be an intuitive and simple tool for conducting power analyses of spatial statistics. This help documentation page gives a detailed description of the metrics calculated by Spatial Power modules and aids users in understanding all aspects of the required input and returned output. The documentation is divided into the following sections:
         </p>
