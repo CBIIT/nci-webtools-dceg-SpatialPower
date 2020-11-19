@@ -27,10 +27,11 @@ export function App() {
   ];
 
   return (
-    <>
+    <div style={{backgroundColor: '#F1F1F1'}}>
       <NCIHeader 
         imageSource="assets/images/dceg-logo.svg" 
         url="https://dceg.cancer.gov/"
+        style={{backgroundColor: 'white'}}
       />    
       <Navbar 
         className="py-0 shadow-sm"
@@ -59,6 +60,6 @@ export function App() {
             <div className="h6">at the National Cancer Institute</div>
         </div>}
       />
-    </>
+    </div>
   );
 }
