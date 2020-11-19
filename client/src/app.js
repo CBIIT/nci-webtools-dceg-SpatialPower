@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Route, useLocation, NavLink } from 'react-router-dom';
-import { Navbar, NCIHeader, NCIFooter } from '@cbiitss/react-components'
+import { Navbar, NCIHeader } from '@cbiitss/react-components'
+import { NCIFooter } from './footer'
 import { Home } from './pages/home/home';
 import { Calculate } from './pages/calculate/calculate';
 import { About } from './pages/about/about';
