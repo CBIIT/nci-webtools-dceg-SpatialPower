@@ -20,7 +20,7 @@ export function Home() {
         <div className="jumbotron jumbotron-fluid text-light ">
             <div className="banner-text container text-center">
                 <h1 className="display-4 mb-4">
-                    <span className="d-inline-block py-4" style={{ borderBottom: '2px solid white' }}>Spatial Power Web Tool</span>
+                    <span className="d-inline-block py-4" style={{ borderBottom: '2px solid white' }}>Spatial Power</span>
                 </h1>
 
                 <p className="lead">Estimate statistical power of spatial clusters</p>
@@ -30,6 +30,11 @@ export function Home() {
         <div className="container lead mb-4">
             <p>
             Spatial Power is a suite of web-based applications designed to easily and efficiently perform power calculations for select spatial statistics. Each included application is specialized for a specific statistic. Spatial data are randomly generated using study-specific parameters and a statistic is calculated iteratively to assess statistical power. The applications provide graphical presentations of both simulated data and power -- including a Geographic Information System overlay.
+            </p>
+            <h4>Credits</h4>
+            <p>
+                Spatial Power was developed by <a href='https://dceg.cancer.gov/fellowship-training/what-our-fellows-do/meet-current-fellows/oeeb-fellows#ian-buller-phd-ma-postdoctoral-fellow'>Ian Buller</a> and <a href='https://dceg.cancer.gov/fellowship-training/what-our-fellows-do/meet-current-fellows/iteb-fellows#derek-brown-phd-postdoctoral-fellow'>Derek Brown</a> in collaboration with NCI's Center for Biomedical Informatics and Information Technology (CBIIT).
+                Support comes from the Division of Cancer Epidemiology and Genetics Informatics Tool Challenge.
             </p>
         </div>
         {/*
