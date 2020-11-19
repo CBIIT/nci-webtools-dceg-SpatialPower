@@ -48,7 +48,7 @@ export function About() {
         <ul>
             <p><b className='underline' id='sparrpowR'>sparrpowR</b>: Calculate statistical power for the spatial relative risk (SRR) function, which is a spatial cluster detection technique that compares two groups of point-level data.
             Users are able to specify the expected study design parameters, iteratively calculate the SRR function, and visualize the power analysis output.
-            The function smooths the relative risk over a 128 x 128 gridded surface with a ‘uniform’ edge correction.
+            The function smooths the relative risk over a 128 x 128 (spatial units depending on the chosen study window) gridded surface with a ‘uniform’ edge correction.
             For advanced features, see the <a className="font-weight-bold" href="https://cran.r-project.org/web/packages/sparrpowR/index.html">sparrpowR</a> package available on the Comprehensive R Archive Network. </p>
             <ul>
                 <p>
