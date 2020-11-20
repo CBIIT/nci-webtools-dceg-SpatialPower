@@ -2,12 +2,13 @@
 .jumbotron {
     display: block;
     position: relative;
-    
+    padding-bottom: 10rem !important;
 }
 
 .jumbotron .banner-text{
     position: relative;
     z-index: 1;
+    padding-top: 5rem;
 }
 
 .jumbotron::after {
