@@ -4,8 +4,7 @@ $enable-gradients: false;
 /** Colors */
 $blue: rgb(24, 83, 148);
 $dark-blue: rgb(18, 46, 81);
-$primary: #343A40;
-$primary-darker: #292d33;
+$primary-darker: $dark-blue;
 $body-color: black;
 
 /** Cards */
