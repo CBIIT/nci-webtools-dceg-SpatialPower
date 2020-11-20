@@ -31,7 +31,7 @@ export function Home() {
             <p>
             Spatial Power is a suite of web-based applications designed to easily and efficiently perform power calculations for select spatial statistics. Each included application is specialized for a specific statistic. Spatial data are randomly generated using study-specific parameters and a statistic is calculated iteratively to assess statistical power. The applications provide graphical presentations of both simulated data and power -- including a Geographic Information System overlay.
             </p>
-            <h4>Credits</h4>
+            <h4 style={{marginTop:'2.5rem'}}>Credits</h4>
             <p>
                 Spatial Power was developed by <a href='https://dceg.cancer.gov/fellowship-training/what-our-fellows-do/meet-current-fellows/oeeb-fellows#ian-buller-phd-ma-postdoctoral-fellow'>Ian Buller</a> and <a href='https://dceg.cancer.gov/fellowship-training/what-our-fellows-do/meet-current-fellows/iteb-fellows#derek-brown-phd-postdoctoral-fellow'>Derek Brown</a> in collaboration with NCI's Center for Biomedical Informatics and Information Technology (CBIIT).
                 Support comes from the <a href='https://dceg.cancer.gov/'>Division of Cancer Epidemiology and Genetics</a> Informatics Tool Challenge.
