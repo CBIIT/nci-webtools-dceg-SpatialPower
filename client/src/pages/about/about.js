@@ -41,7 +41,7 @@ export function About() {
 
         <h2 id='Modules' className='h5'>Modules</h2>
         <p>
-            Currently, Spatial Power consists of one module: <a className="font-weight-bold" href="\#sparrpowR">sparrpowR</a>.
+            Currently, Spatial Power consists of one module: <a className="font-weight-bold" href="/#sparrpowR">sparrpowR</a>.
             Each module can be accessed by clicking on the desired tab at the top of all Spatial Power pages. Below is a description of each spatial statistic, the required user-specified inputs, and an explanation of its returned output:
         </p>
 
@@ -49,7 +49,7 @@ export function About() {
             <p><b className='underline' id='sparrpowR'>sparrpowR</b>: Calculate statistical power for the spatial relative risk (SRR) function, which is a spatial cluster detection technique that compares two groups of point-level data.
             Users are able to specify the expected study design parameters, iteratively calculate the SRR function, and visualize the power analysis output.
             The function smooths the relative risk over a 128 x 128 (spatial units depending on the chosen study window) gridded surface with a ‘uniform’ edge correction.
-            For advanced features, see the <a className="font-weight-bold" href="https://cran.r-project.org/web/packages/sparrpowR/index.html">sparrpowR</a> package available on the Comprehensive R Archive Network. </p>
+            For advanced features, see the <a className="font-weight-bold" href="https://cran.r-project.org/web/packages/sparrpowR/index.html" target='_blank'>sparrpowR</a> package available on the Comprehensive R Archive Network. </p>
             <ul>
                 <p>
                     <t className='underline'>Statistic</t>:
