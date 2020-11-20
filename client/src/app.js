@@ -55,7 +55,7 @@ export function App() {
       </main>
       <NCIFooter 
         className="py-4 bg-primary-gradient text-light"
-        title={<div className="mb-4">
+        title={<div className="mb-4 col-md">
             <div className="h4 mb-0">Division of Cancer Epidemiology and Genetics</div>
             <div className="h6">at the National Cancer Institute</div>
         </div>}

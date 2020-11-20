@@ -38,20 +38,8 @@ function NCIFooter(_ref) {
   }, {
     title: 'More Information',
     links: [{
-      title: 'About This Website',
-      href: 'https://www.cancer.gov/about-website'
-    }, {
-      title: 'Multimedia',
-      href: 'https://www.cancer.gov/multimedia'
-    }, {
-      title: 'Publications',
-      href: 'https://www.cancer.gov/publications'
-    }, {
-      title: 'Site Map',
-      href: 'https://www.cancer.gov/about-website/sitemap'
-    }, {
-      title: 'Digital Standards for NCI Websites',
-      href: 'https://www.cancer.gov/digital-standards'
+      title: 'DCEG',
+      href: 'https://dceg.cancer.gov/'
     }]
   }, {
     title: 'Policies',
@@ -67,18 +55,6 @@ function NCIFooter(_ref) {
     }, {
       href: "https://www.cancer.gov/policies/foia",
       title: 'FOIA'
-    }, {
-      href: "https://www.cancer.gov/policies/privacy-security",
-      title: 'Privacy & Security'
-    }, {
-      href: "https://www.cancer.gov/policies/copyright-reuse",
-      title: 'Reuse & Copyright'
-    }, {
-      href: "https://www.cancer.gov/syndication",
-      title: 'Syndication Services'
-    }, {
-      href: "https://www.cancer.gov/policies/linking",
-      title: 'Website Linking'
     }]
   }] : _ref$columns,
       _ref$footerLinks = _ref.footerLinks,
@@ -101,9 +77,9 @@ function NCIFooter(_ref) {
     className: className,
     style: style
   }, /*#__PURE__*/_react.default.createElement("div", {
-    className: "container"
+    className: "container row mx-auto",
   }, title, /*#__PURE__*/_react.default.createElement("div", {
-    className: "row mb-4"
+    className: "row mb-4 col-md ml-5"
   }, columns.map(function (column, columnIndex) {
     return /*#__PURE__*/_react.default.createElement("div", {
       key: "footer-column-".concat(columnIndex),
