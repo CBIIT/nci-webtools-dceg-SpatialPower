@@ -114,16 +114,16 @@ export function About() {
 
         <h2 id='References' className="h5">References</h2>
         <ol>
-            <li>Arnold BF, Hogan DR, Colford JM, and Hubbard AE. (2011). <a className='font-weight-bold' href='https://doi.org/10.1186/1471-2288-11-94'>Simulation methods to estimate design power: an overview for applied research.</a> BMC Medical Research Methodology, 11(1): 94.</li>
-            <li>Baddeley A, Rubak E, and Turner R. (2015). <a className='font-weight-bold' href='https://doi.org/10.1201/b19708'>Spatial Point Patterns: Methodology and Applications with R.</a> Boca Raton, FL: CRC Press</li>
-            <li>Davies TM, Marshall JC, and Hazelton ML. (2018). <a className='font-weight-bold' href='https://doi.org/10.1002/sim.7577'>Tutorial on kernel estimation of continuous spatial and spatiotemporal relative risk.</a> Statistics in Medicine, 37(7): 1191-1221.</li>
-            <li>Dorey FJ. (2011). <a className='font-weight-bold' href='https://doi.org/10.1007/s11999-010-1435-0'>In Brief: Statistics in Brief: Statistical Power: What Is It and When Should It Be Used?</a> Clinical Orthopaedics and Related Research, 469(2): 619-620.</li>
-            <li>Hazelton ML and Davies TM. (2009). <a className='font-weight-bold' href='https://doi.org/10.1002/bimj.200810495'>Inference Based on Kernel Estimates of the Relative Risk Function in Geographical Epidemiology.</a> Biometrical Journal, 51(1): 98-109.</li>
-            <li>Jones S, Carley S, Harrison M. (2003). <a className='font-weight-bold' href='http://dx.doi.org/10.1136/emj.20.5.453'>An introduction to power and sample size estimation.</a> Emergency Medicine Journal, 20(5): 453</li>
-            <li>Kelsall JE and Diggle PJ. (1995a). <a className='font-weight-bold' href='https://doi.org/10.2307/3318678'>Kernel estimation of relative risk.</a> Bernoulli, 1(1-2): 3-16.</li>
-            <li>Kelsall JE and Diggle PJ. (1995b). <a className='font-weight-bold' href='https://doi.org/10.1002/sim.4780142106'>Non‐parametric estimation of spatial variation in relative risk.</a> Statistics in Medicine, 14(21‐22): 2335-2342.</li>
-            <li>Terrell, GR. (1990). <a className='font-weight-bold' href='https://doi.org/10.1080/01621459.1990.10476223'>The maximal smoothing principle in density estimation.</a> Journal of the American Statistical Association, 85: 470-477.</li>
-            <li>Waller LA and Gotway CA. (2004). <a className='font-weight-bold' href='https://doi.org/10.1002/0471662682'>Applied Spatial Statistics for Public Health Data.</a> Hoboken, NJ: John Wiley & Sons, Inc</li>
+            <li>Arnold BF, Hogan DR, Colford JM, and Hubbard AE. (2011). <a className='font-weight-bold' href='https://doi.org/10.1186/1471-2288-11-94' target='_blank'>Simulation methods to estimate design power: an overview for applied research.</a> BMC Medical Research Methodology, 11(1): 94.</li>
+            <li>Baddeley A, Rubak E, and Turner R. (2015). <a className='font-weight-bold' href='https://doi.org/10.1201/b19708' target='_blank'>Spatial Point Patterns: Methodology and Applications with R.</a> Boca Raton, FL: CRC Press</li>
+            <li>Davies TM, Marshall JC, and Hazelton ML. (2018). <a className='font-weight-bold' href='https://doi.org/10.1002/sim.7577' target='_blank'> Tutorial on kernel estimation of continuous spatial and spatiotemporal relative risk.</a> Statistics in Medicine, 37(7): 1191-1221.</li>
+            <li>Dorey FJ. (2011). <a className='font-weight-bold' href='https://doi.org/10.1007/s11999-010-1435-0' target='_blank'>In Brief: Statistics in Brief: Statistical Power: What Is It and When Should It Be Used?</a> Clinical Orthopaedics and Related Research, 469(2): 619-620.</li>
+            <li>Hazelton ML and Davies TM. (2009). <a className='font-weight-bold' href='https://doi.org/10.1002/bimj.200810495' target='_blank'>Inference Based on Kernel Estimates of the Relative Risk Function in Geographical Epidemiology.</a> Biometrical Journal, 51(1): 98-109.</li>
+            <li>Jones S, Carley S, Harrison M. (2003). <a className='font-weight-bold' href='http://dx.doi.org/10.1136/emj.20.5.453' target='_blank'>An introduction to power and sample size estimation.</a> Emergency Medicine Journal, 20(5): 453</li>
+            <li>Kelsall JE and Diggle PJ. (1995a). <a className='font-weight-bold' href='https://doi.org/10.2307/3318678' target='_blank'>Kernel estimation of relative risk.</a> Bernoulli, 1(1-2): 3-16.</li>
+            <li>Kelsall JE and Diggle PJ. (1995b). <a className='font-weight-bold' href='https://doi.org/10.1002/sim.4780142106' target='_blank'>Non‐parametric estimation of spatial variation in relative risk.</a> Statistics in Medicine, 14(21‐22): 2335-2342.</li>
+            <li>Terrell, GR. (1990). <a className='font-weight-bold' href='https://doi.org/10.1080/01621459.1990.10476223' target='_blank'> The maximal smoothing principle in density estimation.</a> Journal of the American Statistical Association, 85: 470-477.</li>
+            <li>Waller LA and Gotway CA. (2004). <a className='font-weight-bold' href='https://doi.org/10.1002/0471662682' target='_blank'>Applied Spatial Statistics for Public Health Data.</a> Hoboken, NJ: John Wiley & Sons, Inc</li>
         </ol>
     </div>
 }

@@ -92,7 +92,8 @@ function NCIFooter(_ref) {
       return /*#__PURE__*/_react.default.createElement("li", {
         key: "footer-column-".concat(columnIndex, "-link-").concat(linkIndex)
       }, /*#__PURE__*/_react.default.createElement("a", {
-        href: link.href
+        href: link.href,
+        target: '_blank'
       }, link.title));
     })));
   }))), /*#__PURE__*/_react.default.createElement("div", {
@@ -103,7 +104,8 @@ function NCIFooter(_ref) {
     return /*#__PURE__*/_react.default.createElement("li", {
       key: "footer-link-".concat(linkIndex)
     }, /*#__PURE__*/_react.default.createElement("a", {
-      href: link.href
+      href: link.href,
+      target: '_blank'
     }, link.title));
   })), footerText));
 }
