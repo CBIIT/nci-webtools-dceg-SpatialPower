@@ -2,7 +2,7 @@ ARG BASE_IMAGE=spatial-power:base
 
 FROM ${BASE_IMAGE}
 
-ARG SPARRPOWR_TAG
+ARG SPARRPOWR_TAG=CBIIT
 
 COPY . /deploy
 
