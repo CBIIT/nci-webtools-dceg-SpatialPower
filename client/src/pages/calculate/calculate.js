@@ -113,7 +113,7 @@ export function Calculate({ match }) {
         const { win, gis, samp_case, samp_control,
                 x_origin, y_origin, x_case, y_case, n_case, s_case, r_case, 
                 x_control, y_control, s_control, n_control,
-                radius, width, height } = params;
+                radius, width, height, sim_total } = params;
 
         let errors = 0;
         
@@ -125,7 +125,7 @@ export function Calculate({ match }) {
         errors += equalLength(x_case, y_case, 'Sample Case: X Case and Y Case must have the same number of inputs')
         if(!gis)
             errors += inWindow(x_case, y_case, params, 'Sample Case: X Case and Y Case')
-        
+
         /* 
         * Only check X and Y control if sample control is MVN
         * X and Y Control must have equal dimensions. If not a gis plot, ensure coordinates are in the window
@@ -168,6 +168,11 @@ export function Calculate({ match }) {
               // Only check S Control if sample case is MVN. S Control must have either 1 or equal number of dimensions as X and Y Control
         if(samp_control === 'MVN' && s_control.length !== 1)
             errors += equalLength(s_control, x_control, 'Sample Control: S Control must be 1 dimension or equal to dimension of X and Y Control')
+
+        if(gis && sim_total <= 1){
+            errors += 1;
+            addMessage({type: 'danger', text: 'When GIS option is selected, number of simulations must be greater than or equal to 2'})
+        }
 
         return errors === 0
     }
