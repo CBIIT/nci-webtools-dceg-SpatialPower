@@ -124,6 +124,18 @@ export function InputForm({
 
         // todo: use isDefined (eg: not '', undefined, null) to allow using (0, 0) coordinates
         if (params.gis && (name === 'win' || name === 'gis' || name === 'unit' || name === 'longitude' || name === 'latitude' || name === 'width' || name === 'height' || name === 'radius')) {
+            
+            if(value === 'meters'){
+                newParams.width = 1000
+                newParams.height = 2000
+                newParams.radius = 1000
+            }
+            else if(value === 'kilometers'){
+                newParams.width = 1
+                newParams.height = 2
+                newParams.radius = 1
+            }
+            
             const multiplier = {
                 meters: 1,
                 kilometers: 1e3
