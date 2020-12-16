@@ -107,6 +107,21 @@ export function Calculate({ match }) {
         return valid;
     }
 
+    function isNegative(param,field){
+
+        let valid = 0;
+
+        for (let i = 0;i < param.length;i++){
+
+            if(param[i] <= 0){
+                addMessage({type: 'danger', text: field + ' (Value = ' + param[i] + ')'})
+                valid=1;
+            }
+        }
+
+        return valid;
+    }
+
 
     function validation(params) {
 
@@ -135,6 +150,8 @@ export function Calculate({ match }) {
             if(!gis)
                 errors += inWindow(x_control, y_control, params, 'Sample Control: X Control and Y Control')
         }
+
+        errors += isNegative(n_case, 'Sample Case: N Case values must be positive.')
         
         // N Case must have either 1 or equal number of dimensions as X and Y case
         if(n_case.length !== 1)
@@ -144,6 +161,8 @@ export function Calculate({ match }) {
         if (samp_case === 'MVN' && s_case.length !== 1)
             errors += equalLength(s_case, x_case, 'Sample Case: S Case must be 1 dimension or equal to dimension of X and Y Case')
 
+        if(samp_case === 'MVN')
+            errors += isNegative(s_case,'Sample Case: S Case values must be positive.')
         /*
         *  Only check R Case if sample case is MVN
         *  R Case must equal to or less than half the width of the window
@@ -154,6 +173,8 @@ export function Calculate({ match }) {
             if(r_case.length !== 1)
                 errors += equalLength(r_case, x_case, 'Sample Case: R Case must be 1 dimension or equal to dimension of X and Y Case')
 
+            errors += isNegative(r_case, 'Sample Case: R Case values must be positive.')
+
             if(win === 'circle' || win === 'unit_circle')
                 errors +=  min(r_case, radius, 'Sample Case: R Case values must be less than half the width of the window.')
 
@@ -161,11 +182,16 @@ export function Calculate({ match }) {
                 errors += min(r_case, Math.min(width / 2, height / 2), 'Sample Case: R Case values must be less than half the width of the window.')
         }
 
+        errors += isNegative(n_control, 'Sample Control: N Control values must be positive.')
+
         // N Control must have either 1 or equal number of dimensions as X and Y control
         if(n_control.length !== 1)
             errors += equalLength(n_control, x_control, 'Sample Case: N Control must be 1 dimension or equal to dimension of X and Y Control')
 
-              // Only check S Control if sample case is MVN. S Control must have either 1 or equal number of dimensions as X and Y Control
+        if(samp_control === 'MVN')
+            errors += isNegative(s_control, 'Sample Control: S Control values must be positive.')
+
+        // Only check S Control if sample case is MVN. S Control must have either 1 or equal number of dimensions as X and Y Control
         if(samp_control === 'MVN' && s_control.length !== 1)
             errors += equalLength(s_control, x_control, 'Sample Control: S Control must be 1 dimension or equal to dimension of X and Y Control')
 
