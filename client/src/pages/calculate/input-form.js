@@ -84,7 +84,7 @@ export function InputForm({
         }
 
         //Defaults for rectangle windows, updates with window, x_origin, y_origin, width, and height
-        if (newParams.win === 'rectangle' && (name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'width' || name === 'height')) {
+        if (newParams.win === 'rectangle' && (name==='gis' || name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'width' || name === 'height')) {
 
             if (name === 'win') {
                 newParams.x_origin = 0
@@ -104,7 +104,7 @@ export function InputForm({
         }
 
         //Defaults for circular windows, updates with window, x_origin, y_origin, and radius
-        else if (newParams.win === "circle" && (name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'radius')) {
+        else if (newParams.win === "circle" && (name==='gis' || name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'radius')) {
 
             if (name === 'win') {
                 newParams.x_origin = 1
@@ -123,7 +123,7 @@ export function InputForm({
         }
 
         // todo: use isDefined (eg: not '', undefined, null) to allow using (0, 0) coordinates
-        if (params.gis && (name === 'win' || name === 'gis' || name === 'unit' || name === 'longitude' || name === 'latitude' || name === 'width' || name === 'height' || name === 'radius')) {
+        if (newParams.gis && (name === 'win' || name === 'gis' || name === 'unit' || name === 'longitude' || name === 'latitude' || name === 'width' || name === 'height' || name === 'radius')) {
             
             if(value === 'meters' || (name === 'win' && newParams.unit === 'meters')){
                 newParams.width = 1000
