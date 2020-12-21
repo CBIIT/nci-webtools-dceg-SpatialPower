@@ -646,7 +646,6 @@ export function InputForm({
                     id="sim_total"
                     name="sim_total"
                     className="form-control"
-                    aria-describedby="sim_total_tooltip"
                     value={params.sim_total}
                     onChange={handleChange} />
             </OverlayTrigger>
