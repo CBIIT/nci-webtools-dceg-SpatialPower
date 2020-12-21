@@ -149,7 +149,7 @@ async function processMessage(params) {
             const userEmailResults = await email.sendMail({
                 from: config.email.sender,
                 to: params.email,
-                subject: 'SparrpowR Simulation Results - ' + params.job_name + " - " + params.timestamp + " UTC",
+                subject: 'SparrpowR Simulation Results - ' + params.job_name + " - " + params.timestamp + " UTC (FAILED)",
                 html: await readTemplate(__dirname + '/templates/user-failure-email.html', templateData),
             });
         }
