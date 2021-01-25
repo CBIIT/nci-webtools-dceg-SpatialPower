@@ -96,11 +96,12 @@ export function getTargetCoordinates(longitude, latitude, bearingDegrees, distan
  * @returns {[longitude: number, latitude: number][]} An array of valid GeoJSON coordinates
  */
 export function getRectangularCoordinates(longitude, latitude, horizontalDistance, verticalDistance, globalRadius = 6371e3) {
-    const topLeft = normalizeCoordinates([longitude, latitude]);
-    const bottomLeft = getTargetCoordinates(longitude, latitude, 180, verticalDistance, globalRadius)
-    const topRight = getTargetCoordinates(longitude, latitude, 90, horizontalDistance, globalRadius);
-    const bottomRight = getTargetCoordinates(topRight[0], topRight[1], 180, verticalDistance)
-    return [topLeft, topRight, bottomRight, bottomLeft, topLeft]; // clockwise
+    const bottomLeft = normalizeCoordinates([longitude, latitude]);
+    const topLeft = getTargetCoordinates(longitude, latitude, 0, verticalDistance, globalRadius)
+    const bottomRight = getTargetCoordinates(longitude, latitude, 90, horizontalDistance)
+    const topRight = getTargetCoordinates(bottomRight[0], bottomRight[1], 0, verticalDistance, globalRadius);
+   
+    return [bottomLeft, topLeft, topRight, bottomRight, bottomLeft]; // clockwise
 }
 
 /**

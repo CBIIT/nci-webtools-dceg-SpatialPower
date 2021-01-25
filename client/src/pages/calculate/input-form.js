@@ -148,10 +148,10 @@ export function InputForm({
                 newParams.geojson = JSON.stringify({ type: 'Polygon', coordinates: [coordinates] });
 
                 newParams.x_case = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 90, width / 2)[0]).toFixed(4)];
-                newParams.y_case = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 180, height / 2)[1]).toFixed(4)];
+                newParams.y_case = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 0, height / 2)[1]).toFixed(4)];
 
                 newParams.x_control = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 90, width / 2)[0]).toFixed(4)];
-                newParams.y_control = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 180, height / 2)[1]).toFixed(4)];
+                newParams.y_control = [(getTargetCoordinates(newParams.longitude, newParams.latitude, 0, height / 2)[1]).toFixed(4)];
 
                 //Parameters are in the unit selected, converted to meters on submit
                 newParams.r_case = [(Math.floor(Math.min(newParams.width / 2, newParams.height / 2) * 10) / 10)];
