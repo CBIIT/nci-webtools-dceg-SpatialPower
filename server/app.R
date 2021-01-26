@@ -103,13 +103,6 @@ calculate <- function(params) {
     )
     
     if (params$gis) {
-        # determine Unversial Transverse Mercatro (UTM) system from starting coordinates
-        utm_zone <- (floor((params$longitude + 180)/6) %% 60) + 1
-        if (params$latitude >= 0) {
-        local_utm <- sp::CRS(paste0("+proj=utm +zone=", utm_zone, " +datum=WGS84"))
-        } else {
-        local_utm <- sp::CRS(paste0("+proj=utm +zone=", utm_zone, " +datum=WGS84 +south"))
-        }
         
         # determine local coordinate reference system from starting coordinates
         local_crs <- sp::CRS(paste0("+proj=webmerc +datum=WGS84 +lon_0=", params$longitude, " +y_0=", params$latitude))
@@ -117,20 +110,20 @@ calculate <- function(params) {
         
         geojson_sp <- geojsonio::geojson_sp(params$geojson)
         sp_area_union <- maptools::unionSpatialPolygons(geojson_sp, IDs = rep(1, length(geojson_sp)))
-        sp_area_proj <- sp::spTransform(sp_area_union, CRSobj = local_utm)
+        sp_area_proj <- sp::spTransform(sp_area_union, CRSobj = local_crs)
         sp_params$win <- spatstat::as.owin(sp_area_proj)
         
         case <- transform_coords(
             data.frame(x = sp_params$x_case,y = sp_params$y_case),
             from_crs=global_crs,
-            to_crs=local_utm
+            to_crs=local_crs
         )@coords
         
         control <- transform_coords(
             data.frame(x = sp_params$x_control, y = sp_params$y_control),
             coordinate_columns = c('x', 'y'),
             from_crs = global_crs, 
-            to_crs = local_utm
+            to_crs = local_crs
         )@coords
         
         sp_params$x_case = case[,1]
@@ -198,14 +191,9 @@ calculate <- function(params) {
 }
 
 plot_gis <- function(results, params){
-    # determine Unversial Transverse Mercatro (UTM) system from starting coordinates
-    utm_zone <- (floor((params$longitude + 180)/6) %% 60) + 1
-    if (params$latitude >= 0) {
-        local_utm <- sp::CRS(paste0("+proj=utm +zone=", utm_zone, " +datum=WGS84"))
-    } else {
-        local_utm <- sp::CRS(paste0("+proj=utm +zone=", utm_zone, " +datum=WGS84 +south"))
-    }
+
     global_crs <- sp::CRS("+init=EPSG:4326")
+    local_crs <- sp::CRS(paste0("+proj=webmerc +datum=WGS84 +lon_0=", params$longitude, " +y_0=", params$latitude))
 
     # for now, unproject just the pval_prop_case matrix
     # extract proportion significant
@@ -220,7 +208,7 @@ plot_gis <- function(results, params){
     sp::gridded(lrr_narm) <- TRUE # gridded
     pvalprop_raster <- raster::raster(lrr_narm) # convert to raster
         
-    raster::crs(pvalprop_raster) <- local_utm # todo: change to local UTM
+    raster::crs(pvalprop_raster) <- local_crs # todo: change to local UTM
         
     # Categorized raster by power threshold into two groups 
     ## Level 1 : Insufficiently powered
