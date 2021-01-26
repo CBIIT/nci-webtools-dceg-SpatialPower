@@ -119,13 +119,13 @@ export function Plots() {
 
     // assign colors to categorical values
     const categories = [
-        { value: 0, label: 'Insufficient', color: params.insuff_color },
-        { value: 1, label: 'Sufficient', color: params.suff_color },
+        { value: 1, label: 'Insufficient', color: params.insuff_color },
+        { value: 2, label: 'Sufficient', color: params.suff_color },
     ];
 
     const polygons = (mapData ? mapData.polygons : []).map(({ Polygons }, i) => {
         const data = mapData.data[i];
-        const category = categories.find(e => e.value === data.z);
+        const category = categories.find(e => e.value === data.layer);
         const color = category ? category.color : params.insuff_color;
         const paths = Polygons.map(p => p.coords.map(([lng, lat]) => [lat, lng]))
         return { paths, color };
