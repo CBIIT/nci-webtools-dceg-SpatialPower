@@ -27,7 +27,7 @@ RUN dnf -y update \
 
 RUN Rscript -e "install.packages('remotes', lib = .Library, repos='https://cloud.r-project.org')"
 
-RUN Rscript -e "remotes::install_github('spatstat/spatstat.core')"
+RUN Rscript -e "remotes::install_github('spatstat/spatstat.core', ref='v1.65-0')"
 
 RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='$SPARRPOWR_TAG')"
 
