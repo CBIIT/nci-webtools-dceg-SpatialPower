@@ -1,7 +1,6 @@
-
-FROM centos:latest
-
-ARG SPARRPOWR_TAG=CBIIT
+# example build command (from repository root)
+# docker build -t spatial-power:backend -f docker/backend.dockerfile --build-args SPARRPOWR_TAG=CBIIT .
+FROM centos:8.3.2011
 
 RUN dnf -y update \
  && dnf -y install \
@@ -26,22 +25,23 @@ RUN dnf -y update \
     https://download.fedoraproject.org/pub/epel/7/x86_64/Packages/j/jq-devel-1.6-2.el7.x86_64.rpm \
  && dnf clean all
 
-COPY . /deploy
+# install sparrpowR dependencies
+RUN Rscript -e "install.packages(c('geojsonio', 'jsonlite', 'remotes', 'rgdal', 'tibble'), repos='https://cloud.r-project.org/')"
+RUN Rscript -e "remotes::install_github('spatstat/spatstat.core', ref='v1.65-0')"
+RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='CBIIT')"
+
+# install version of sparrpowR specified by tag or commmit id
+ARG SPARRPOWR_TAG=CBIIT
+
+RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='$SPARRPOWR_TAG')"
 
 COPY package*.json /deploy
 
 WORKDIR /deploy
 
-# install version of sparrpowR specified by tag
-RUN Rscript -e "install.packages('remotes', lib = .Library, repos='https://cloud.r-project.org')"
-
-RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='$SPARRPOWR_TAG')"
-
-RUN Rscript -e "install.packages(c('geojsonio', 'jsonlite', 'rgdal', 'tibble'), repos='https://cloud.r-project.org/')"
-
-RUN Rscript -e "remotes::install_github('spatstat/spatstat.core', ref='v1.65-0')"
-
 RUN npm install
+
+COPY . /deploy
 
 CMD npm start
 
