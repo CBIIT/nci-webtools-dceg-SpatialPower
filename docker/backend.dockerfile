@@ -35,6 +35,8 @@ ARG SPARRPOWR_TAG=CBIIT
 
 RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='$SPARRPOWR_TAG')"
 
+RUN mkdir /deploy
+
 COPY package*.json /deploy
 
 WORKDIR /deploy
