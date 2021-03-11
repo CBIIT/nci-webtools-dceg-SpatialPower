@@ -28,7 +28,6 @@ RUN dnf -y update \
 # install sparrpowR dependencies
 RUN Rscript -e "install.packages(c('geojsonio', 'jsonlite', 'remotes', 'rgdal', 'tibble'), repos='https://cloud.r-project.org/')"
 RUN Rscript -e "remotes::install_github('spatstat/spatstat.core', ref='v1.65-0')"
-RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='CBIIT')"
 
 # install version of sparrpowR specified by tag or commmit id
 ARG SPARRPOWR_TAG=CBIIT
