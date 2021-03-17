@@ -41,7 +41,7 @@ RUN Rscript -e "install.packages(c(\
 
 # do not remove this line: this is to ensure that all sparrpowR dependencies are installed and cached at the time of the initial build
 # this should rarely change, as the ref should be set to the tag associated with the latest production release
-RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='SpatialPower-0.0.0')" 
+RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='master')" 
 
 # install version of sparrpowR specified by tag or commmit id (preferred)
 ARG SPARRPOWR_TAG=CBIIT

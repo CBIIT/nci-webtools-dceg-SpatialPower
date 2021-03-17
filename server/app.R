@@ -133,7 +133,7 @@ calculate <- function(params) {
     } else {
         if (params$win == "unit_circle") {
             #  actual unit circle is spatstat::disc() # defaults: radius 1, center: 0, 0
-            sp_params$win <- spatstat::disc(radius = 0.5, centre = c(0.5, 0.5))
+            sp_params$win <- spatstat.geom::disc(radius = 0.5, centre = c(0.5, 0.5))
         } else if (params$win == "unit_square") {
             sp_params$win <- spatstat::unit.square()
         } else if (params$win == "rectangle") {
@@ -145,7 +145,7 @@ calculate <- function(params) {
         } else if (params$win == "circle") {
             x <- params$x_origin
             y <- params$y_origin
-            sp_params$win <- spatstat::disc(radius = params$radius, centre = c(x,y))
+            sp_params$win <- spatstat.geom::disc(radius = params$radius, centre = c(x,y))
         }
     }
     

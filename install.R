@@ -22,8 +22,9 @@ install.packages(
         'spatstat',
         'spatstat.data',
         'spatstat.utils',
-        'tensor'
-        'tibble',
+        'spatstat.geom',
+        'tensor',
+        'tibble'
     ), 
     lib = .Library, 
     repos='https://cloud.r-project.org/'
