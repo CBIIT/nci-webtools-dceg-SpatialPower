@@ -36,7 +36,6 @@ RUN Rscript -e "install.packages(c(\
     'spatstat.data', \
     'spatstat.geom', \
     'spatstat.utils', \
-    'spatstat.core', \
     'tibble'\
 ), repos='https://cloud.r-project.org/')"
 
