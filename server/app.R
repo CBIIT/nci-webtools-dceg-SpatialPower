@@ -110,7 +110,7 @@ calculate <- function(params) {
         geojson_sp <- geojsonio::geojson_sp(params$geojson)
         sp_area_union <- maptools::unionSpatialPolygons(geojson_sp, IDs = rep(1, length(geojson_sp)))
         sp_area_proj <- sp::spTransform(sp_area_union, CRSobj = local_crs)
-        sp_params$win <- spatstat::as.owin(sp_area_proj)
+        sp_params$win <- spatstat.geom::as.owin(sp_area_proj)
         
         case <- transform_coords(
             data.frame(x = sp_params$x_case,y = sp_params$y_case),
@@ -141,7 +141,7 @@ calculate <- function(params) {
             x2 <- x1 + params$width
             y1 <- params$y_origin
             y2 <- y1 + params$height
-        sp_params$win <- spatstat::owin(c(x1, x2), c(y1, y2))
+        sp_params$win <- spatstat.geom::owin(c(x1, x2), c(y1, y2))
         } else if (params$win == "circle") {
             x <- params$x_origin
             y <- params$y_origin
