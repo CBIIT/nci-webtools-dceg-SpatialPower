@@ -97,6 +97,7 @@ calculate <- function(params) {
         s_case = as.double(unlist(params$s_case, use.names=FALSE)),
         s_control = as.double(unlist(params$s_control, use.names=FALSE)),
         alpha = as.double(params$alpha),
+        p_correct = params$p_correct,
         n_core = 8,
         verbose = FALSE
     )

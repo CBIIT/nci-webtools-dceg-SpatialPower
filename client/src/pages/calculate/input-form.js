@@ -835,6 +835,37 @@ export function InputForm({
             </OverlayTrigger>
         </div>
 
+        <div className="custom-control custom-checkbox">
+            <input
+                type="checkbox"
+                className="custom-control-input"
+                id="multi_test"
+                name="multi_test"
+                checked={params.multi_test}
+                onChange={handleChange} />
+
+            <OverlayTrigger overlay={<Tooltip id="multi_test_tooltip">If checked, enable the selection of multiple testing correction.</Tooltip>}>
+                <label className="custom-control-label" htmlFor="multi_test">Multiple Testing Correction</label>
+            </OverlayTrigger>
+        </div>
+
+        {params.multi_test && <div className="form-group">
+            <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the type of multiple testing correction.</Tooltip>}>
+                <select
+                    id="p_correct"
+                    name="p_correct"
+                    className="custom-select"
+                    value={params.p_correct}
+                    onChange={handleChange}>
+                    <option value="" hidden>(select option)</option>
+                    <option value="none">None</option>
+                    <option value="FDR">False Discovery Rate</option>
+                    <option value="Sidak">Sidak</option>
+                    <option value="Bonferroni">Bonferroni</option>
+                </select>
+            </OverlayTrigger>
+        </div>}
+
         <hr className="mt-4" />
 
         <fieldset className="border px-3 mb-4">
