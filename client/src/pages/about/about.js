@@ -99,7 +99,7 @@ export function About() {
                     </ul>
                 </p>
 
-                <p>Customize Plot Setting: Parameters include plotting titles, X-Y axes, legend location, points, symbols, colors, and sizes. The ‘Power Threshold’ is a numeric value between 0 and 1 that specifies the desired level of power. Both significantly powered case and control clusters can be displayed using the ‘Control Clusters’ option. </p>
+                <p>Customize Plot Setting: Parameters include plotting titles, X-Y axes, legend location, points, symbols, colors, and sizes. The ‘Power Threshold’ is a numeric value between 0 and 1 that specifies the desired level of power. One-sided tests are displayed by default using the user specified ‘Alpha’ level and display the power for the lower-tail only. Two-sided tests are displayed with the ‘Two-sided Test’ option using half of the user-specified ‘Alpha’ level at each tail. </p>
                 <p>
                     <div>Plots:</div>
                     <ul style={{ listStyle: 'none' }}>

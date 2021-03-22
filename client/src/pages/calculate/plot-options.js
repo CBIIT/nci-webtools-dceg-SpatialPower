@@ -107,8 +107,8 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                             name="cascon"
                                             checked={params.cascon}
                                             onChange={handleChange} />
-                                        <OverlayTrigger overlay={<Tooltip id="cascon_tooltip">If checked, display statistical power for both case and control clusters. If not, display power for case clusters only.</Tooltip>}>
-                                            <label className="custom-control-label" htmlFor="cascon">Control Clusters</label>
+                                        <OverlayTrigger overlay={<Tooltip id="cascon_tooltip">If checked, display statistical power based on a two-sided test (case and control clusters). If not, display power based on a one-sided test (case only).</Tooltip>}>
+                                            <label className="custom-control-label" htmlFor="cascon">Two-sided Test</label>
                                         </OverlayTrigger>
                                     </div>}
                                 </div>
