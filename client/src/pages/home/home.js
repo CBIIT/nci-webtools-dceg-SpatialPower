@@ -34,7 +34,7 @@ export function Home() {
             <h4 style={{marginTop:'2.5rem'}}>Credits</h4>
             <p>
                 Spatial Power was developed by <a href='https://dceg.cancer.gov/fellowship-training/what-our-fellows-do/meet-current-fellows/oeeb-fellows#ian-buller-phd-ma-postdoctoral-fellow' target='_blank'>Ian Buller</a> and <a href='https://dceg.cancer.gov/fellowship-training/what-our-fellows-do/meet-current-fellows/iteb-fellows#derek-brown-phd-postdoctoral-fellow' target='_blank'>Derek Brown</a> in collaboration with NCI's Center for Biomedical Informatics and Information Technology (CBIIT).
-                Support comes from the <a href='https://dceg.cancer.gov/' target='_blank'>Division of Cancer Epidemiology and Genetics</a> Informatics Tool Challenge.
+                Support comes from the <a href='https://dceg.cancer.gov/' target='_blank'>Division of Cancer Epidemiology and Genetics</a> Informatics Tool Challenge and the <a href='https://cpfp.cancer.gov/' target="_blank">Cancer Prevention Fellowship Program</a> Trans-Fellowship Research Award.
             </p>
             <p>
                 Questions or comments? Contact us via <a href='mailto:NCISpatialPowerWebAdmin@nih.gov?subject=Spatial Power'>email.</a>

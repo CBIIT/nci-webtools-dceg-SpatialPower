@@ -86,6 +86,14 @@ export function About() {
                 <p>Number of Simulations: The number of simulation iterations to perform. Utilize 1 simulation to ensure data parameters are entered correctly.</p>
                 <p>Random Seed: Utilize to ensure reproducible results.</p>
                 <p>Alpha: The p-value threshold for significance.</p>
+                <p>
+                    Multiple Testing Correction: Apply a correction for multiple comparisons
+                    <ul style={{ listStyle: 'none' }}>
+                        <li>- False Discovery Rate: Follows the Benjamini and Hochberg approach for choosing the critical p-value by: 1) sorting the p-values (pi) of each knot in ascending order (p1 ≤ p2 ≤ ... ≤ pm) and 2) starting from pm find the first pi for which pi ≤ (i/m) * alpha. See <HashLink className="font-weight-bold" smooth to="/about/#References">Benjamini and Hochberg (1995)</HashLink> for more details.</li>
+                        <li>- Sidak: Follows the Sidak correction for independent tests by: (1 – alpha)<sup>(1 / total number of gridded knots across the estimated surface)</sup>. The default resolution is 128 x 128 or n=16,384 knots. Please use the sparrpowR package in R for advanced features, such as specifying a custom resolution. See <HashLink className="font-weight-bold" smooth to="/about/#References">Sidak (1967)</HashLink> for more details. </li>
+                        <li>- Bonferroni: Follows the Bonferroni correction for independent tests by: alpha / total number of gridded knots across the estimated surface. The default resolution is 128 x 128 or n=16,384 knots. Please use the sparrpowR package in R for advanced features, such as specifying a custom resolution.</li>
+                    </ul>
+                </p>
 
                 <p>
                     <t className='underline'>Outputs</t>:
@@ -116,12 +124,15 @@ export function About() {
         <ol>
             <li>Arnold BF, Hogan DR, Colford JM, and Hubbard AE. (2011). <a className='font-weight-bold' href='https://doi.org/10.1186/1471-2288-11-94' target='_blank'>Simulation methods to estimate design power: an overview for applied research.</a> BMC Medical Research Methodology, 11(1): 94.</li>
             <li>Baddeley A, Rubak E, and Turner R. (2015). <a className='font-weight-bold' href='https://doi.org/10.1201/b19708' target='_blank'>Spatial Point Patterns: Methodology and Applications with R.</a> Boca Raton, FL: CRC Press</li>
+            <li>Benjamini Y, Hochberg Y (1995). <a className='font-weight-bold' href='https://doi.org/10.1111/j.2517-6161.1995.tb02031.x' target='_blank'>Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing.</a> Journal of the Royal Statistical Society: Series B (Methodological).</li>
+            <li>Buller ID, Brown DW, Myers TA, Jones RR, Machiela MJ. <a className='font-weight-bold' href='https://ij-healthgeographics.biomedcentral.com/articles/10.1186/s12942-021-00267-z#article-info' target='_blank'>sparrpowR: a flexible R package to estimate statistical power to identify spatial clustering of two groups and its application.</a> Int J Health Geogr 20, 13 (2021). </li>
             <li>Davies TM, Marshall JC, and Hazelton ML. (2018). <a className='font-weight-bold' href='https://doi.org/10.1002/sim.7577' target='_blank'> Tutorial on kernel estimation of continuous spatial and spatiotemporal relative risk.</a> Statistics in Medicine, 37(7): 1191-1221.</li>
             <li>Dorey FJ. (2011). <a className='font-weight-bold' href='https://doi.org/10.1007/s11999-010-1435-0' target='_blank'>In Brief: Statistics in Brief: Statistical Power: What Is It and When Should It Be Used?</a> Clinical Orthopaedics and Related Research, 469(2): 619-620.</li>
             <li>Hazelton ML and Davies TM. (2009). <a className='font-weight-bold' href='https://doi.org/10.1002/bimj.200810495' target='_blank'>Inference Based on Kernel Estimates of the Relative Risk Function in Geographical Epidemiology.</a> Biometrical Journal, 51(1): 98-109.</li>
             <li>Jones S, Carley S, Harrison M. (2003). <a className='font-weight-bold' href='http://dx.doi.org/10.1136/emj.20.5.453' target='_blank'>An introduction to power and sample size estimation.</a> Emergency Medicine Journal, 20(5): 453</li>
             <li>Kelsall JE and Diggle PJ. (1995a). <a className='font-weight-bold' href='https://doi.org/10.2307/3318678' target='_blank'>Kernel estimation of relative risk.</a> Bernoulli, 1(1-2): 3-16.</li>
             <li>Kelsall JE and Diggle PJ. (1995b). <a className='font-weight-bold' href='https://doi.org/10.1002/sim.4780142106' target='_blank'>Non‐parametric estimation of spatial variation in relative risk.</a> Statistics in Medicine, 14(21‐22): 2335-2342.</li>
+            <li>Sidak Z (1967). <a className='font-weight-bold' href='https://doi.org/10.2307/2283989' target='_blank'>Rectangular Confidence Regions for the Means of Multivariate Normal Distributions.</a>  Journal of the American Statistical Association Vol. 62, No. 318, pp. 626-633</li>
             <li>Terrell, GR. (1990). <a className='font-weight-bold' href='https://doi.org/10.1080/01621459.1990.10476223' target='_blank'> The maximal smoothing principle in density estimation.</a> Journal of the American Statistical Association, 85: 470-477.</li>
             <li>Waller LA and Gotway CA. (2004). <a className='font-weight-bold' href='https://doi.org/10.1002/0471662682' target='_blank'>Applied Spatial Statistics for Public Health Data.</a> Hoboken, NJ: John Wiley & Sons, Inc</li>
         </ol>
