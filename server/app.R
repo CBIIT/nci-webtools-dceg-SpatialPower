@@ -141,11 +141,17 @@ calculate <- function(params) {
             x2 <- x1 + params$width
             y1 <- params$y_origin
             y2 <- y1 + params$height
-        sp_params$win <- spatstat.geom::owin(c(x1, x2), c(y1, y2))
+            sp_params$win <- spatstat.geom::owin(c(x1, x2), c(y1, y2))
         } else if (params$win == "circle") {
             x <- params$x_origin
             y <- params$y_origin
             sp_params$win <- spatstat.geom::disc(radius = params$radius, centre = c(x,y))
+        }
+        else if(params$win == "ellipse"){
+            x <- params$x_origin
+            y <- params$y_origin
+            rad <- params$angle * (pi/180)
+            sp_params$win <- spatstat.geom::ellipse(params$radius2,params$radius,centre = c(x,y),rad)
         }
     }
     
