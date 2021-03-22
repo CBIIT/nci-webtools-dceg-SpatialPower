@@ -100,7 +100,7 @@ export function getRectangularCoordinates(longitude, latitude, horizontalDistanc
     const topLeft = getTargetCoordinates(longitude, latitude, 0, verticalDistance, globalRadius)
     const bottomRight = getTargetCoordinates(longitude, latitude, 90, horizontalDistance)
     const topRight = getTargetCoordinates(bottomRight[0], bottomRight[1], 0, verticalDistance, globalRadius);
-   
+
     return [bottomLeft, topLeft, topRight, bottomRight, bottomLeft]; // clockwise
 }
 
@@ -122,4 +122,35 @@ export function getRegularPolygonalCoordinates(longitude, latitude, radius, numS
     coordinates[numSides] = coordinates[0]; // close polygon
     return coordinates;
 }
+ 
+function getLatLong(center,angle,radius) {
+	
+	var rEarth = 6371000; // meters
+	
+	var x0 = center[0] * Math.PI / 180; // convert to radians.
+	var y0 = center[1] * Math.PI / 180;
+	
+	var y1 = Math.asin( Math.sin(y0)*Math.cos(radius/rEarth) + Math.cos(y0)*Math.sin(radius/rEarth)*Math.cos(angle) );
+	var x1 = x0 + Math.atan2(Math.sin(angle)*Math.sin(radius/rEarth)*Math.cos(y0), Math.cos(radius/rEarth)-Math.sin(y0)*Math.sin(y1));
+	
+	var y1 = y1 * 180 / Math.PI;
+	var x1 = x1	* 180 / Math.PI;
+			
+	return [x1,y1];
+} 
 
+export function getEllipticalCoordinates(longitude, latitude, r1, r2, rot, numSides = 30) {
+
+    var rotation = rot / 180 * Math.PI
+    var n = Math.ceil(36 * (Math.max(r1 / r2, r2 / r1)))
+    var coords = []
+
+    for (let i = 0; i <= n; i++) {
+        let angle = Math.PI * 2 / n * i + rotation;
+        let radius = r1 * r2 / Math.sqrt(r1 * r1 * Math.sin(angle) * Math.sin(angle) + r2 * r2 * Math.cos(angle) * Math.cos(angle))
+
+        coords.push(getLatLong([longitude,latitude],angle,radius))
+    }
+    coords.push(coords[0])
+    return coords
+}
