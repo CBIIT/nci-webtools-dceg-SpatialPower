@@ -11,6 +11,7 @@ install.packages(
         'iterators',
         'jsonlite',
         'maps',
+        'maptools',
         'misc3d',
         'polyclip',
         'raster',
