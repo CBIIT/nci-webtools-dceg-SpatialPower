@@ -3,7 +3,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
 import { getInitialState } from '../../services/store/params';
-import { getRectangularCoordinates, getRegularPolygonalCoordinates, getTargetCoordinates } from '../../services/utils/geospatial';
+import { getRectangularCoordinates, getRegularPolygonalCoordinates, getTargetCoordinates, getEllipticalCoordinates } from '../../services/utils/geospatial';
 
 
 export function InputForm({
@@ -84,7 +84,7 @@ export function InputForm({
         }
 
         //Defaults for rectangle windows, updates with window, x_origin, y_origin, width, and height
-        if (newParams.win === 'rectangle' && (name==='gis' || name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'width' || name === 'height')) {
+        if (newParams.win === 'rectangle' && (name === 'gis' || name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'width' || name === 'height')) {
 
             if (name === 'win') {
                 newParams.x_origin = 0
@@ -104,7 +104,7 @@ export function InputForm({
         }
 
         //Defaults for circular windows, updates with window, x_origin, y_origin, and radius
-        else if (newParams.win === "circle" && (name==='gis' || name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'radius')) {
+        else if (newParams.win === "circle" && (name === 'gis' || name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'radius')) {
 
             if (name === 'win') {
                 newParams.x_origin = 1
@@ -121,21 +121,42 @@ export function InputForm({
             newParams.y_control = [newParams.y_origin]
             newParams.s_control = [Math.floor((newParams.radius / 3) * 10) / 10]
         }
+        else if (newParams.win === "ellipse" && (name === 'gis' || name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'radius' || name === 'radius2' || name === 'angle')) {
+            if (name === 'win') {
+                newParams.x_origin = 1
+                newParams.y_origin = 1
+                newParams.radius = 1
+                newParams.radius2 = 1
+                newParams.angle = 1
+            }
+
+            newParams.x_case = [newParams.x_origin]
+            newParams.y_case = [newParams.y_origin]
+            newParams.x_control = [newParams.x_origin]
+            newParams.y_control = [newParams.y_origin]
+
+            newParams.r_case = [Math.floor(Math.min(newParams.radius / 2, newParams.radius2 / 2) * 10) / 10];
+            newParams.s_case = [Math.floor(Math.min(newParams.radius / 3, newParams.radius2 / 3) * 10) / 10];
+
+            newParams.s_control = [Math.floor(Math.min(newParams.radius / 3, newParams.radius2 / 3) * 10) / 10];
+        }
 
         // todo: use isDefined (eg: not '', undefined, null) to allow using (0, 0) coordinates
-        if (newParams.gis && (name === 'win' || name === 'gis' || name === 'unit' || name === 'longitude' || name === 'latitude' || name === 'width' || name === 'height' || name === 'radius')) {
-            
-            if(value === 'meters' || (name === 'win' && newParams.unit === 'meters')){
+        if (newParams.gis && (name === 'win' || name === 'gis' || name === 'unit' || name === 'longitude' || name === 'latitude' || name === 'width' || name === 'height' || name === 'radius' || name === 'radius2' || name === 'angle')) {
+
+            if (value === 'meters' || (name === 'win' && newParams.unit === 'meters')) {
                 newParams.width = 1000
                 newParams.height = 2000
                 newParams.radius = 1000
+                newParams.radius2 = 1000
             }
-            else if(value === 'kilometers' || (name === 'win' && newParams.unit === 'kilometers')){
+            else if (value === 'kilometers' || (name === 'win' && newParams.unit === 'kilometers')) {
                 newParams.width = 1
                 newParams.height = 2
                 newParams.radius = 1
+                newParams.radius2 = 1
             }
-            
+
             const multiplier = {
                 meters: 1,
                 kilometers: 1e3
@@ -175,7 +196,24 @@ export function InputForm({
                 newParams.s_case = [Math.floor((newParams.radius / 3) * 10) / 10];
 
                 newParams.s_control = [Math.floor((newParams.radius / 3) * 10) / 10]
-               
+            }
+            else if (newParams.win === 'ellipse' && newParams.radius && newParams.radius2 && newParams.angle) {
+                const radius = +newParams.radius * multiplier;
+                const radius2 = +newParams.radius2 * multiplier;
+                const coordinates = getEllipticalCoordinates(newParams.longitude, newParams.latitude, radius, radius2, newParams.angle);
+                newParams.geojson = JSON.stringify({ type: 'Polygon', coordinates: [coordinates] });
+                console.log(coordinates)
+
+                newParams.x_case = [newParams.longitude];
+                newParams.y_case = [newParams.latitude];
+
+                newParams.x_control = [newParams.longitude];
+                newParams.y_control = [newParams.latitude];
+
+                newParams.r_case = [Math.floor(Math.min(newParams.radius / 2, newParams.radius2 / 2) * 10) / 10];
+                newParams.s_case = [Math.floor(Math.min(newParams.radius / 3, newParams.radius2 / 3) * 10) / 10];
+
+                newParams.s_control = [Math.floor(Math.min(newParams.radius / 3, newParams.radius2 / 3) * 10) / 10];
             } else {
                 newParams.geojson = '';
             }
@@ -197,7 +235,7 @@ export function InputForm({
         mergeParams(newParams);
     }
 
- 
+
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -235,6 +273,7 @@ export function InputForm({
                             {!params.gis && <option value="unit_square">Unit Square</option>}
                             <option value="rectangle">Rectangle</option>
                             <option value="circle">Circle</option>
+                            <option value="ellipse">Ellipse</option>
                         </select>
                     </OverlayTrigger>
                 </div>
@@ -453,6 +492,121 @@ export function InputForm({
                     </OverlayTrigger>
                 </div>
             </div>}
+
+            {params.win === "ellipse" && <>
+                {!params.gis && <div className="row">
+                    <div className="col-md-12 form-group">
+                        <label htmlFor="x_origin">X Origin</label>
+                        <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the center of the circle</Tooltip>}>
+                            <input
+                                type="text"
+                                data-type="number"
+                                id="x_origin"
+                                name="x_origin"
+                                step="any"
+                                className="form-control"
+                                value={params.x_origin}
+                                onChange={handleChange}
+                                onBlur={handleBlur} />
+                        </OverlayTrigger>
+                    </div>
+
+                    <div className="col-md-12 form-group">
+                        <label htmlFor="y_origin">Y Origin</label>
+                        <OverlayTrigger overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the center of the circle</Tooltip>}>
+                            <input
+                                type="text"
+                                data-type="number"
+                                id="y_origin"
+                                name="y_origin"
+                                step="any"
+                                className="form-control"
+                                value={params.y_origin}
+                                onChange={handleChange}
+                                onBlur={handleBlur} />
+                        </OverlayTrigger>
+                    </div>
+                </div>}
+                {params.gis && <div className="row">
+                    <div className="col-md-12 form-group">
+                        <label htmlFor="latitude">Latitude</label>
+                        <OverlayTrigger overlay={<Tooltip id="latitude_tooltip">Enter the latitude of the lower left corner</Tooltip>}>
+                            <input
+                                type="text"
+                                data-type="number"
+                                id="latitude"
+                                name="latitude"
+                                step="any"
+                                className="form-control"
+                                value={params.latitude}
+                                onChange={handleChange}
+                                onBlur={handleBlur} />
+                        </OverlayTrigger>
+                    </div>
+
+                    <div className="col-md-12 form-group">
+                        <label htmlFor="longitude">Longitude</label>
+                        <OverlayTrigger overlay={<Tooltip id="latitude_tooltip">Enter the longitude of the lower left corner</Tooltip>}>
+                            <input
+                                type="text"
+                                data-type="number"
+                                id="longitude"
+                                name="longitude"
+                                step="any"
+                                className="form-control"
+                                value={params.longitude}
+                                onChange={handleChange}
+                                onBlur={handleBlur} />
+                        </OverlayTrigger>
+                    </div>
+                </div>}
+
+                <div className="row">
+                    <div className="col-md-8 form-group">
+                        <label htmlFor="radius">Radius 1 {params.gis && params.unit && `(${params.unit})`}</label>
+                        <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Enter the first radius of the ellipse</Tooltip>}>
+                            <input
+                                type="number"
+                                id="radius"
+                                name="radius"
+                                step="any"
+                                min="0"
+                                className="form-control"
+                                value={params.radius}
+                                onChange={handleChange} />
+                        </OverlayTrigger>
+                    </div>
+
+                    <div className="col-md-8 form-group">
+                        <label htmlFor="radius2">Radius 2 {params.gis && params.unit && `(${params.unit})`}</label>
+                        <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Enter the second radius of the ellipse</Tooltip>}>
+                            <input
+                                type="number"
+                                id="radius2"
+                                name="radius2"
+                                step="any"
+                                min="0"
+                                className="form-control"
+                                value={params.radius2}
+                                onChange={handleChange} />
+                        </OverlayTrigger>
+                    </div>
+
+                    <div className="col-md-8 form-group">
+                        <label htmlFor="angle">Angle (degrees)</label>
+                        <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Enter the angle of the ellipse</Tooltip>}>
+                            <input
+                                type="number"
+                                id="angle"
+                                name="angle"
+                                step="any"
+                                className="form-control"
+                                value={params.angle}
+                                onChange={handleChange} />
+                        </OverlayTrigger>
+                    </div>
+                </div>
+            </>}
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
