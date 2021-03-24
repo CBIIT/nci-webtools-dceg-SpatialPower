@@ -127,7 +127,7 @@ export function InputForm({
                 newParams.y_origin = 1
                 newParams.radius = 1
                 newParams.radius2 = 1
-                newParams.angle = 1
+                newParams.angle = 0
             }
 
             newParams.x_case = [newParams.x_origin]
@@ -197,12 +197,12 @@ export function InputForm({
 
                 newParams.s_control = [Math.floor((newParams.radius / 3) * 10) / 10]
             }
-            else if (newParams.win === 'ellipse' && newParams.radius && newParams.radius2 && newParams.angle) {
+            else if ((newParams.win === 'ellipse' && newParams.radius && newParams.radius2) || name === 'angle' ) {
                 const radius = +newParams.radius * multiplier;
                 const radius2 = +newParams.radius2 * multiplier;
+
                 const coordinates = getEllipticalCoordinates(newParams.longitude, newParams.latitude, radius, radius2, newParams.angle);
                 newParams.geojson = JSON.stringify({ type: 'Polygon', coordinates: [coordinates] });
-                console.log(coordinates)
 
                 newParams.x_case = [newParams.longitude];
                 newParams.y_case = [newParams.latitude];

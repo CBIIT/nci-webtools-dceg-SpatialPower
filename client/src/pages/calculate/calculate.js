@@ -56,7 +56,7 @@ export function Calculate({ match }) {
     // Valid if all (x,y) coordinates are within the bounds of the window
     function inWindow(x, y, params, field) {
 
-        let { win, x_origin, y_origin, width, height, radius } = params;
+        let { win, x_origin, y_origin, width, height, radius, radius2, angle } = params;
         let valid = 0;
 
         if (win === 'unit_circle' || win === 'circle') {
@@ -82,10 +82,23 @@ export function Calculate({ match }) {
 
             for (let i = 0; i < x.length; i++) {
 
-                if (x[i] < x_origin || x[i] > x_origin + width || y[i] < y_origin || y[i] > y_origin + height){
+                if (x[i] < x_origin || x[i] > x_origin + width || y[i] < y_origin || y[i] > y_origin + height) {
                     addMessage({ type: 'danger', text: field + ' cannot be outside the window. Coordinate: (' + x[i] + ',' + y[i] + ')' })
                     valid = 1;
-                }    
+                }
+            }
+        }
+
+        else if (win === 'ellipse') {
+
+            for (let i = 0; i < x.length; i++) {
+                const firstCalc = Math.pow(Math.sin(angle) * (x - x_origin) + Math.cos(angle) * (y - y_origin), 2) / Math.pow(radius, 2)
+                const secondCalc = Math.pow(Math.sin(angle) * (x - x_origin) + Math.cos(angle) * (y - y_origin), 2) / Math.pow(radius2, 2)
+
+                if ((firstCalc + secondCalc) > 1) {
+                    addMessage({ type: 'danger', text: field + ' cannot be outside the window. Coordinate: (' + x[i] + ',' + y[i] + ')' })
+                    valid = 1;
+                }
             }
         }
 
@@ -99,7 +112,7 @@ export function Calculate({ match }) {
 
         for (let i = 0; i < param.length; i++) {
 
-            if (param[i] > max){
+            if (param[i] > max) {
                 addMessage({ type: 'danger', text: field + ' (Value = ' + param[i] + ')' })
                 valid = 1;
             }
@@ -107,15 +120,15 @@ export function Calculate({ match }) {
         return valid;
     }
 
-    function min(param,field){
+    function min(param, field) {
 
         let valid = 0;
 
-        for (let i = 0;i < param.length;i++){
+        for (let i = 0; i < param.length; i++) {
 
-            if(param[i] < .001){
-                addMessage({type: 'danger', text: field + ' (Value = ' + param[i] + ')'})
-                valid=1;
+            if (param[i] < .001) {
+                addMessage({ type: 'danger', text: field + ' (Value = ' + param[i] + ')' })
+                valid = 1;
             }
         }
 
@@ -126,78 +139,81 @@ export function Calculate({ match }) {
     function validation(params) {
 
         const { win, gis, samp_case, samp_control,
-                x_origin, y_origin, x_case, y_case, n_case, s_case, r_case, 
-                x_control, y_control, s_control, n_control,
-                radius, width, height, sim_total } = params;
+            x_origin, y_origin, x_case, y_case, n_case, s_case, r_case,
+            x_control, y_control, s_control, n_control,
+            radius, radius2, width, height, sim_total } = params;
 
         let errors = 0;
-        
+
         // Window origin coordinates must be numeric
         errors += isNumber(x_origin, 'X Origin')
         errors += isNumber(y_origin, 'Y Origin');
 
         // X and Y Case must have equal dimensions. If not a gis plot, ensure coordinates are in the window
         errors += equalLength(x_case, y_case, 'Sample Case: X Case and Y Case must have the same number of inputs')
-        if(!gis)
+        if (!gis)
             errors += inWindow(x_case, y_case, params, 'Sample Case: X Case and Y Case')
 
         /* 
         * Only check X and Y control if sample control is MVN
         * X and Y Control must have equal dimensions. If not a gis plot, ensure coordinates are in the window
         */
-        if(samp_control === 'MVN'){
+        if (samp_control === 'MVN') {
             errors += equalLength(x_control, y_control, 'Sample Control: X Control and Y Control must have the same number of inputs')
-            if(!gis)
+            if (!gis)
                 errors += inWindow(x_control, y_control, params, 'Sample Control: X Control and Y Control')
         }
 
         errors += min(n_case, 'Sample Case: N Case values must be greater than .001.')
-        
+
         // N Case must have either 1 or equal number of dimensions as X and Y case
-        if(n_case.length !== 1)
+        if (n_case.length !== 1)
             errors += equalLength(n_case, x_case, 'Sample Case: N Case must be 1 dimension or equal to dimension of X and Y Case')
 
         // Only check S Case if sample case is MVN. S Case must have either 1 or equal number of dimensions as X and Y case
         if (samp_case === 'MVN' && s_case.length !== 1)
             errors += equalLength(s_case, x_case, 'Sample Case: S Case must be 1 dimension or equal to dimension of X and Y Case')
 
-        if(samp_case === 'MVN')
-            errors += min(s_case,'Sample Case: S Case values must be greater than .001.')
+        if (samp_case === 'MVN')
+            errors += min(s_case, 'Sample Case: S Case values must be greater than .001.')
         /*
         *  Only check R Case if sample case is MVN
         *  R Case must equal to or less than half the width of the window
         *  For rectangular windows, width = min(height,width)
         */
-        if(samp_case !== 'MVN'){
+        if (samp_case !== 'MVN') {
 
-            if(r_case.length !== 1)
+            if (r_case.length !== 1)
                 errors += equalLength(r_case, x_case, 'Sample Case: R Case must be 1 dimension or equal to dimension of X and Y Case')
 
             errors += min(r_case, 'Sample Case: R Case values must be greater than .001.')
 
-            if(win === 'circle' || win === 'unit_circle')
-                errors +=  max(r_case, radius, 'Sample Case: R Case values must be less than half the width of the window.')
+            if (win === 'circle' || win === 'unit_circle')
+                errors += max(r_case, radius, 'Sample Case: R Case values must be less than half the radius of the window.')
 
-            else if(win === 'rectangle' || win === 'unit_square')
+            else if (win === 'rectangle' || win === 'unit_square')
                 errors += max(r_case, Math.min(width / 2, height / 2), 'Sample Case: R Case values must be less than half the width of the window.')
+
+            else if (win === 'ellipse')
+                errors += max(r_case, Math.min(radius / 2, radius2 / 2), 'Sample Case: R Case values must be less than half the smallest radius of the window')
         }
 
         errors += min(n_control, 'Sample Control: N Control values must be greater than .001.')
 
         // N Control must have either 1 or equal number of dimensions as X and Y control
-        if(n_control.length !== 1)
+        if (n_control.length !== 1)
             errors += equalLength(n_control, x_control, 'Sample Case: N Control must be 1 dimension or equal to dimension of X and Y Control')
 
-        if(samp_control === 'MVN')
+        if (samp_control === 'MVN')
             errors += min(s_control, 'Sample Control: S Control values must be greater than .001.')
 
         // Only check S Control if sample case is MVN. S Control must have either 1 or equal number of dimensions as X and Y Control
-        if(samp_control === 'MVN' && s_control.length !== 1)
+        if (samp_control === 'MVN' && s_control.length !== 1)
             errors += equalLength(s_control, x_control, 'Sample Control: S Control must be 1 dimension or equal to dimension of X and Y Control')
 
-        if(gis && sim_total <= 1){
+        if (gis && sim_total <= 1) {
             errors += 1;
-            addMessage({type: 'danger', text: 'When GIS option is selected, number of simulations must be greater than or equal to 2'})
+            addMessage({ type: 'danger', text: 'When GIS option is selected, number of simulations must be greater than or equal to 2' })
         }
 
         return errors === 0
@@ -226,35 +242,34 @@ export function Calculate({ match }) {
      * @param {object} params 
      */
     async function handleSubmit(params) {
-        console.log(params);
 
         mergeParams(params);
         resetResults();
         resetMessages();
         window.scrollTo(0, 0);
-       
+
         if (validation(params)) {
-             try {
- 
-                 let convertParams = params;
-                 if (params.gis && params.unit !== 'meters')
-                     convertParams = convertToMeters(params);
- 
-                 mergeResults({ loading: true });
-                 const response = await postJSON('api/submit', convertParams);
- 
-                 // If the request was enqueued, notify the user. Otherwise, save results to the store
-                 params.queue
-                     ? addMessage({ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` })
-                     : mergeResults(response);
- 
-             } catch (error) {
-                 addMessage({ type: 'danger', text: error });
-             } finally {
-                 const urlKey = new Date().getTime();
-                 mergeResults({ loading: false, submitted: true, urlKey });
-             }
-         }
+            try {
+
+                let convertParams = params;
+                if (params.gis && params.unit !== 'meters')
+                    convertParams = convertToMeters(params);
+
+                mergeResults({ loading: true });
+                const response = await postJSON('api/submit', convertParams);
+
+                // If the request was enqueued, notify the user. Otherwise, save results to the store
+                params.queue
+                    ? addMessage({ type: 'primary', text: `Your request has been enqueued. Results will be sent to: ${params.email}.` })
+                    : mergeResults(response);
+
+            } catch (error) {
+                addMessage({ type: 'danger', text: error });
+            } finally {
+                const urlKey = new Date().getTime();
+                mergeResults({ loading: false, submitted: true, urlKey });
+            }
+        }
     }
 
     /**
