@@ -5,6 +5,7 @@ import { NCIFooter } from './footer'
 import { Home } from './pages/home/home';
 import { Calculate } from './pages/calculate/calculate';
 import { About } from './pages/about/about';
+import { Citations } from './pages/citations/citations'
 import './styles/main.scss';
 
 export function App() {
@@ -24,6 +25,10 @@ export function App() {
       route: '/about',
       title: 'About',
     },
+    {
+      route: '/citations',
+      title: 'Citations'
+    }
   ];
 
   return (
@@ -52,6 +57,7 @@ export function App() {
         <Route path="/" exact={true} component={Home} />
         <Route path="/sparrpowR/:id?" component={Calculate} />
         <Route path="/about" component={About} />
+        <Route path="/citations" component={Citations} />
       </main>
       <NCIFooter 
         className="py-4 bg-primary-gradient text-light"
