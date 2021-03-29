@@ -22,12 +22,12 @@ export function App() {
       title: 'SparrpowR',
     },
     {
-      route: '/about',
-      title: 'About',
-    },
-    {
       route: '/citations',
       title: 'Citations'
+    },
+    {
+      route: '/about',
+      title: 'About',
     }
   ];
 
@@ -56,8 +56,8 @@ export function App() {
       <main id="main">
         <Route path="/" exact={true} component={Home} />
         <Route path="/sparrpowR/:id?" component={Calculate} />
-        <Route path="/about" component={About} />
         <Route path="/citations" component={Citations} />
+        <Route path="/about" component={About} />
       </main>
       <NCIFooter 
         className="py-4 bg-primary-gradient text-light"

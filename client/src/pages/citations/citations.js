@@ -6,7 +6,7 @@ export function Citations() {
         <h1 className="h4">Citations</h1>
 
         <hr />
-        <div className="container lead mb-4">
+        <div className="container lead mb-4" style={{minHeight: '50rem'}}>
             <p>
                 Thanks for using Spatial Power! If you use Spatial Power in any publication please cite the Spatial Power manuscript and any relevant module publications:
         </p>
