@@ -3,6 +3,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
 import { getInitialState } from '../../services/store/params';
+import { fetchJSON, postJSON } from '../../services/query';
 import { getRectangularCoordinates, getRegularPolygonalCoordinates, getTargetCoordinates, getEllipticalCoordinates } from '../../services/utils/geospatial';
 
 
@@ -46,6 +47,13 @@ export function InputForm({
         }
 
         return params.sim_total > 0 && params.rand_seed > 0 && params.alpha;
+    }
+
+    async function handleUpload(params){
+
+        console.log(params)
+        const response = await postJSON('api/readFile', params.customFile);
+
     }
 
     function handleChange(event) {
@@ -102,7 +110,7 @@ export function InputForm({
             newParams.y_control = [Number(newParams.y_origin) + Number([newParams.height / 2])]
             newParams.s_control = [Math.floor(Math.min(newParams.width / 3, newParams.height / 3) * 10) / 10]
         }
-
+        /*
         //Defaults for circular windows, updates with window, x_origin, y_origin, and radius
         else if (newParams.win === "circle" && (name === 'gis' || name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'radius')) {
 
@@ -120,7 +128,7 @@ export function InputForm({
             newParams.x_control = [newParams.x_origin]
             newParams.y_control = [newParams.y_origin]
             newParams.s_control = [Math.floor((newParams.radius / 3) * 10) / 10]
-        }
+        }*/
         else if (newParams.win === "ellipse" && (name === 'gis' || name === 'win' || name === 'x_origin' || name === 'y_origin' || name === 'radius' || name === 'radius2' || name === 'angle')) {
             if (name === 'win') {
                 newParams.x_origin = 1
@@ -144,13 +152,13 @@ export function InputForm({
         // todo: use isDefined (eg: not '', undefined, null) to allow using (0, 0) coordinates
         if (newParams.gis && (name === 'win' || name === 'gis' || name === 'unit' || name === 'longitude' || name === 'latitude' || name === 'width' || name === 'height' || name === 'radius' || name === 'radius2' || name === 'angle')) {
 
-            if (value === 'meters' || (name === 'win' && newParams.unit === 'meters')) {
+            if (value === 'm' || (name === 'win' && newParams.unit === 'm')) {
                 newParams.width = 1000
                 newParams.height = 2000
                 newParams.radius = 1000
                 newParams.radius2 = 1000
             }
-            else if (value === 'kilometers' || (name === 'win' && newParams.unit === 'kilometers')) {
+            else if (value === 'km' || (name === 'win' && newParams.unit === 'km')) {
                 newParams.width = 1
                 newParams.height = 2
                 newParams.radius = 1
@@ -158,8 +166,8 @@ export function InputForm({
             }
 
             const multiplier = {
-                meters: 1,
-                kilometers: 1e3
+                m: 1,
+                km: 1e3
             }[newParams.unit];
 
             if (newParams.win === 'rectangle' && newParams.width && newParams.height) {
@@ -180,6 +188,7 @@ export function InputForm({
 
                 newParams.s_control = [Math.floor(Math.min(newParams.width / 3, newParams.height / 3) * 10) / 10]
             }
+            /*
             else if (newParams.win === 'circle' && newParams.radius) {
                 const radius = +newParams.radius * multiplier;
                 const coordinates = getRegularPolygonalCoordinates(newParams.longitude, newParams.latitude, radius);
@@ -196,8 +205,8 @@ export function InputForm({
                 newParams.s_case = [Math.floor((newParams.radius / 3) * 10) / 10];
 
                 newParams.s_control = [Math.floor((newParams.radius / 3) * 10) / 10]
-            }
-            else if ((newParams.win === 'ellipse' && newParams.radius && newParams.radius2) || name === 'angle' ) {
+            }*/
+            else if ((newParams.win === 'ellipse' && newParams.radius && newParams.radius2) || name === 'angle') {
                 const radius = +newParams.radius * multiplier;
                 const radius2 = +newParams.radius2 * multiplier;
 
@@ -272,8 +281,8 @@ export function InputForm({
                             {!params.gis && <option value="unit_circle">Unit Circle</option>}
                             {!params.gis && <option value="unit_square">Unit Square</option>}
                             <option value="rectangle">Rectangle</option>
-                            <option value="circle">Circle</option>
                             <option value="ellipse">Ellipse</option>
+                            <option value="custom">Custom Window</option>
                         </select>
                     </OverlayTrigger>
                 </div>
@@ -294,7 +303,7 @@ export function InputForm({
                 </div>
             </div>
 
-            {params.gis && <div className="form-group">
+            {params.gis && params.win !== 'custom' && <div className="form-group">
                 <label htmlFor="unit" className="required">Unit</label>
                 <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the unit of measurement for the window</Tooltip>}>
                     <select
@@ -304,8 +313,8 @@ export function InputForm({
                         value={params.unit}
                         onChange={handleChange}>
                         <option value="" hidden>(select option)</option>
-                        <option value="kilometers">Kilometers</option>
-                        <option value="meters">Meters</option>
+                        <option value="km">Kilometers</option>
+                        <option value="m">Meters</option>
                     </select>
                 </OverlayTrigger>
             </div>}
@@ -411,8 +420,8 @@ export function InputForm({
                     </div>
                 </div>
             </>}
-
-            {params.win === "circle" && <div className="row">
+            
+            {/*params.win === "circle" && <div className="row">
                 {!params.gis && <div className="col-md-8 form-group">
                     <label htmlFor="x_origin">X Origin</label>
                     <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the center of the circle</Tooltip>}>
@@ -491,13 +500,13 @@ export function InputForm({
                             onChange={handleChange} />
                     </OverlayTrigger>
                 </div>
-            </div>}
+            </div>*/}
 
             {params.win === "ellipse" && <>
                 {!params.gis && <div className="row">
                     <div className="col-md-12 form-group">
                         <label htmlFor="x_origin">X Origin</label>
-                        <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the center of the circle</Tooltip>}>
+                        <OverlayTrigger overlay={<Tooltip id="x_origin_tooltip">Enter the X coordinate of the center of the ellipse</Tooltip>}>
                             <input
                                 type="text"
                                 data-type="number"
@@ -513,7 +522,7 @@ export function InputForm({
 
                     <div className="col-md-12 form-group">
                         <label htmlFor="y_origin">Y Origin</label>
-                        <OverlayTrigger overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the center of the circle</Tooltip>}>
+                        <OverlayTrigger overlay={<Tooltip id="y_origin_tooltip">Enter the Y coordinate of the center of the ellipse</Tooltip>}>
                             <input
                                 type="text"
                                 data-type="number"
@@ -607,6 +616,29 @@ export function InputForm({
                     </div>
                 </div>
             </>}
+
+            {params.win === 'custom' && <div className="col-md-24 pl-0">
+                <label  htmlFor="customFile">GeoJSON File</label>
+            </div>}
+
+            {params.win === 'custom' && <div className="col-md-24 form-group">
+                <label class="custom-file-label" for="customFile">Choose a geoJSON file</label>
+                <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Choose a geoJSON file with a custom polygon. No validation will be provided for custom windows.</Tooltip>}>
+                    <input
+                        type="file"
+                        id="customFile"
+                        name="customFile"
+                        step="any"
+                        className="custom-file-input form-control"
+                        value={params.customFile}
+                        onChange={e => {
+                            console.log(e.target.files[0])
+                            handleUpload(e.target.files[0])
+
+                        }} />
+                </OverlayTrigger>
+
+            </div>}
         </fieldset>
 
         <fieldset className="border px-3 mb-4">

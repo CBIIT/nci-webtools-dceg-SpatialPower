@@ -221,7 +221,7 @@ export function Calculate({ match }) {
 
     function convertToMeters(params) {
         const multiplier = {
-            kilometers: 1e3
+            km: 1e3
         }[params.unit];
 
         const newParams = { ...params };
@@ -252,7 +252,7 @@ export function Calculate({ match }) {
             try {
 
                 let convertParams = params;
-                if (params.gis && params.unit !== 'meters')
+                if (params.gis && params.unit !== 'm')
                     convertParams = convertToMeters(params);
 
                 mergeResults({ loading: true });
