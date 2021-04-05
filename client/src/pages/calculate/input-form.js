@@ -3,6 +3,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
 import { getInitialState } from '../../services/store/params';
+import exampleJSON from './files/Washington_DC_Boundary.geojson';
+import { Button } from 'react-bootstrap';
 import { getRectangularCoordinates, getRegularPolygonalCoordinates, getTargetCoordinates, getEllipticalCoordinates } from '../../services/utils/geospatial';
 
 
@@ -49,25 +51,51 @@ export function InputForm({
         return params.sim_total > 0 && params.rand_seed > 0 && params.alpha;
     }
 
-    async function handleUpload(file){
+    async function handleUpload(file) {
 
-        setFileError('') 
+        setFileError('')
         const newParams = { ...params, ['filename']: file.name };
         const reader = new FileReader()
         reader.onloadend = () => {
-            try{
+            try {
                 const data = JSON.parse(reader.result)
-                newParams.geojson = JSON.stringify({ type: data.features[0].geometry.type, coordinates: data.features[0].geometry.coordinates }); 
+                newParams.geojson = JSON.stringify({ type: data.features[0].geometry.type, coordinates: data.features[0].geometry.coordinates });
                 newParams.longitude = data.features[0].geometry.coordinates[0][0][0]
                 newParams.latitude = data.features[0].geometry.coordinates[0][0][1]
                 mergeParams(newParams);
-                
-            }catch(e){
+
+            } catch (e) {
                 setFileError('Error with file, please upload a valid geoJSON file.')
             }
         }
-        await reader.readAsText(file,'UTF-8"')
+        await reader.readAsText(file, 'UTF-8"')
+    }
 
+    function handleLoadFile() {
+
+        setFileError('')
+        const newParams = { ...params, ['filename']: 'Washington_DC_Boundary.geojson' };
+
+        fetch(exampleJSON)
+            .then(r => r.text())
+            .then(text => {
+
+                const data = JSON.parse(text)
+                newParams.geojson = JSON.stringify({ type: data.features[0].geometry.type, coordinates: data.features[0].geometry.coordinates });
+                newParams.longitude = -77.0409
+                newParams.latitude = 38.9096
+                newParams.unit = 'km'
+                newParams.x_case = [-77.0409]
+                newParams.y_case = [38.9096]
+               
+                newParams.s_case = [2]
+                newParams.r_case = [2]
+
+                newParams.x_control = [-77.0409]
+                newParams.y_control = [38.9096]                
+                newParams.s_control = [5]
+                mergeParams(newParams)
+            })
     }
 
     function handleChange(event) {
@@ -317,6 +345,55 @@ export function InputForm({
                 </div>
             </div>
 
+            {params.win === 'custom' && <div className="col-md-24 pl-0">
+                <label htmlFor="customFile">GeoJSON File</label>
+            </div>}
+
+            {params.win === 'custom' && <div className="col-md-24">
+                <label class="custom-file-label" for="customFile">{params.filename ? params.filename : 'Choose a geoJSON file'}</label>
+                <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Choose a geoJSON file with a custom polygon. No validation will be provided for custom windows.</Tooltip>}>
+                    <input
+                        type="file"
+                        id="customFile"
+                        name="customFile"
+                        step="any"
+                        label="Choose a geoJSON file"
+                        className="custom-file-input form-control"
+                        value={params.customFile}
+                        onChange={e => {
+                            handleUpload(e.target.files[0])
+                        }} />
+                </OverlayTrigger>
+
+            </div>}
+
+            {params.win === 'custom' && <div className='row'>
+                <Button
+                    variant="link"
+                    className='col-md-12 form-group pt-0'
+                    onClick={handleLoadFile}
+                    style={{textAlign:'left'}}
+                >
+                    <i className="fa fa-file mr-1"></i>
+                    Load geoJSON
+                </Button>
+
+                <a
+                    className='col-md-12 form-group'
+                    href="assets/files/Washington_DC_Boundary.geojson"
+                    target="_blank"
+                    download
+                    style={{textAlign:'right'}}
+                >
+                    <i className="fa fa-file mr-1"></i>
+                    Download geoJSON
+                </a>
+            </div>}
+
+            {fileError && <div className="col-md-24 form-group pl-0">
+                <span style={{ color: 'red' }}>{fileError}</span>
+            </div>}
+
             {params.gis && <div className="form-group">
                 <label htmlFor="unit" className="required">Unit</label>
                 <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the unit of measurement for the window</Tooltip>}>
@@ -434,7 +511,7 @@ export function InputForm({
                     </div>
                 </div>
             </>}
-            
+
             {/*params.win === "circle" && <div className="row">
                 {!params.gis && <div className="col-md-8 form-group">
                     <label htmlFor="x_origin">X Origin</label>
@@ -631,32 +708,6 @@ export function InputForm({
                 </div>
             </>}
 
-            {params.win === 'custom' && <div className="col-md-24 pl-0">
-                <label  htmlFor="customFile">GeoJSON File</label>
-            </div>}
-
-            {params.win === 'custom' && <div className="col-md-24 form-group">
-                <label class="custom-file-label" for="customFile">{params.filename ? params.filename : 'Choose a geoJSON file'}</label>
-                <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Choose a geoJSON file with a custom polygon. No validation will be provided for custom windows.</Tooltip>}>
-                    <input
-                        type="file"
-                        id="customFile"
-                        name="customFile"
-                        step="any"
-                        label="Choose a geoJSON file"
-                        className="custom-file-input form-control"
-                        value={params.customFile}
-                        onChange={e => {
-                            handleUpload(e.target.files[0])
-
-                        }} />
-                </OverlayTrigger>
-
-            </div>}
-            {fileError && <div className="col-md-24 form-group pl-0">
-                <span style={{color: 'red'}}>{fileError}</span>
-            </div>}
-            
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
