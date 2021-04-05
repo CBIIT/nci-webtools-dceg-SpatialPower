@@ -3,7 +3,6 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { getInputEventValue } from './utils';
 import { getInitialState } from '../../services/store/params';
-import { fetchJSON, postJSON } from '../../services/query';
 import { getRectangularCoordinates, getRegularPolygonalCoordinates, getTargetCoordinates, getEllipticalCoordinates } from '../../services/utils/geospatial';
 
 
@@ -18,6 +17,7 @@ export function InputForm({
     const resetParams = _ => setParams(getInitialState());
     const simQueueCutoff = 100;
     const [submitted, setSubmitted] = useState(false);
+    const [fileError, setFileError] = useState('')
     useEffect(_ => setParams(storeParams), [storeParams]);
 
     function checkRequired() {
@@ -49,10 +49,24 @@ export function InputForm({
         return params.sim_total > 0 && params.rand_seed > 0 && params.alpha;
     }
 
-    async function handleUpload(params){
+    async function handleUpload(file){
 
-        console.log(params)
-        const response = await postJSON('api/readFile', params.customFile);
+        setFileError('') 
+        const newParams = { ...params, ['filename']: file.name };
+        const reader = new FileReader()
+        reader.onloadend = () => {
+            try{
+                const data = JSON.parse(reader.result)
+                newParams.geojson = JSON.stringify({ type: data.features[0].geometry.type, coordinates: data.features[0].geometry.coordinates }); 
+                newParams.longitude = data.features[0].geometry.coordinates[0][0][0]
+                newParams.latitude = data.features[0].geometry.coordinates[0][0][1]
+                mergeParams(newParams);
+                
+            }catch(e){
+                setFileError('Error with file, please upload a valid geoJSON file.')
+            }
+        }
+        await reader.readAsText(file,'UTF-8"')
 
     }
 
@@ -282,7 +296,7 @@ export function InputForm({
                             {!params.gis && <option value="unit_square">Unit Square</option>}
                             <option value="rectangle">Rectangle</option>
                             <option value="ellipse">Ellipse</option>
-                            <option value="custom">Custom Window</option>
+                            {params.gis && <option value="custom">Custom Window</option>}
                         </select>
                     </OverlayTrigger>
                 </div>
@@ -303,7 +317,7 @@ export function InputForm({
                 </div>
             </div>
 
-            {params.gis && params.win !== 'custom' && <div className="form-group">
+            {params.gis && <div className="form-group">
                 <label htmlFor="unit" className="required">Unit</label>
                 <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the unit of measurement for the window</Tooltip>}>
                     <select
@@ -622,23 +636,27 @@ export function InputForm({
             </div>}
 
             {params.win === 'custom' && <div className="col-md-24 form-group">
-                <label class="custom-file-label" for="customFile">Choose a geoJSON file</label>
+                <label class="custom-file-label" for="customFile">{params.filename ? params.filename : 'Choose a geoJSON file'}</label>
                 <OverlayTrigger overlay={<Tooltip id="radius_tooltip">Choose a geoJSON file with a custom polygon. No validation will be provided for custom windows.</Tooltip>}>
                     <input
                         type="file"
                         id="customFile"
                         name="customFile"
                         step="any"
+                        label="Choose a geoJSON file"
                         className="custom-file-input form-control"
                         value={params.customFile}
                         onChange={e => {
-                            console.log(e.target.files[0])
                             handleUpload(e.target.files[0])
 
                         }} />
                 </OverlayTrigger>
 
             </div>}
+            {fileError && <div className="col-md-24 form-group pl-0">
+                <span style={{color: 'red'}}>{fileError}</span>
+            </div>}
+            
         </fieldset>
 
         <fieldset className="border px-3 mb-4">

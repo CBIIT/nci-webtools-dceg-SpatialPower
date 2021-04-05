@@ -22,7 +22,7 @@ if (process.env.NODE_ENV !== 'production')
 apiRouter.use('/results', express.static(config.results.folder));
 
 // parse json requests
-apiRouter.use(express.json());
+apiRouter.use(express.json({limit: '10mb'}));
 
 // compress all responses
 apiRouter.use(compression());

@@ -4,6 +4,8 @@ import { mergeObject } from './utils';
 export const getInitialState = () => ({
     win: '',
     gis: false,
+    customFile: '',
+    filename: '',
     geojson: '',
     x_origin: 0,
     y_origin: 0,
