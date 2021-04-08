@@ -119,18 +119,20 @@ calculate <- function(params) {
             to_crs=local_crs
         )@coords
         
-        control <- transform_coords(
-            data.frame(x = sp_params$x_control, y = sp_params$y_control),
-            coordinate_columns = c('x', 'y'),
-            from_crs = global_crs, 
-            to_crs = local_crs
-        )@coords
-        
         sp_params$x_case = case[,1]
         sp_params$y_case = case[,2]
-        sp_params$x_control = control[,1]
-        sp_params$y_control = control[,2]
-        
+
+        if(params$samp_control == "MVN"){
+            control <- transform_coords(
+                data.frame(x = sp_params$x_control, y = sp_params$y_control),
+                coordinate_columns = c('x', 'y'),
+                from_crs = global_crs, 
+                to_crs = local_crs
+            )@coords
+    
+            sp_params$x_control = control[,1]
+            sp_params$y_control = control[,2]
+        }
     } else {
         if (params$win == "unit_circle") {
             #  actual unit circle is spatstat::disc() # defaults: radius 1, center: 0, 0

@@ -60,8 +60,8 @@ export function InputForm({
             try {
                 const data = JSON.parse(reader.result)
                 newParams.geojson = JSON.stringify({ type: data.features[0].geometry.type, coordinates: data.features[0].geometry.coordinates });
-                newParams.longitude = data.features[0].geometry.coordinates[0][0][0]
-                newParams.latitude = data.features[0].geometry.coordinates[0][0][1]
+                newParams.longitude = parseFloat(data.features[0].geometry.coordinates[0][0][0].toFixed(4))
+                newParams.latitude = parseFloat(data.features[0].geometry.coordinates[0][0][1].toFixed(4))
                 mergeParams(newParams);
 
             } catch (e) {
@@ -265,7 +265,7 @@ export function InputForm({
                 newParams.s_case = [Math.floor(Math.min(newParams.radius / 3, newParams.radius2 / 3) * 10) / 10];
 
                 newParams.s_control = [Math.floor(Math.min(newParams.radius / 3, newParams.radius2 / 3) * 10) / 10];
-            } else {
+            } else if (newParams.win != 'custom') {
                 newParams.geojson = '';
             }
 
