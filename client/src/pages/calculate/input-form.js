@@ -58,6 +58,7 @@ export function InputForm({
         const reader = new FileReader()
         reader.onloadend = () => {
             try {
+                console.log('load')
                 const data = JSON.parse(reader.result)
                 newParams.geojson = JSON.stringify({ type: data.features[0].geometry.type, coordinates: data.features[0].geometry.coordinates });
                 newParams.longitude = parseFloat(data.features[0].geometry.coordinates[0][0][0].toFixed(4))
@@ -265,9 +266,7 @@ export function InputForm({
                 newParams.s_case = [Math.floor(Math.min(newParams.radius / 3, newParams.radius2 / 3) * 10) / 10];
 
                 newParams.s_control = [Math.floor(Math.min(newParams.radius / 3, newParams.radius2 / 3) * 10) / 10];
-            } else if (newParams.win != 'custom') {
-                newParams.geojson = '';
-            }
+            } 
 
         }
 
