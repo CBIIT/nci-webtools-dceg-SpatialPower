@@ -976,8 +976,6 @@ export function InputForm({
             </div>}
         </fieldset>
 
-        <hr className="mt-4" />
-
         <fieldset className="border px-3 mb-4">
             <legend className="legend font-weight-bold">Queue</legend>
             <div className="form-group custom-control custom-checkbox">
