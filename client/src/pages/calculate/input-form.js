@@ -899,7 +899,7 @@ export function InputForm({
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
-            <legend className="legend font-weight-bold">Sample Case</legend>
+            <legend className="legend font-weight-bold">Simulations</legend>
             <div className="form-group">
                 <label htmlFor="sim_total" className="required">Number of Simulations</label>
                 <OverlayTrigger overlay={<Tooltip id="sim_total_tooltip">Specify the number of simulation iterations to perform.</Tooltip>}>
