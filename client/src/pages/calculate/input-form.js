@@ -308,41 +308,46 @@ export function InputForm({
     return <form className={className} onSubmit={handleSubmit} onReset={handleReset}>
         <fieldset className="border px-3 mb-4">
             <legend className="legend font-weight-bold">Spatial Window</legend>
-            <div className="row">
-                <div className="col-18 form-group">
-                    <label htmlFor="win" className="required">Window Shape</label>
-                    <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the shape of the window</Tooltip>}>
-                        <select
-                            id="win"
-                            name="win"
-                            className="custom-select"
-                            value={params.win}
-                            onChange={handleChange}>
-                            <option value="" hidden>(select option)</option>
-                            {!params.gis && <option value="unit_circle">Unit Circle</option>}
-                            {!params.gis && <option value="unit_square">Unit Square</option>}
-                            <option value="rectangle">Rectangle</option>
-                            <option value="ellipse">Ellipse</option>
-                            {params.gis && <option value="custom">Custom Window</option>}
-                        </select>
-                    </OverlayTrigger>
+
+            <div className="form-group">
+                <div className="row col-md-24">
+                    <label htmlFor="win" className="required mr-4">
+                        Window Shape
+                    </label>
+
+                    <div className="custom-control custom-checkbox">
+                        <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            id="gis"
+                            name="gis"
+                            checked={params.gis}
+                            onChange={handleChange} />
+
+                        <OverlayTrigger overlay={<Tooltip id="gis_tooltip">If checked, display 4th plot with map and plot overlays</Tooltip>}>
+                            <label className="custom-control-label" htmlFor="gis">GIS</label>
+                        </OverlayTrigger>
+                    </div>
                 </div>
 
-                <div className="col-6 pt-3 pt-1-xs form-group custom-control custom-checkbox">
-                    <div className="d-block">&nbsp;</div>
-                    <input
-                        type="checkbox"
-                        className="custom-control-input"
-                        id="gis"
-                        name="gis"
-                        checked={params.gis}
-                        onChange={handleChange} />
-
-                    <OverlayTrigger overlay={<Tooltip id="gis_tooltip">If checked, display 4th plot with map and plot overlays</Tooltip>}>
-                        <label className="custom-control-label" htmlFor="gis">GIS</label>
-                    </OverlayTrigger>
-                </div>
+                <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the shape of the window</Tooltip>}>
+                    <select
+                        id="win"
+                        name="win"
+                        className="custom-select"
+                        value={params.win}
+                        onChange={handleChange}>
+                        <option value="" hidden>(select option)</option>
+                        {!params.gis && <option value="unit_circle">Unit Circle</option>}
+                        {!params.gis && <option value="unit_square">Unit Square</option>}
+                        <option value="rectangle">Rectangle</option>
+                        <option value="ellipse">Ellipse</option>
+                        {params.gis && <option value="custom">Custom Window</option>}
+                    </select>
+                </OverlayTrigger>
             </div>
+
+
 
             {params.win === 'custom' && params.gis && <div className='form-group'>
 
@@ -893,80 +898,83 @@ export function InputForm({
             </div>}
         </fieldset>
 
-        <div className="form-group">
-            <label htmlFor="sim_total" className="required">Number of Simulations</label>
-            <OverlayTrigger overlay={<Tooltip id="sim_total_tooltip">Specify the number of simulation iterations to perform.</Tooltip>}>
+        <fieldset className="border px-3 mb-4">
+            <legend className="legend font-weight-bold">Sample Case</legend>
+            <div className="form-group">
+                <label htmlFor="sim_total" className="required">Number of Simulations</label>
+                <OverlayTrigger overlay={<Tooltip id="sim_total_tooltip">Specify the number of simulation iterations to perform.</Tooltip>}>
+                    <input
+                        type="number"
+                        min="0"
+                        id="sim_total"
+                        name="sim_total"
+                        className="form-control"
+                        value={params.sim_total}
+                        onChange={handleChange} />
+                </OverlayTrigger>
+            </div>
+
+            <div className="form-group">
+                <label htmlFor="rand_seed" className="required">Random Seed</label>
+                <OverlayTrigger overlay={<Tooltip id="rand_seed_tooltip">Specify a random seed</Tooltip>}>
+                    <input
+                        type="number"
+                        id="rand_seed"
+                        name="rand_seed"
+                        min="0"
+                        className="form-control no-spinner"
+                        value={params.rand_seed}
+                        onChange={handleChange} />
+                </OverlayTrigger>
+            </div>
+
+            <div className="form-group">
+                <label htmlFor="alpha" className="required">Alpha</label>
+                <OverlayTrigger overlay={<Tooltip id="alpha_tooltip">Specify a numeric value to calculate p-value thresholds (default=0.05).</Tooltip>}>
+                    <input
+                        type="number"
+                        min="0"
+                        max="1"
+                        step="any"
+                        id="alpha"
+                        name="alpha"
+                        className="form-control no-spinner"
+                        value={params.alpha}
+                        onChange={handleChange} />
+                </OverlayTrigger>
+            </div>
+
+            <div className="custom-control custom-checkbox form-group">
                 <input
-                    type="number"
-                    min="0"
-                    id="sim_total"
-                    name="sim_total"
-                    className="form-control"
-                    value={params.sim_total}
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="multi_test"
+                    name="multi_test"
+                    checked={params.multi_test}
                     onChange={handleChange} />
-            </OverlayTrigger>
-        </div>
 
-        <div className="form-group">
-            <label htmlFor="rand_seed" className="required">Random Seed</label>
-            <OverlayTrigger overlay={<Tooltip id="rand_seed_tooltip">Specify a random seed</Tooltip>}>
-                <input
-                    type="number"
-                    id="rand_seed"
-                    name="rand_seed"
-                    min="0"
-                    className="form-control no-spinner"
-                    value={params.rand_seed}
-                    onChange={handleChange} />
-            </OverlayTrigger>
-        </div>
+                <OverlayTrigger overlay={<Tooltip id="multi_test_tooltip">If checked, enable the selection of multiple testing correction.</Tooltip>}>
+                    <label className="custom-control-label" htmlFor="multi_test">Multiple Testing Correction</label>
+                </OverlayTrigger>
+            </div>
 
-        <div className="form-group">
-            <label htmlFor="alpha" className="required">Alpha</label>
-            <OverlayTrigger overlay={<Tooltip id="alpha_tooltip">Specify a numeric value to calculate p-value thresholds (default=0.05).</Tooltip>}>
-                <input
-                    type="number"
-                    min="0"
-                    max="1"
-                    step="any"
-                    id="alpha"
-                    name="alpha"
-                    className="form-control no-spinner"
-                    value={params.alpha}
-                    onChange={handleChange} />
-            </OverlayTrigger>
-        </div>
-
-        <div className="custom-control custom-checkbox">
-            <input
-                type="checkbox"
-                className="custom-control-input"
-                id="multi_test"
-                name="multi_test"
-                checked={params.multi_test}
-                onChange={handleChange} />
-
-            <OverlayTrigger overlay={<Tooltip id="multi_test_tooltip">If checked, enable the selection of multiple testing correction.</Tooltip>}>
-                <label className="custom-control-label" htmlFor="multi_test">Multiple Testing Correction</label>
-            </OverlayTrigger>
-        </div>
-
-        {params.multi_test && <div className="form-group">
-            <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the type of multiple testing correction.</Tooltip>}>
-                <select
-                    id="p_correct"
-                    name="p_correct"
-                    className="custom-select"
-                    value={params.p_correct}
-                    onChange={handleChange}>
-                    <option value="" hidden>(select option)</option>
-                    <option value="none">None</option>
-                    <option value="FDR">False Discovery Rate</option>
-                    <option value="Sidak">Sidak</option>
-                    <option value="Bonferroni">Bonferroni</option>
-                </select>
-            </OverlayTrigger>
-        </div>}
+            {params.multi_test && <div className="form-group">
+                <OverlayTrigger overlay={<Tooltip id="win_tooltip">Specify the type of multiple testing correction.</Tooltip>}>
+                    <select
+                        id="p_correct"
+                        name="p_correct"
+                        className="custom-select"
+                        value={params.p_correct}
+                        onChange={handleChange}>
+                        <option value="" hidden>(select option)</option>
+                        <option value="none">None</option>
+                        <option value="FDR">False Discovery Rate</option>
+                        <option value="Sidak">Sidak</option>
+                        <option value="Bonferroni">Bonferroni</option>
+                    </select>
+                </OverlayTrigger>
+            </div>}
+        </fieldset>
 
         <hr className="mt-4" />
 
