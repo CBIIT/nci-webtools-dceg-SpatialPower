@@ -64,8 +64,14 @@ apiRouter.post('/submit', async (request, response) => {
         // perform calculation and return results
         const sourcePath = path.resolve(__dirname, 'app.R');
         const results = await r(sourcePath, 'calculate', [body]);
-        if (!Array.isArray(results.plots)) results.plots = [results.plots];
-        response.json(results);
+
+        if (!Array.isArray(results.plots)) 
+            results.plots = [results.plots];
+
+        if(results.error && results.error.includes('GIS Error')) 
+            response.status(500).json(results.error)
+        else
+            response.json(results);
 
     } catch (error) {
         const errorText = String(error.stderr || error);

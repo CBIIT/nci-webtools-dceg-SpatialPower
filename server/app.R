@@ -76,6 +76,63 @@ transform_coords <- function (dataframe, coordinate_columns = c(1,2), from_crs, 
   sp::spTransform(dataframe, to_crs)
 }
 
+GIS_check<- function(win = spatstat.geom::unit.square(),
+                     sim_total = 2,
+                     x_case, y_case,
+                     samp_case = c("uniform", "MVN", "CSR", "IPP"),
+                     samp_control = c("uniform", "systematic", "MVN",
+                                           "CSR", "IPP", "clustered"), 
+                     x_control = NULL, y_control = NULL,
+                     n_case = NULL, n_control = NULL,
+                     npc_control = NULL,
+                     r_case = NULL, r_control = NULL,
+                     s_case = NULL, s_control = NULL,
+                     l_case = NULL, l_control = NULL,
+                     e_control = NULL,
+                     alpha = 0.05,
+                     p_correct = "none",
+                     verbose = TRUE,
+                     parallel = FALSE,
+                     n_core = 2){
+
+   # Create 'check' object
+   check<- NA
+
+   check<- testthat::test_that("spatial_power runs", {
+		testthat::expect_named(sparrpowR::spatial_power(
+		             		   sim_total=1,
+                         		   win = win,
+   			       		   samp_case = samp_case,
+	   	   	       		   x_case = x_case,
+               	       		   y_case = y_case,
+			       		   n_case = n_case,
+                         		   r_case = r_case,
+			       		   s_case = s_case,
+     			       		   l_case = l_case,
+
+                         		   samp_control = samp_control,
+                         		   x_control = x_control,
+                         		   y_control = y_control,
+                         		   n_control = n_control,
+                         		   r_control = r_control,
+			       		   s_control = s_control,
+     			       		   l_control = l_control,
+						   e_control = e_control,
+                         		   verbose = FALSE)
+	
+		)
+           }	     
+           )
+
+   if(check==TRUE){
+       test_result= 'pass' 
+   } else{
+       test_result= 'error'}
+
+ # Return check object
+ return(list(test_result=test_result))
+} 
+
 calculate <- function(params) {
     output <- list()
     
@@ -157,45 +214,65 @@ calculate <- function(params) {
             sp_params$win <- spatstat.geom::ellipse(params$radius2,params$radius,centre = c(x,y),rad)
         }
     }
+
+    if(!params$gis || (params$gis && 
+        GIS_check(win = sp_params$win,
+        sim_total = sp_params$sim_total,
+        x_case = sp_params$x_case, y_case = sp_params$y_case,
+        samp_case = sp_params$samp_case,
+        samp_control = sp_params$samp_control,
+        x_control = sp_params$x_control,
+        y_control = sp_params$y_control,
+        n_case = sp_params$n_case,n_control = sp_params$n_control,
+        r_case = sp_params$r_case,
+        s_case = sp_params$s_case, s_control = sp_params$s_control,
+        alpha = sp_params$alpha,
+        p_correct = sp_params$p_correct) == 'pass')) {
+
     
-    if(params$sim_total == 1) {
-        # additional parameters for spatial_data are ignored
-        results <- do.call(sparrpowR::spatial_data, sp_params)
-    }
-    
-    else if(params$sim_total > 1) {
-        results <- do.call(sparrpowR::spatial_power, sp_params)
-        s_stat <- t.test(results$s_obs, mu = 1, alternative = "two.sided")
-        t_stat <- t.test(results$t_obs, mu = 0, alternative = "two.sided") 
+        if(params$sim_total == 1) {
+            # additional parameters for spatial_data are ignored
+            results <- do.call(sparrpowR::spatial_data, sp_params)
+        }
         
-        output$summary <- list(
-            mean_n_con = mean(results$n_con),
-            mean_n_cas = mean(results$n_cas),
-            mean_bandw = mean(results$bandw),
-            sd_n_con = sd(results$n_con),
-            sd_n_cas = sd(results$n_cas),
-            sd_bandw = sd(results$bandw),
-            s_test_stat = s_stat$statistic,
-            t_test_stat = t_stat$statistic,
-            s_pval = s_stat$p.value,
-            t_pval = t_stat$p.value
-        )
+        else if(params$sim_total > 1) {
+            results <- do.call(sparrpowR::spatial_power, sp_params)
+            s_stat <- t.test(results$s_obs, mu = 1, alternative = "two.sided")
+            t_stat <- t.test(results$t_obs, mu = 0, alternative = "two.sided") 
+            
+            output$summary <- list(
+                mean_n_con = mean(results$n_con),
+                mean_n_cas = mean(results$n_cas),
+                mean_bandw = mean(results$bandw),
+                sd_n_con = sd(results$n_con),
+                sd_n_cas = sd(results$n_cas),
+                sd_bandw = sd(results$bandw),
+                s_test_stat = s_stat$statistic,
+                t_test_stat = t_stat$statistic,
+                s_pval = s_stat$p.value,
+                t_pval = t_stat$p.value
+            )
+        }
+        
+        # unprojects output in a format suitable for display in leaflet.js
+        if (params$gis) {
+            gis_results <- plot_gis(results,params)
+            results$projected_data <- gis_results
+            output$data <- gis_results
+        }
+        
+        # save output file
+        saveRDS(results, "results.rds")
+        
+        # generate plots and return output
+        output$plots <- plot_results(results, params)
+        output$id <- params$id
+        output
     }
-    
-    # unprojects output in a format suitable for display in leaflet.js
-    if (params$gis) {
-        gis_results <- plot_gis(results,params)
-        results$projected_data <- gis_results
-        output$data <- gis_results
+    else{
+        output$error <- "GIS Error: Coordinates selected not within window bounds"
+        output
     }
-    
-    # save output file
-    saveRDS(results, "results.rds")
-    
-    # generate plots and return output
-    output$plots <- plot_results(results, params)
-    output$id <- params$id
-    output
 }
 
 plot_gis <- function(results, params){

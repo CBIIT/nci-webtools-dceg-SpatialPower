@@ -25,6 +25,7 @@ install.packages(
         'spatstat.utils',
         'spatstat.geom',
         'tensor',
+        'testthat',
         'tibble'
     ), 
     lib = .Library, 
