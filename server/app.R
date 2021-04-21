@@ -195,7 +195,7 @@ calculate <- function(params) {
             #  actual unit circle is spatstat::disc() # defaults: radius 1, center: 0, 0
             sp_params$win <- spatstat.geom::disc(radius = 0.5, centre = c(0.5, 0.5))
         } else if (params$win == "unit_square") {
-            sp_params$win <- spatstat::unit.square()
+            sp_params$win <- spatstat.geom::unit.square()
         } else if (params$win == "rectangle") {
             x1 <- params$x_origin
             x2 <- x1 + params$width
