@@ -55,10 +55,17 @@ function streamToFile(readStream, filePath) {
  * Processes a message and sends emails when finished
  * @param {object} params 
  */
-async function processMessage(params) {
+async function processMessage(message) {
     const s3 = new AWS.S3();
     const email = nodemailer.createTransport(config.email.smtp);
 
+    const {Body: object} = await s3.getObject({
+        Bucket: config.s3.bucket,
+        Key: message
+    }).promise()
+
+    const params = JSON.parse(object)
+    
     try {
         // get calculation results
         const directory = path.resolve(config.results.folder, params.id);
@@ -74,13 +81,6 @@ async function processMessage(params) {
         var seconds = ((time % 60000) / 1000).toFixed(0);
         
         var runtime = (minutes > 0 ? minutes + " min " : '') + seconds + " secs"
-
-        // upload parameters
-        await s3.upload({
-            Body: JSON.stringify(params),
-            Bucket: config.s3.bucket,
-            Key: `${config.s3.outputKeyPrefix}${params.id}/params.json`
-        }).promise();
 
         // upload results
         await s3.upload({
@@ -164,12 +164,15 @@ async function processMessage(params) {
  */
 async function receiveMessage() {
     const sqs = new AWS.SQS();
+    const { QueueUrl } = await sqs.getQueueUrl({
+        QueueName: config.queue.name
+      }).promise();
 
     try {
         // to simplify running multiple workers in parallel, 
         // fetch one message at a time
         const data = await sqs.receiveMessage({
-            QueueUrl: config.queue.url,
+            QueueUrl: QueueUrl,
             MaxNumberOfMessages: 1,
             VisibilityTimeout: config.queue.visibilityTimeout,
             WaitTimeSeconds: 20,
@@ -183,7 +186,7 @@ async function receiveMessage() {
             
             // while processing is not complete, update the message's visibilityTimeout
             const intervalId = setInterval(_ => sqs.changeMessageVisibility({
-                QueueUrl: config.queue.url,
+                QueueUrl: QueueUrl,
                 ReceiptHandle: message.ReceiptHandle,
                 VisibilityTimeout: config.queue.visibilityTimeout
             }).send(), 1000 * (config.queue.visibilityTimeout - 1));
@@ -207,7 +210,7 @@ async function receiveMessage() {
 
             // remove original message from queue once processed
             await sqs.deleteMessage({
-                QueueUrl: config.queue.url,
+                QueueUrl: QueueUrl,
                 ReceiptHandle: message.ReceiptHandle
             }).promise();
         }

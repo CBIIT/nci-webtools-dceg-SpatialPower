@@ -22,7 +22,7 @@ if (process.env.NODE_ENV !== 'production')
 apiRouter.use('/results', express.static(config.results.folder));
 
 // parse json requests
-apiRouter.use(express.json({limit: '10mb'}));
+apiRouter.use(express.json({ limit: '10mb' }));
 
 // compress all responses
 apiRouter.use(compression());
@@ -33,6 +33,9 @@ apiRouter.use('/ping', (request, response) => response.json(true));
 // handle calculation submission
 apiRouter.post('/submit', async (request, response) => {
     try {
+        const s3 = new AWS.S3();
+        const sqs = new AWS.SQS();
+
         // generate unique id for response
         const id = crypto.randomBytes(16).toString('hex');
 
@@ -48,30 +51,46 @@ apiRouter.post('/submit', async (request, response) => {
                 delete body[key];
 
         if (body.queue) {
+
+            const key = `${config.s3.outputKeyPrefix}${body.id}/params.json`
+
+            const { QueueUrl } = await sqs.getQueueUrl({
+                QueueName: config.queue.name
+            }).promise();
+
+            await s3.upload({
+                Body: JSON.stringify(body),
+                Bucket: config.s3.bucket,
+                Key: key
+            }).promise();
+
             // enqueue message and send a response with the request id
             await new AWS.SQS().sendMessage({
-                QueueUrl: config.queue.url,
+                QueueUrl: QueueUrl,
                 MessageDeduplicationId: id,
                 MessageGroupId: id,
-                MessageBody: JSON.stringify(body)
+                MessageBody: JSON.stringify(key)
             }).promise();
-            response.json({ id });  
+            response.json({ id });
         }
-        // ensure working directory exists
-        body.directory = path.resolve(config.results.folder, id);
-        await fs.promises.mkdir(body.directory, { recursive: true });
+        
+        else {
+            // ensure working directory exists
+            body.directory = path.resolve(config.results.folder, id);
+            await fs.promises.mkdir(body.directory, { recursive: true });
 
-        // perform calculation and return results
-        const sourcePath = path.resolve(__dirname, 'app.R');
-        const results = await r(sourcePath, 'calculate', [body]);
+            // perform calculation and return results
+            const sourcePath = path.resolve(__dirname, 'app.R');
+            const results = await r(sourcePath, 'calculate', [body]);
 
-        if (!Array.isArray(results.plots)) 
-            results.plots = [results.plots];
+            if (!Array.isArray(results.plots))
+                results.plots = [results.plots];
 
-        if(results.error && results.error.includes('GIS Error')) 
-            response.status(500).json(results.error)
-        else
-            response.json(results);
+            if (results.error && results.error.includes('GIS Error'))
+                response.status(500).json(results.error)
+            else
+                response.json(results);
+        }
 
     } catch (error) {
         const errorText = String(error.stderr || error);
