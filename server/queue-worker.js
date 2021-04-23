@@ -58,13 +58,14 @@ function streamToFile(readStream, filePath) {
 async function processMessage(message) {
     const s3 = new AWS.S3();
     const email = nodemailer.createTransport(config.email.smtp);
+    logger.info('Message: ' + message)
 
     const {Body: object} = await s3.getObject({
         Bucket: config.s3.bucket,
         Key: message
     }).promise()
-
     const params = JSON.parse(object)
+    logger.info('Params: '+ params)
     
     try {
         // get calculation results
