@@ -53,7 +53,6 @@ apiRouter.post('/submit', async (request, response) => {
         if (body.queue) {
 
             const key = `${config.s3.outputKeyPrefix}${body.id}/params.json`
-            logger.info(config.queue.name)
 
             const { QueueUrl } = await sqs.getQueueUrl({
                 QueueName: config.queue.name

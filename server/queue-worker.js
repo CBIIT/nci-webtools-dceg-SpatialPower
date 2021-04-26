@@ -58,14 +58,12 @@ function streamToFile(readStream, filePath) {
 async function processMessage(message) {
     const s3 = new AWS.S3();
     const email = nodemailer.createTransport(config.email.smtp);
-    logger.info('Message: ' + message)
 
     const {Body: object} = await s3.getObject({
         Bucket: config.s3.bucket,
         Key: message
     }).promise()
     const params = JSON.parse(object)
-    logger.info('Params: '+ params)
     
     try {
         // get calculation results
@@ -191,8 +189,6 @@ async function receiveMessage() {
                 ReceiptHandle: message.ReceiptHandle,
                 VisibilityTimeout: config.queue.visibilityTimeout
             }).send(), 1000 * (config.queue.visibilityTimeout - 1));
-
-            logger.info('test')
 
             // processMessage should return a boolean status indicating success or failure
             const status = await processMessage(params);
