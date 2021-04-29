@@ -88,6 +88,12 @@ async function processMessage(message) {
             Key: `${config.s3.outputKeyPrefix}${params.id}/results.json`
         }).promise();
 
+        await s3.upload({
+            Body: JSON.stringify(results),
+            Bucket: config.s3.bucket,
+            Key: `${config.s3.outputKeyPrefix}${params.id}/results.rds`
+        }).promise();
+
         // upload plots
         for (let filename of results.plots) {
           const filepath = path.resolve(directory, filename);
