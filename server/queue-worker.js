@@ -89,7 +89,7 @@ async function processMessage(message) {
         }).promise();
 
         await s3.upload({
-            Body: JSON.stringify(results),
+            Body: fs.createReadStream(path.resolve(directory,'results.rds')),
             Bucket: config.s3.bucket,
             Key: `${config.s3.outputKeyPrefix}${params.id}/results.rds`
         }).promise();

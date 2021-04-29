@@ -110,8 +110,9 @@ apiRouter.post('/replot', async (request, response) => {
 
         const body = Object.assign(request.body, {
             directory: path.resolve(config.results.folder, request.body.id),
-            rds: 'results.rds',
+            rds_file: 'results.rds',
         });
+        
         const sourcePath = path.resolve(__dirname, 'app.R');
         const results = await r(sourcePath, 'replot', [body]);
         if (!Array.isArray(results.plots)) results.plots = [results.plots];
