@@ -21,8 +21,13 @@ export function Plots() {
     const mapRef = useRef(null);
 
     const [show, setShow] = useState(false);
+    const [activeKey, setActiveKey] = useState('plot-0')
+
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+        setShow(true)
+        handleSelect('plot-gis')
+    }
 
     async function handleExport(event) {
         event.preventDefault();
@@ -72,6 +77,7 @@ export function Plots() {
         }
 
         if (params.gis && mapRef.current) {
+
             const canvas = await html2canvas(document.querySelector('#map-container'), {
                 useCORS: true, 
                 ignoreElements: el => el.className === 'leaflet-top leaflet-left'
@@ -83,6 +89,8 @@ export function Plots() {
 
             if (contents.length)
                 archive.file(`map.${params.plot_format}`, contents, { base64: true });
+
+            
         }
 
         const content = await archive.generateAsync({ type: 'blob' });
@@ -96,6 +104,8 @@ export function Plots() {
     }
 
     function handleSelect(event) {
+        setActiveKey(event)
+
         if (event === 'plot-gis') {
             // because the map is initially offscreen, we need to 
             // manually invalidate its size and reset its bounds when
@@ -133,7 +143,7 @@ export function Plots() {
 
     if (!plots || !plots.length) return null;
 
-    return <Tab.Container id="plots-container" defaultActiveKey="plot-0" onSelect={handleSelect}>
+    return <Tab.Container id="plots-container" activeKey={activeKey} onSelect={handleSelect}>
         <Card className="shadow-sm mb-3">
             <Card.Header className="bg-white">
                 <div className="d-flex align-items-center">
