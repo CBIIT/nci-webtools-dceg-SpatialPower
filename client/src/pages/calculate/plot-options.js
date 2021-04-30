@@ -94,7 +94,7 @@ export function PlotOptions({ onSubmit = e => { } }) {
                                             name="plot_pts"
                                             checked={params.plot_pts}
                                             onChange={handleChange} />
-                                        <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display points from the first simulation iteration on the Continuous Power plot.”</Tooltip>}>
+                                        <OverlayTrigger overlay={<Tooltip id="title_tooltip">If checked, display points from the first simulation iteration on the Continuous Power plot.</Tooltip>}>
                                             <label className="custom-control-label" htmlFor="plot_pts">Simulated Points</label>
                                         </OverlayTrigger>
                                     </div>}
