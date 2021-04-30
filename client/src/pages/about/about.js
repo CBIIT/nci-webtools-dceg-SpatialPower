@@ -55,8 +55,9 @@ export function About() {
                 </p>
                 <p>
                     <t className='underline'>Inputs</t>:
-                    <p>Spatial Window: Window in which to simulate the random data. Choices are Unit Circle, Unit Square, Rectangle, and Circle. For both Unit Circle and Unit Square, the origin is set at (0,0) with a radius/width of 1. The Rectangle and Circle options allow for user defined origins and radii/widths.</p>
-                    <p>GIS Option: Allows for a Geographic Information System overlay of statistical power results. This option is available for both rectangular and circular Spatial Windows.</p>
+                    <p>Spatial Window: Window in which to simulate the random data. Choices are Unit Circle, Unit Square, Rectangle, and Ellipse. For both Unit Circle and Unit Square, the origin is set at (0,0) with a radius/width of 1. The Rectangle and Ellipse options allow for user defined origins and radii/widths. The Ellipse option also allows for user defined angle of orientation.</p>
+                    <p>GIS Option: Allows for a Geographic Information System overlay of statistical power results. This option is available for both rectangular, elliptical, and custom Spatial Windows.</p>
+                    <p>The Custom Window option allows the user to upload a GeoJSON (a .geoJSON file) of a single polygon to be the Spatial Window for power calculations. The file must be in longitude and latitude with a WGS84 reference coordinate system. We include a GeoJSON of the Washington, District of Columbia boundary as an exemplar (available from <a className='font-weight-bold' href='https://opendata.dc.gov/datasets/washington-dc-boundary?geometry=-77.448%2C38.800%2C-76.581%2C38.987' target='_blank'>Open Data DC</a>).</p>
 
                     <t>Sample Case:</t>
                     <ul style={{ listStyle: 'none' }}>
@@ -85,7 +86,7 @@ export function About() {
                 <p>
                     Multiple Testing Correction: Apply a correction for multiple comparisons
                     <ul style={{ listStyle: 'none' }}>
-                        <li>- False Discovery Rate: Follows the Benjamini and Hochberg approach for choosing the critical p-value by: 1) sorting the p-values (p<sub>i</sub>) of each knot in ascending order (p<sub>1</sub> ≤ p<sub>2</sub> ≤ ... ≤ p<sub>m</sub>) and 2) starting from <sub>m</sub> find the first p<sub>i</sub> for which p<sub>i</sub> ≤ (i/m) * alpha. See <HashLink className="font-weight-bold" smooth to="/about/#References">Benjamini and Hochberg (1995)</HashLink> for more details.</li>
+                        <li>- False Discovery Rate: Follows the Benjamini and Hochberg approach for choosing the critical p-value by: 1) sorting the p-values (p<sub>i</sub>) of each knot in ascending order (p<sub>1</sub> ≤ p<sub>2</sub> ≤ ... ≤ p<sub>m</sub>) and 2) starting from m find the first p<sub>i</sub> for which p<sub>i</sub> ≤ (i/m) * alpha. See <HashLink className="font-weight-bold" smooth to="/about/#References">Benjamini and Hochberg (1995)</HashLink> for more details.</li>
                         <li>- Sidak: Follows the Sidak correction for independent tests by: (1 – alpha)<sup>(1 / total number of gridded knots across the estimated surface)</sup>. The default resolution is 128 x 128 or n=16,384 knots. Please use the sparrpowR package in R for advanced features, such as specifying a custom resolution. See <HashLink className="font-weight-bold" smooth to="/about/#References">Sidak (1967)</HashLink> for more details. </li>
                         <li>- Bonferroni: Follows the Bonferroni correction for independent tests by: alpha / total number of gridded knots across the estimated surface. The default resolution is 128 x 128 or n=16,384 knots. Please use the sparrpowR package in R for advanced features, such as specifying a custom resolution.</li>
                     </ul>
