@@ -1,6 +1,6 @@
 # example build command (from repository root)
 # docker build -t spatial-power:backend -f docker/backend.dockerfile --build-args SPARRPOWR_TAG=CBIIT .
-FROM centos:8.3.2011
+FROM quay.io/centos/centos:stream8
 
 RUN dnf -y update \
  && dnf -y install \

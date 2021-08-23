@@ -14,9 +14,6 @@ RUN dnf -y update \
     nodejs \
  && dnf clean all
 
-# Add custom httpd configuration
-COPY docker/spatial-power.conf /etc/httpd/conf.d/spatial-power.conf
-
 RUN mkdir /client
 
 WORKDIR /client
@@ -31,6 +28,9 @@ RUN npm run build \
  && mv /client/build /var/www/html/spatial-power
 
 WORKDIR /var/www/html
+
+# Add custom httpd configuration
+COPY docker/httpd-spatial-power.conf /etc/httpd/conf.d/httpd-spatial-power.conf
 
 RUN touch index.html && chown apache:apache index.html
 
