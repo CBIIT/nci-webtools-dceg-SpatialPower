@@ -39,7 +39,7 @@ function NCIFooter(_ref) {
     title: 'More Information',
     links: [{
       title: 'DCEG',
-      href: 'https://dceg.cancer.gov/'
+      href: 'https://dceg.cancer.gov/tools/design/spatial-power'
     }]
   }, {
     title: 'Policies',
