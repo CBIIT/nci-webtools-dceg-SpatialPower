@@ -38,7 +38,7 @@ function NCIFooter(_ref) {
   }, {
     title: 'More Information',
     links: [{
-      title: 'DCEG',
+      title: 'Spatial Power and Related Resources',
       href: 'https://dceg.cancer.gov/tools/design/spatial-power'
     }]
   }, {
