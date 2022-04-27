@@ -27,7 +27,7 @@ export function Home() {
                 <NavLink className="btn btn-lg btn-outline-light" to="sparrpowR">Run Calculation</NavLink>
             </div>
         </div>
-        <div className="container lead mb-4">
+        <div className="container lead pb-4">
             <p>
             Spatial Power is a suite of web-based applications designed to easily and efficiently perform power calculations for select spatial statistics. Each included application is specialized for a specific statistic. Spatial data are randomly generated using study-specific parameters and a statistic is calculated iteratively to assess statistical power. The applications provide graphical presentations of both simulated data and power -- including a Geographic Information System overlay.
             </p>

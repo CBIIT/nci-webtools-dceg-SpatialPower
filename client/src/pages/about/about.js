@@ -4,7 +4,7 @@ import { HashLink } from 'react-router-hash-link';
 
 export function About() {
 
-    return <div className="container my-4">
+    return <div className="container py-4">
         <p>
             Spatial Power is designed to be an intuitive and simple tool for conducting power analyses of spatial statistics. This help documentation page gives a detailed description of the metrics calculated by Spatial Power modules and aids users in understanding all aspects of the required input and returned output. The documentation is divided into the following sections:
         </p>

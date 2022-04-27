@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, useLocation, NavLink } from 'react-router-dom';
 import { Navbar, NCIHeader } from '@cbiitss/react-components'
-import { NCIFooter } from './footer'
 import { Home } from './pages/home/home';
 import { Calculate } from './pages/calculate/calculate';
 import { About } from './pages/about/about';
@@ -59,13 +58,6 @@ export function App() {
         <Route path="/citations" component={Citations} />
         <Route path="/about" component={About} />
       </main>
-      <NCIFooter 
-        className="py-4 bg-primary-gradient text-light"
-        title={<div className="mb-4 col-md">
-            <div className="h4 mb-0"><a target='_blank' href='https://dceg.cancer.gov/' style={{color: 'white'}}>Division of Cancer Epidemiology and Genetics</a></div>
-            <div className="h6">at the National Cancer Institute</div>
-        </div>}
-      />
     </div>
   );
 }

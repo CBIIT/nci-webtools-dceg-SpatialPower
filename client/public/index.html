@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="" />
-    <!--
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="" />
+  <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -14,13 +15,64 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Spatial Power Web Tool</title>
-    <style>.leaflet-container {  height: 800px; }</style>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <script nomodule src="https://cdn.jsdelivr.net/npm/babel-polyfill@6.26.0/dist/polyfill.min.js" integrity="sha256-WRc/eG3R84AverJv0zmqxAmdwQxstUpqkiE+avJ3WSo=" crossorigin="anonymous"></script>
-    <script nomodule src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.4.0/dist/fetch.umd.js" integrity="sha256-17sG19PAt2IccZKY2F4xmrujlvGGvjxB0bxuxPuycMw=" crossorigin="anonymous"></script>
-  </body>
+  <title>Spatial Power Web Tool</title>
+  <style>
+    .leaflet-container {
+      height: 800px;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <footer class="py-4 bg-primary-gradient text-light">
+    <div class="container row mx-auto">
+      <div class="mb-4 col-md">
+        <div class="h4 mb-0"><a target="_blank" href="https://dceg.cancer.gov/" style="color: white;">Division of Cancer
+            Epidemiology and Genetics</a></div>
+        <div class="h6">at the National Cancer Institute</div>
+      </div>
+      <div class="row mb-4 col-md ml-5">
+        <div class="col-md">
+          <div class="h5 font-weight-normal">CONTACT INFORMATION</div>
+          <ul class="footer-links">
+            <li><a href="mailto:NCISpatialPowerWebAdmin@nih.gov?subject=Spatial Power" target="_blank">Contact Us</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md">
+          <div class="h5 font-weight-normal">MORE INFORMATION</div>
+          <ul class="footer-links">
+            <li><a href="https://dceg.cancer.gov/tools/design/spatial-power" target="_blank">Spatial Power and Related
+                Resources</a></li>
+          </ul>
+        </div>
+        <div class="col-md">
+          <div class="h5 font-weight-normal">POLICIES</div>
+          <ul class="footer-links">
+            <li><a href="https://www.cancer.gov/policies/accessibility" target="_blank">Accessibility</a></li>
+            <li><a href="https://www.cancer.gov/policies/comments" target="_blank">Content Policy</a></li>
+            <li><a href="https://www.cancer.gov/policies/disclaimer" target="_blank">Disclaimer</a></li>
+            <li><a href="https://www.cancer.gov/policies/foia" target="_blank">FOIA</a></li>
+            <li><a href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html" target="_blank">HHS Vulnerability Disclosure</a></li>            
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <ul class="footer-links inline">
+        <li><a href="http://www.hhs.gov/" target="_blank">U.S. Department of Health and Human Services</a></li>
+        <li><a href="http://www.nih.gov/" target="_blank">National Institutes of Health</a></li>
+        <li><a href="https://www.cancer.gov/" target="_blank">National Cancer Institute</a></li>
+        <li><a href="http://usa.gov/" target="_blank">USA.gov</a></li>
+      </ul><span>NIH ... Turning Discovery Into Health ®</span>
+    </div>
+  </footer>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/babel-polyfill@6.26.0/dist/polyfill.min.js"
+    integrity="sha256-WRc/eG3R84AverJv0zmqxAmdwQxstUpqkiE+avJ3WSo=" crossorigin="anonymous"></script>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.4.0/dist/fetch.umd.js"
+    integrity="sha256-17sG19PAt2IccZKY2F4xmrujlvGGvjxB0bxuxPuycMw=" crossorigin="anonymous"></script>
+</body>
+
 </html>
