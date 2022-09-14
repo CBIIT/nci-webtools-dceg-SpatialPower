@@ -1,68 +1,86 @@
-# example build command (from repository root)
-# docker build -t spatial-power:backend -f docker/backend.dockerfile --build-args SPARRPOWR_TAG=CBIIT .
-FROM quay.io/centos/centos:stream8
+FROM public.ecr.aws/amazonlinux/amazonlinux:2022
 
 RUN dnf -y update \
  && dnf -y install \
-    dnf-plugins-core \
-    epel-release \
-    glibc-langpack-en \
- && dnf config-manager --set-enabled powertools \
- && dnf -y module enable nodejs:13 \
- && dnf -y install \
-    nodejs \
-    R \
-    gdal-devel \
-    geos \
-    geos-devel \
+    bzip2 \
+    cmake \
+    diffutils \
+    gcc-c++ \
+    httpd \
+    jq \
+    jq-devel \
     libcurl-devel \
-    proj-devel \
+    libtiff-devel \
+    make \
+    nodejs \
+    npm \
     protobuf-devel \
+    python3 \
+    python3-devel \
+    python3-setuptools \
+    R \
+    sqlite \
     sqlite-devel \
-    udunits2-devel \
+    tar \
     v8-devel \
-    https://download.fedoraproject.org/pub/epel/7/x86_64/Packages/j/jq-1.6-2.el7.x86_64.rpm \
-    https://download.fedoraproject.org/pub/epel/7/x86_64/Packages/j/jq-devel-1.6-2.el7.x86_64.rpm \
+    wget \
+    expat-devel \
  && dnf clean all
+
+ENV GEOS_VERSION=3.11.0
+RUN cd /tmp \
+ && curl -L https://github.com/libgeos/geos/releases/download/$GEOS_VERSION/geos-$GEOS_VERSION.tar.bz2 | tar xj \
+ && cd geos-$GEOS_VERSION \
+ && mkdir -p build \
+ && cd build \
+ && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .. \
+ && cmake --build . --target install
+
+ENV PROJ_VERSION=9.1.0
+RUN cd /tmp \
+ && curl -L https://github.com/OSGeo/PROJ/releases/download/$PROJ_VERSION/proj-$PROJ_VERSION.tar.gz | tar xz \
+ && cd proj-$PROJ_VERSION \
+ && mkdir -p build \
+ && cd build \
+ && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .. \
+ && cmake --build . --target install
+ 
+ENV GDAL_VERSION=3.5.2
+RUN cd /tmp \
+ && curl -L https://github.com/OSGeo/gdal/releases/download/v$GDAL_VERSION/gdal-$GDAL_VERSION.tar.gz | tar xz \
+ && cd gdal-$GDAL_VERSION \
+ && mkdir -p build \
+ && cd build \
+ && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .. \
+ && cmake --build . --target install
+
+ENV UDUNITS2_VERION=2.2.28
+RUN cd /tmp \
+ && curl -L https://artifacts.unidata.ucar.edu/repository/downloads-udunits/${UDUNITS2_VERION}/udunits-${UDUNITS2_VERION}.tar.gz | tar xz \
+ && cd udunits-${UDUNITS2_VERION} \
+ && ./configure --prefix=/usr \
+ && make install
+
+RUN projsync --system-directory --all
 
 ENV R_REMOTES_NO_ERRORS_FROM_WARNINGS="true"
 
-# install sparrpowR dependencies
-RUN Rscript -e "install.packages(c(\
-    'geojsonio', \
-    'jsonlite', \
-    'remotes', \
-    'rgdal', \
-    'spatstat.data', \
-    'spatstat.geom', \
-    'spatstat.utils', \
-    'testthat', \
-    'tibble'\
-), repos='https://cloud.r-project.org/')"
-
-# do not remove this line: this is to ensure that all sparrpowR dependencies are installed and cached at the time of the initial build
-# this should rarely change, as the ref should be set to the tag associated with the latest production release
-RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='master')" 
-
-# install version of sparrpowR specified by tag or commmit id (preferred)
-ARG SPARRPOWR_TAG=CBIIT
-
-# although SPARRPOWR_TAG is assigned a tag name by default, it should be passed in as a specific commit hash
-# to avoid erroneous build cache hits due to reusing the same command string
-RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='$SPARRPOWR_TAG')"
-
 RUN mkdir /deploy
 
-COPY package*.json /deploy
-
 WORKDIR /deploy
+
+COPY install.R /deploy
+
+RUN Rscript install.R
+
+# install version of sparrpowR specified by tag or commmit id (preferred, to avoid build cache)
+ARG SPARRPOWR_TAG=master
+RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='$SPARRPOWR_TAG')"
+
+COPY package*.json /deploy
 
 RUN npm install
 
 COPY . /deploy
 
 CMD npm start
-
-
-
-
