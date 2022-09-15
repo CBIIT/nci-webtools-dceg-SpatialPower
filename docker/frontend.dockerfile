@@ -7,6 +7,7 @@ RUN dnf -y update \
     make \
     nodejs \
     npm \
+    python3-devel \
  && dnf clean all
 
 RUN mkdir /client
