@@ -7,11 +7,12 @@ const archiver = require('archiver');
 const AWS = require('aws-sdk');
 const r = require('r-wrapper').async;
 const config = require('./config.json');
-const logger = require('./utils/logger');
+const createLogger = require('./utils/logger');
 const process = require('process')
 
 const app = express();
 const apiRouter = express.Router();
+const logger = createLogger('spatial-power');
 app.use('/api', apiRouter);
 
 // serve public folder during local development
@@ -81,7 +82,7 @@ apiRouter.post('/submit', async (request, response) => {
 
             // perform calculation and return results
             const sourcePath = path.resolve(__dirname, 'app.R');
-            const results = await r(sourcePath, 'calculate', [body]);
+            const results = await r(sourcePath, 'calculate', {params: body});
 
             if (!Array.isArray(results.plots))
                 results.plots = [results.plots];
