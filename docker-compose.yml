@@ -1,0 +1,22 @@
+version: '3'
+services:
+    backend:
+        build:
+            context: '.'
+            dockerfile: './docker/backend.dockerfile'
+        volumes:
+            - './server/config.json:/server/config.json:ro'
+            - './server/logs:/server/logs'
+            - './server/results:/server/results'
+
+    frontend:
+        build: 
+            context: '.'
+            dockerfile: './docker/frontend.dockerfile'
+            args:
+                APP_PATH: /spatial-power
+        environment:
+            API_HOST: http://backend:4000
+        ports: 
+            - '8080:80'
+
