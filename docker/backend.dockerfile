@@ -63,24 +63,30 @@ RUN cd /tmp \
 
 RUN projsync --system-directory --all
 
+RUN mkdir /server
+
+WORKDIR /server
+
+COPY server/renv.lock .
+
 ENV R_REMOTES_NO_ERRORS_FROM_WARNINGS="true"
 
-RUN mkdir /deploy
+ENV DOWNLOAD_STATIC_LIBV8=1
 
-WORKDIR /deploy
-
-COPY install.R /deploy
-
-RUN Rscript install.R
+RUN R -e "\
+    options(Ncpus=parallel::detectCores()); \
+    install.packages('renv', repos = 'https://cloud.r-project.org/'); \
+    renv::restore();"
 
 # install version of sparrpowR specified by tag or commmit id (preferred, to avoid build cache)
 ARG SPARRPOWR_TAG=master
+
 RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='$SPARRPOWR_TAG')"
 
-COPY package*.json /deploy
+COPY server/package*.json .
 
 RUN npm install
 
-COPY . /deploy
+COPY server .
 
 CMD npm start
