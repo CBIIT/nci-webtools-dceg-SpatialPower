@@ -4,11 +4,10 @@
   "description": "Web application for sparrpowR",
   "main": "index.js",
   "scripts": {
-    "install-r-packages": "Rscript install.R",
-    "install-latest-sparrpowR-package": "Rscript -e \"devtools::install_github(c('spatstat/spatstat.core', 'machiela-lab/sparrpowR@CBIIT'))\"",
+    "install-r-packages": "Rscript -e 'renv::restore()'",
     "build": "cd client && npm run build",
-    "start": "node server/app.js",
-    "start-queue-worker": "node server/queue-worker.js",
+    "start": "node app.js",
+    "start-queue-worker": "node queue-worker.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
