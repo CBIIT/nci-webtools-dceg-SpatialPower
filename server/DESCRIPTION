@@ -1,0 +1,8 @@
+Type: project
+Description: SpatialPower server
+Depends:
+  geojsonio,
+  jsonlite,
+  remotes,
+  sparrpowR,
+  testthat
