@@ -1,8 +1,7 @@
 const path = require("path");
 const util = require("util");
 const fs = require("fs");
-const { createLogger, format, transports, info } = require("winston");
-const logConfig = require("../config.json").logs;
+const { createLogger, format, transports } = require("winston");
 require("winston-daily-rotate-file");
 
 function objectToString(obj) {
@@ -21,8 +20,7 @@ function formatLogMessage({ label, timestamp, level, message }) {
   ].join(" - ");
 }
 
-function getLogger(name, config = logConfig) {
-  const { folder, level } = config;
+function getLogger(name, { folder, level }) {
   fs.mkdirSync(folder, { recursive: true });
 
   return new createLogger({
