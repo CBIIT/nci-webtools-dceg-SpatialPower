@@ -16,7 +16,7 @@ services:
             args:
                 APP_PATH: /spatial-power
         environment:
-            API_HOST: http://backend:4000
+            API_HOST: http://backend:8000
         ports: 
-            - '8080:80'
+            - '8080:8000'
 
