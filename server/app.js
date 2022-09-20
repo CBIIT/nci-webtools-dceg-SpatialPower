@@ -12,7 +12,7 @@ const process = require('process')
 
 const app = express();
 const apiRouter = express.Router();
-const logger = createLogger('spatial-power');
+const logger = createLogger('spatial-power', config.logs);
 app.use('/api', apiRouter);
 
 // serve public folder during local development
