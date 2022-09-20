@@ -81,7 +81,7 @@ RUN R -e "\
 # install version of sparrpowR specified by tag or commmit id (preferred, to avoid build cache)
 ARG SPARRPOWR_TAG=master
 
-RUN Rscript -e "remotes::install_github('machiela-lab/sparrpowR', ref='$SPARRPOWR_TAG')"
+RUN Rscript -e "renv::install('machiela-lab/sparrpowR@$SPARRPOWR_TAG')"
 
 COPY server/package*.json .
 
