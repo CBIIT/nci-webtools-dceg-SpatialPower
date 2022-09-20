@@ -4,5 +4,6 @@ Depends:
   geojsonio,
   jsonlite,
   remotes,
+  rgdal,
   sparrpowR,
   testthat

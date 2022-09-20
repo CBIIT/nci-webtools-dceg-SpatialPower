@@ -3,6 +3,7 @@ install.packages(
         'geojsonio',
         'jsonlite',
         'remotes',
+        'rgdal',
         'sparrpowR',
         'testthat'
     ), 
