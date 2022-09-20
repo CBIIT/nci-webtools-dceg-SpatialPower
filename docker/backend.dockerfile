@@ -79,7 +79,7 @@ RUN R -e "\
     renv::restore();"
 
 # install version of sparrpowR specified by tag or commmit id (preferred, to avoid build cache)
-ARG SPARRPOWR_TAG=master
+ARG SPARRPOWR_TAG=v0.2.5
 
 RUN Rscript -e "renv::install('machiela-lab/sparrpowR@$SPARRPOWR_TAG')"
 
