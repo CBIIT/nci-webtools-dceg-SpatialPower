@@ -33,6 +33,7 @@ apiRouter.use('/ping', (request, response) => response.json(true));
 
 // handle calculation submission
 apiRouter.post('/submit', async (request, response) => {
+    logger.info("Execute submit")
     try {
         const s3 = new AWS.S3();
         const sqs = new AWS.SQS();
@@ -74,7 +75,7 @@ apiRouter.post('/submit', async (request, response) => {
             }).promise();
             response.json({ id });
         }
-        
+
         else {
             // ensure working directory exists
             body.directory = path.resolve(config.results.folder, id);
@@ -82,7 +83,7 @@ apiRouter.post('/submit', async (request, response) => {
 
             // perform calculation and return results
             const sourcePath = path.resolve(__dirname, 'app.R');
-            const results = await r(sourcePath, 'calculate', {params: body});
+            const results = await r(sourcePath, 'calculate', { params: body });
 
             if (!Array.isArray(results.plots))
                 results.plots = [results.plots];
@@ -113,9 +114,10 @@ apiRouter.post('/replot', async (request, response) => {
             directory: path.resolve(config.results.folder, request.body.id),
             rds_file: 'results.rds',
         });
-        
+
+        logger.info(body)
         const sourcePath = path.resolve(__dirname, 'app.R');
-        const results = await r(sourcePath, 'replot', [body]);
+        const results = await r(sourcePath, 'replot', { params: body });
         if (!Array.isArray(results.plots)) results.plots = [results.plots];
 
         response.json(results);

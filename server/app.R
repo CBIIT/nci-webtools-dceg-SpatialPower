@@ -310,10 +310,10 @@ plot_gis <- function(results, params){
 replot <- function(params) {
   setwd(params$directory)
   output <- list()
-  results <- readRDS(params$rds)
+  results <- readRDS(params$rds_file)
 
   if(params$gis){
-    gis_results <- plot_gis(results,params)
+    gis_results <- plot_gis(results, params)
     results$projected_data <- gis_results
     output$data <- gis_results
   }
