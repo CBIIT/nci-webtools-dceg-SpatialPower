@@ -17,7 +17,7 @@ const logger = createLogger('spatial-power', config.logs);
 
     // create required folders 
     for (let folder of [config.logs.folder, config.results.folder]) {
-      fs.mkdirSync(folder, {recursive: true});
+        fs.mkdirSync(folder, { recursive: true });
     }
 
     receiveMessage();
@@ -30,11 +30,11 @@ const logger = createLogger('spatial-power', config.logs);
  */
 async function readTemplate(filePath, data) {
     const template = await fs.promises.readFile(path.resolve(filePath));
-  
+
     // replace {tokens} with data values or removes them if not found
     return String(template).replace(
-      /{[^{}]+}/g,
-      key => data[key.replace(/[{}]+/g, '')] || ''
+        /{[^{}]+}/g,
+        key => data[key.replace(/[{}]+/g, '')] || ''
     );
 }
 
@@ -60,26 +60,27 @@ async function processMessage(message) {
     const s3 = new AWS.S3();
     const email = nodemailer.createTransport(config.email.smtp);
 
-    const {Body: object} = await s3.getObject({
+    const { Body: object } = await s3.getObject({
         Bucket: config.s3.bucket,
         Key: message
     }).promise()
     const params = JSON.parse(object)
-    
+
     try {
         // get calculation results
         const directory = path.resolve(config.results.folder, params.id);
+        params.directory = directory;
         const sourcePath = path.resolve(__dirname, 'app.R');
-        await fs.promises.mkdir(directory, {recursive: true}); 
+        await fs.promises.mkdir(directory, { recursive: true });
 
         const start = new Date().getTime();
-        const results = await r(sourcePath, 'calculate', [{...params, directory}]);
+        const results = await r(sourcePath, 'calculate', { params: params });
         const end = new Date().getTime();
 
         const time = end - start;
         const minutes = Math.floor(time / 60000);
         var seconds = ((time % 60000) / 1000).toFixed(0);
-        
+
         var runtime = (minutes > 0 ? minutes + " min " : '') + seconds + " secs"
 
         // upload results
@@ -90,19 +91,19 @@ async function processMessage(message) {
         }).promise();
 
         await s3.upload({
-            Body: fs.createReadStream(path.resolve(directory,'results.rds')),
+            Body: fs.createReadStream(path.resolve(directory, 'results.rds')),
             Bucket: config.s3.bucket,
             Key: `${config.s3.outputKeyPrefix}${params.id}/results.rds`
         }).promise();
 
         // upload plots
         for (let filename of results.plots) {
-          const filepath = path.resolve(directory, filename);
-          await s3.upload({
-              Body: fs.createReadStream(filepath),
-              Bucket: config.s3.bucket,
-              Key: `${config.s3.outputKeyPrefix}${params.id}/${filename}`
-          }).promise();
+            const filepath = path.resolve(directory, filename);
+            await s3.upload({
+                Body: fs.createReadStream(filepath),
+                Bucket: config.s3.bucket,
+                Key: `${config.s3.outputKeyPrefix}${params.id}/${filename}`
+            }).promise();
         }
 
         // specify email template variables
@@ -172,8 +173,8 @@ async function receiveMessage() {
     const sqs = new AWS.SQS();
     const { QueueUrl } = await sqs.getQueueUrl({
         QueueName: config.queue.name
-      }).promise();
-      
+    }).promise();
+
     try {
         // to simplify running multiple workers in parallel, 
         // fetch one message at a time
@@ -189,7 +190,7 @@ async function receiveMessage() {
             const params = JSON.parse(message.Body);
 
             logger.info(`Received Message : ${message.Body}`);
-            
+
             // while processing is not complete, update the message's visibilityTimeout
             const intervalId = setInterval(_ => sqs.changeMessageVisibility({
                 QueueUrl: QueueUrl,
@@ -200,7 +201,7 @@ async function receiveMessage() {
             // processMessage should return a boolean status indicating success or failure
             const status = await processMessage(params);
             clearInterval(intervalId);
-            
+
             // if message was not processed successfully, send it to the
             // error queue (add metadata in future if needed)
             if (!status && config.queue.errorUrl) {
