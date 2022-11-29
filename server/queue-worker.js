@@ -5,7 +5,8 @@ const AWS = require('aws-sdk');
 const nodemailer = require('nodemailer');
 const r = require('r-wrapper').async;
 const config = require('./config.json');
-const logger = require('./utils/logger');
+const createLogger = require('./utils/logger');
+const logger = createLogger('spatial-power', config.logs);
 
 (async function main() {
     // update aws configuration if all keys are supplied, otherwise
@@ -172,7 +173,7 @@ async function receiveMessage() {
     const { QueueUrl } = await sqs.getQueueUrl({
         QueueName: config.queue.name
       }).promise();
-
+      
     try {
         // to simplify running multiple workers in parallel, 
         // fetch one message at a time
