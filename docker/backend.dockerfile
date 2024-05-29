@@ -18,7 +18,7 @@ RUN dnf -y update \
     python3 \
     python3-devel \
     python3-setuptools \
-    R \
+    R-4.1.3 \
     sqlite \
     sqlite-devel \
     tar \
