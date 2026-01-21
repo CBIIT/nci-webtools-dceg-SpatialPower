@@ -89,7 +89,7 @@ jobs:
                 export DOCKER_APP_LOGS_FOLDER="${{ env.DOCKER_APP_LOGS_FOLDER }}"
                 export DOCKER_APP_TMP_FOLDER="${{ env.DOCKER_APP_TMP_FOLDER }}"
                 
-                envsubst < docker/docker-compose.deploy.yml > docker-compose-rendered.yml
+                envsubst < docker-compose.deploy.yml > docker-compose-rendered.yml
                 
                 echo "Rendered docker-compose.yml:"
                 cat docker-compose-rendered.yml
