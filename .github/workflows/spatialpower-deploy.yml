@@ -102,19 +102,34 @@ jobs:
             - name: Get EC2 instance ID
               id: get-instance
               run: |
-                INSTANCE_ID=$(aws ec2 describe-instances \
-                  --filters "Name=tag:Name,Values=${{ secrets.EC2_INSTANCE_NAME }}" \
-                            "Name=instance-state-name,Values=running" \
-                  --query "Reservations[0].Instances[0].InstanceId" \
-                  --output text)
+                # Retry logic for EC2 describe-instances
+                MAX_ATTEMPTS=3
+                ATTEMPT=1
                 
-                if [ "$INSTANCE_ID" == "None" ] || [ -z "$INSTANCE_ID" ]; then
-                  echo "Error: Could not find running EC2 instance with name ${{ secrets.EC2_INSTANCE_NAME }}"
-                  exit 1
-                fi
+                while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+                  echo "Attempt $ATTEMPT of $MAX_ATTEMPTS to get EC2 instance..."
+                  
+                  INSTANCE_ID=$(aws ec2 describe-instances \
+                    --filters "Name=tag:Name,Values=${{ secrets.EC2_INSTANCE_NAME }}" \
+                              "Name=instance-state-name,Values=running" \
+                    --query "Reservations[0].Instances[0].InstanceId" \
+                    --output text 2>&1)
+                  
+                  EXIT_CODE=$?
+                  
+                  if [ $EXIT_CODE -eq 0 ] && [ "$INSTANCE_ID" != "None" ] && [ -n "$INSTANCE_ID" ]; then
+                    echo "instance_id=$INSTANCE_ID" >> $GITHUB_OUTPUT
+                    echo "Found EC2 instance: $INSTANCE_ID"
+                    exit 0
+                  fi
+                  
+                  echo "Attempt $ATTEMPT failed. Waiting before retry..."
+                  ATTEMPT=$((ATTEMPT + 1))
+                  [ $ATTEMPT -le $MAX_ATTEMPTS ] && sleep 5
+                done
                 
-                echo "instance_id=$INSTANCE_ID" >> $GITHUB_OUTPUT
-                echo "Found EC2 instance: $INSTANCE_ID"
+                echo "Error: Could not find running EC2 instance with name ${{ secrets.EC2_INSTANCE_NAME }} after $MAX_ATTEMPTS attempts"
+                exit 1
 
             - name: Deploy to EC2 via SSM
               run: |
