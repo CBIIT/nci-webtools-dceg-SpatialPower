@@ -54,10 +54,10 @@ RUN cd /tmp \
  && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .. \
  && cmake --build . --target install
 
-ENV UDUNITS2_VERION=2.2.28
+ENV UDUNITS2_VERSION=2.2.28
 RUN cd /tmp \
- && curl -L https://artifacts.unidata.ucar.edu/repository/downloads-udunits/${UDUNITS2_VERION}/udunits-${UDUNITS2_VERION}.tar.gz | tar xz \
- && cd udunits-${UDUNITS2_VERION} \
+ && curl -L https://artifacts.unidata.ucar.edu/repository/downloads-udunits/${UDUNITS2_VERSION}/udunits-${UDUNITS2_VERSION}.tar.gz | tar xz \
+ && cd udunits-${UDUNITS2_VERSION} \
  && ./configure --prefix=/usr \
  && make install
 
