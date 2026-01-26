@@ -56,7 +56,8 @@ RUN cd /tmp \
 
 ENV UDUNITS2_VERSION=2.2.28
 RUN cd /tmp \
- && curl -L https://artifacts.unidata.ucar.edu/repository/downloads-udunits/${UDUNITS2_VERSION}/udunits-${UDUNITS2_VERSION}.tar.gz | tar xz \
+ && curl -L -o udunits.tar.gz https://downloads.unidata.ucar.edu/udunits/${UDUNITS2_VERSION}/udunits-${UDUNITS2_VERSION}.tar.gz \
+ && tar xzf udunits.tar.gz \
  && cd udunits-${UDUNITS2_VERSION} \
  && ./configure --prefix=/usr \
  && make install
