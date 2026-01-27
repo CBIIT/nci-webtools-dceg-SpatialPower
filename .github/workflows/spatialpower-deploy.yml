@@ -25,10 +25,10 @@ env:
     AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
     ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
     ECR_REPOSITORY: spatial-power
-    DOCKER_APP_ROOT: /local/content/docker_apps/spatial-power
-    DOCKER_APP_CONFIG_FOLDER: /local/content/docker_apps/spatial-power/config
-    DOCKER_APP_LOGS_FOLDER: /local/content/docker_apps/spatial-power/logs
-    DOCKER_APP_TMP_FOLDER: /local/content/docker_apps/spatial-power/tmp
+    DOCKER_APP_ROOT: /local/content/docker_apps/spatial_power
+    DOCKER_APP_CONFIG_FOLDER: /local/content/docker_apps/spatial_power/config
+    DOCKER_APP_LOGS_FOLDER: /local/content/docker_apps/spatial_power/logs
+    DOCKER_APP_TMP_FOLDER: /local/content/docker_apps/spatial_power/tmp
 
 jobs:
     Deploy:
