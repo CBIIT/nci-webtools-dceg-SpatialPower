@@ -1,259 +1,261 @@
 name: Deploy Spatial Power
-on:
-    workflow_dispatch:
-        inputs:
-            tier:
-                description: "Deployment Tier"
-                required: true
-                default: "dev"
-                type: choice
-                options:
-                    - dev
-                    - qa
-                    - stage
-                    - prod
-            sparrpowr_tag:
-                description: "sparrpowR R package version tag"
-                required: false
-                default: "v0.2.5"
-                type: string
+permissions:
+  id-token: write
+  contents: read
 
-env:
-    APP: spatial-power
-    TZ: America/New_York
-    AWS_REGION: us-east-1
-    AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-    ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
-    ECR_REPOSITORY: spatial-power
-    DOCKER_APP_ROOT: /local/content/docker_apps/spatial_power
-    DOCKER_APP_CONFIG_FOLDER: /local/content/docker_apps/spatial_power/config
-    DOCKER_APP_LOGS_FOLDER: /local/content/docker_apps/spatial_power/logs
-    DOCKER_APP_TMP_FOLDER: /local/content/docker_apps/spatial_power/tmp
+on:
+  workflow_dispatch:
+    inputs:
+      tier:
+        description: "Deployment Tier"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - qa
+          - stage
+          - prod
+      sparrpowr_tag:
+        description: "sparrpowR R package version tag"
+        required: false
+        default: "v0.2.5"
+        type: string
 
 jobs:
-    Deploy:
-        runs-on: ubuntu-latest
-        environment: ${{ inputs.tier }}
-        permissions:
-            id-token: write
-            contents: read
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v5
+  Deploy:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.tier }}
+    env:
+      APP: spatial-power
+      TZ: America/New_York
+      AWS_REGION: us-east-1
+      AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+      ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
+      ECR_REPOSITORY: spatial-power
+      DOCKER_APP_ROOT: /local/content/docker_apps/spatial_power
+      DOCKER_APP_CONFIG_FOLDER: /local/content/docker_apps/spatial_power/config
+      DOCKER_APP_LOGS_FOLDER: /local/content/docker_apps/spatial_power/logs
+      DOCKER_APP_TMP_FOLDER: /local/content/docker_apps/spatial_power/tmp
 
-            - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v5.1.0
-              with:
-                role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ec2-role-analysistools-${{ inputs.tier }}-role
-                aws-region: ${{ env.AWS_REGION }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
 
-            - name: Login to Amazon ECR
-              id: login-ecr
-              uses: aws-actions/amazon-ecr-login@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6.0.0
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/ec2-role-analysistools-${{ inputs.tier }}-role
+          aws-region: ${{ env.AWS_REGION }}
 
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2.1.0
 
-            - name: Build and push backend image
-              uses: docker/build-push-action@v5
-              with:
-                context: .
-                file: docker/backend.dockerfile
-                push: true
-                build-args: |
-                  SPARRPOWR_TAG=${{ inputs.sparrpowr_tag }}
-                tags: |
-                  ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-${{ github.sha }}
-                  ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-latest
-                cache-from: type=registry,ref=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-buildcache
-                cache-to: type=registry,ref=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-buildcache,mode=max
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4.0.0
 
-            - name: Build and push frontend image
-              uses: docker/build-push-action@v5
-              with:
-                context: .
-                file: docker/frontend.dockerfile
-                push: true
-                tags: |
-                  ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:frontend-${{ inputs.tier }}-${{ github.sha }}
-                  ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:frontend-${{ inputs.tier }}-latest
-                cache-from: type=registry,ref=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:frontend-${{ inputs.tier }}-buildcache
-                cache-to: type=registry,ref=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:frontend-${{ inputs.tier }}-buildcache,mode=max
+      - name: Build and push backend image
+        uses: docker/build-push-action@v7.0.0
+        with:
+          context: .
+          file: docker/backend.dockerfile
+          push: true
+          build-args: |
+            SPARRPOWR_TAG=${{ inputs.sparrpowr_tag }}
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-${{ github.sha }}
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-latest
+          cache-from: type=registry,ref=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-buildcache
+          cache-to: type=registry,ref=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-buildcache,mode=max
 
-            - name: Prepare docker-compose file
-              run: |
-                export ECR_REGISTRY="${{ env.ECR_REGISTRY }}"
-                export ECR_REPOSITORY="${{ env.ECR_REPOSITORY }}"
-                export TIER="${{ inputs.tier }}"
-                export DOCKER_APP_CONFIG_FOLDER="${{ env.DOCKER_APP_CONFIG_FOLDER }}"
-                export DOCKER_APP_LOGS_FOLDER="${{ env.DOCKER_APP_LOGS_FOLDER }}"
-                export DOCKER_APP_TMP_FOLDER="${{ env.DOCKER_APP_TMP_FOLDER }}"
-                
-                envsubst < docker-compose.deploy.yml > docker-compose-rendered.yml
-                
-                echo "Rendered docker-compose.yml:"
-                cat docker-compose-rendered.yml
-                
-                # Base64 encode for safe transfer
-                COMPOSE_BASE64=$(base64 -w 0 docker-compose-rendered.yml 2>/dev/null || base64 docker-compose-rendered.yml)
-                echo "compose_base64=$COMPOSE_BASE64" >> $GITHUB_OUTPUT
-              id: compose
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v7.0.0
+        with:
+          context: .
+          file: docker/frontend.dockerfile
+          push: true
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:frontend-${{ inputs.tier }}-${{ github.sha }}
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:frontend-${{ inputs.tier }}-latest
+          cache-from: type=registry,ref=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:frontend-${{ inputs.tier }}-buildcache
+          cache-to: type=registry,ref=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:frontend-${{ inputs.tier }}-buildcache,mode=max
 
-            - name: Get EC2 instance ID
-              id: get-instance
-              run: |
-                # Retry logic for EC2 describe-instances
-                MAX_ATTEMPTS=3
-                ATTEMPT=1
-                
-                while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
-                  echo "Attempt $ATTEMPT of $MAX_ATTEMPTS to get EC2 instance..."
-                  
-                  INSTANCE_ID=$(aws ec2 describe-instances \
-                    --filters "Name=tag:Name,Values=${{ secrets.EC2_INSTANCE_NAME }}" \
-                              "Name=instance-state-name,Values=running" \
-                    --query "Reservations[0].Instances[0].InstanceId" \
-                    --output text 2>&1)
-                  
-                  EXIT_CODE=$?
-                  
-                  if [ $EXIT_CODE -eq 0 ] && [ "$INSTANCE_ID" != "None" ] && [ -n "$INSTANCE_ID" ]; then
-                    echo "instance_id=$INSTANCE_ID" >> $GITHUB_OUTPUT
-                    echo "Found EC2 instance: $INSTANCE_ID"
-                    exit 0
-                  fi
-                  
-                  echo "Attempt $ATTEMPT failed. Waiting before retry..."
-                  ATTEMPT=$((ATTEMPT + 1))
-                  [ $ATTEMPT -le $MAX_ATTEMPTS ] && sleep 5
-                done
-                
-                echo "Error: Could not find running EC2 instance with name ${{ secrets.EC2_INSTANCE_NAME }} after $MAX_ATTEMPTS attempts"
-                exit 1
+      - name: Prepare docker-compose file
+        run: |
+          export ECR_REGISTRY="${{ env.ECR_REGISTRY }}"
+          export ECR_REPOSITORY="${{ env.ECR_REPOSITORY }}"
+          export TIER="${{ inputs.tier }}"
+          export DOCKER_APP_CONFIG_FOLDER="${{ env.DOCKER_APP_CONFIG_FOLDER }}"
+          export DOCKER_APP_LOGS_FOLDER="${{ env.DOCKER_APP_LOGS_FOLDER }}"
+          export DOCKER_APP_TMP_FOLDER="${{ env.DOCKER_APP_TMP_FOLDER }}"
 
-            - name: Deploy to EC2 via SSM
-              run: |
-                cat > commands.json << 'EOF'
-                {
-                  "Parameters": {
-                    "commands": [
-                      "set -e",
-                      "echo '=== Starting deployment ==='",
-                      "cd ${{ env.DOCKER_APP_ROOT }}",
-                      "echo '=== Logging in to ECR ==='",
-                      "aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}",
-                      "echo '=== Creating required directories ==='",
-                      "mkdir -p ${{ env.DOCKER_APP_CONFIG_FOLDER }}",
-                      "mkdir -p ${{ env.DOCKER_APP_LOGS_FOLDER }}",
-                      "mkdir -p ${{ env.DOCKER_APP_TMP_FOLDER }}",
-                      "echo '=== Checking and creating config.json if needed ==='",
-                      "if [ ! -f ${{ env.DOCKER_APP_CONFIG_FOLDER }}/config.json ]; then echo 'config.json not found, creating default...'; cat > ${{ env.DOCKER_APP_CONFIG_FOLDER }}/config.json << 'CONFIG_EOF'\n{\n  \"server\": {\n    \"port\": 8000,\n    \"static\": \"../client/build\"\n  },\n  \"logs\": {\n    \"folder\": \"logs\",\n    \"level\": \"info\"\n  },\n  \"results\": {\n    \"folder\": \"results\"\n  }\n}\nCONFIG_EOF\nelse echo 'config.json already exists'; fi",
-                      "echo 'Current config.json:'; cat ${{ env.DOCKER_APP_CONFIG_FOLDER }}/config.json",
-                      "echo '=== Creating docker-compose.yml ==='",
-                      "echo '${{ steps.compose.outputs.compose_base64 }}' | base64 -d > docker-compose.yml",
-                      "echo 'Generated docker-compose.yml:'; cat docker-compose.yml",
-                      "echo '=== Pulling latest images ==='",
-                      "docker compose pull --quiet",
-                      "echo '=== Stopping spatial-power containers by name ==='",
-                      "docker ps --filter name=spatial-power -q | xargs -r docker stop || echo 'No spatial-power containers running'",
-                      "echo '=== Finding and stopping containers on port 80 ==='",
-                      "CONTAINER_80=$(docker ps --format '{{.ID}} {{.Ports}}' | grep '0.0.0.0:80' | awk '{print $1}')",
-                      "if [ -n \"$CONTAINER_80\" ]; then echo \"Stopping container using port 80: $CONTAINER_80\"; docker stop $CONTAINER_80; fi",
-                      "echo '=== Finding and stopping containers on port 8000 ==='",
-                      "CONTAINER_8000=$(docker ps --format '{{.ID}} {{.Ports}}' | grep '0.0.0.0:8000' | awk '{print $1}')",
-                      "if [ -n \"$CONTAINER_8000\" ]; then echo \"Stopping container using port 8000: $CONTAINER_8000\"; docker stop $CONTAINER_8000; fi",
-                      "echo '=== Running compose down ==='",
-                      "docker compose down --remove-orphans || true",
-                      "echo '=== Removing only spatial-power containers ==='",
-                      "docker ps -a --filter name=spatial-power -q | xargs -r docker rm -f || echo 'No spatial-power containers to remove'",
-                      "echo '=== Waiting for port release ==='",
-                      "sleep 3",
-                      "echo '=== Current containers ==='",
-                      "docker ps -a",
-                      "echo '=== Starting new containers ==='",
-                      "docker compose up -d",
-                      "echo '=== Verifying mounted config in backend ==='",
-                      "docker compose exec -T backend cat /server/config.json",
-                      "echo '=== Running containers ==='",
-                      "docker compose ps",
-                      "echo '=== Checking backend logs ==='",
-                      "docker compose logs backend --tail 50",
-                      "echo '=== Deployment completed successfully ==='"
-                    ]
-                  }
-                }
-                EOF
-                
-                COMMAND_ID=$(aws ssm send-command \
-                  --instance-ids "${{ steps.get-instance.outputs.instance_id }}" \
-                  --document-name "AWS-RunShellScript" \
-                  --cli-input-json file://commands.json \
-                  --query "Command.CommandId" \
-                  --output text)
-                
-                echo "SSM Command ID: $COMMAND_ID"
-                
-                echo "Waiting for deployment to complete..."
-                for i in {1..60}; do
-                  STATUS=$(aws ssm get-command-invocation \
-                    --command-id "$COMMAND_ID" \
-                    --instance-id "${{ steps.get-instance.outputs.instance_id }}" \
-                    --query "Status" \
-                    --output text)
-                  
-                  echo "Status: $STATUS (attempt $i/60)"
-                  
-                  if [[ "$STATUS" == "Success" ]]; then
-                    echo "✅ Deployment successful!"
-                    break
-                  elif [[ "$STATUS" =~ ^(Failed|Cancelled|TimedOut)$ ]]; then
-                    echo "❌ Deployment failed with status: $STATUS"
-                    
-                    echo ""
-                    echo "=== Deployment Output ==="
-                    aws ssm get-command-invocation \
-                      --command-id "$COMMAND_ID" \
-                      --instance-id "${{ steps.get-instance.outputs.instance_id }}" \
-                      --query "StandardOutputContent" \
-                      --output text
-                    
-                    echo ""
-                    echo "=== Deployment Errors ==="
-                    aws ssm get-command-invocation \
-                      --command-id "$COMMAND_ID" \
-                      --instance-id "${{ steps.get-instance.outputs.instance_id }}" \
-                      --query "StandardErrorContent" \
-                      --output text
-                    
-                    exit 1
-                  fi
-                  
-                  sleep 5
-                done
-                
-                echo ""
-                echo "=== Deployment Output ==="
-                aws ssm get-command-invocation \
-                  --command-id "$COMMAND_ID" \
-                  --instance-id "${{ steps.get-instance.outputs.instance_id }}" \
-                  --query "StandardOutputContent" \
-                  --output text
+          envsubst < docker-compose.deploy.yml > docker-compose-rendered.yml
 
-            - name: Deployment summary
-              if: success()
-              run: |
-                echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
-                echo "- **Application**: Spatial Power" >> $GITHUB_STEP_SUMMARY
-                echo "- **Environment**: ${{ inputs.tier }}" >> $GITHUB_STEP_SUMMARY
-                echo "- **Git Reference**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-                echo "- **Backend Image**: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-                echo "- **Frontend Image**: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:frontend-${{ inputs.tier }}-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-                echo "- **sparrpowR Version**: ${{ inputs.sparrpowr_tag }}" >> $GITHUB_STEP_SUMMARY
-                echo "- **EC2 Instance**: ${{ steps.get-instance.outputs.instance_id }}" >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                echo "### Components Deployed" >> $GITHUB_STEP_SUMMARY
-                echo "- Frontend (nginx/Apache) - Port 80" >> $GITHUB_STEP_SUMMARY
-                echo "- Backend (Node.js + R) - Port 8000" >> $GITHUB_STEP_SUMMARY
-                echo "- Processor (Queue Worker)" >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                echo "✅ Deployment completed successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "Rendered docker-compose.yml:"
+          cat docker-compose-rendered.yml
+
+          # Base64 encode for safe transfer
+          COMPOSE_BASE64=$(base64 -w 0 docker-compose-rendered.yml 2>/dev/null || base64 docker-compose-rendered.yml)
+          echo "compose_base64=$COMPOSE_BASE64" >> $GITHUB_OUTPUT
+        id: compose
+
+      - name: Get EC2 instance ID
+        id: get-instance
+        run: |
+          # Retry logic for EC2 describe-instances
+          MAX_ATTEMPTS=3
+          ATTEMPT=1
+
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            echo "Attempt $ATTEMPT of $MAX_ATTEMPTS to get EC2 instance..."
+
+            INSTANCE_ID=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=${{ vars.EC2_INSTANCE_NAME }}" \
+                        "Name=instance-state-name,Values=running" \
+              --query "Reservations[0].Instances[0].InstanceId" \
+              --output text 2>&1)
+
+            EXIT_CODE=$?
+
+            if [ $EXIT_CODE -eq 0 ] && [ "$INSTANCE_ID" != "None" ] && [ -n "$INSTANCE_ID" ]; then
+              echo "instance_id=$INSTANCE_ID" >> $GITHUB_OUTPUT
+              echo "Found EC2 instance: $INSTANCE_ID"
+              exit 0
+            fi
+
+            echo "Attempt $ATTEMPT failed. Waiting before retry..."
+            ATTEMPT=$((ATTEMPT + 1))
+            [ $ATTEMPT -le $MAX_ATTEMPTS ] && sleep 5
+          done
+
+          echo "Error: Could not find running EC2 instance with name ${{ vars.EC2_INSTANCE_NAME }} after $MAX_ATTEMPTS attempts"
+          exit 1
+
+      - name: Deploy to EC2 via SSM
+        run: |
+          cat > commands.json << 'EOF'
+          {
+            "Parameters": {
+              "commands": [
+                "set -e",
+                "echo '=== Starting deployment ==='",
+                "cd ${{ env.DOCKER_APP_ROOT }}",
+                "echo '=== Logging in to ECR ==='",
+                "aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}",
+                "echo '=== Creating required directories ==='",
+                "mkdir -p ${{ env.DOCKER_APP_CONFIG_FOLDER }}",
+                "mkdir -p ${{ env.DOCKER_APP_LOGS_FOLDER }}",
+                "mkdir -p ${{ env.DOCKER_APP_TMP_FOLDER }}",
+                "echo '=== Checking and creating config.json if needed ==='",
+                "if [ ! -f ${{ env.DOCKER_APP_CONFIG_FOLDER }}/config.json ]; then echo 'config.json not found, creating default...'; cat > ${{ env.DOCKER_APP_CONFIG_FOLDER }}/config.json << 'CONFIG_EOF'\n{\n  \"server\": {\n    \"port\": 8000,\n    \"static\": \"../client/build\"\n  },\n  \"logs\": {\n    \"folder\": \"logs\",\n    \"level\": \"info\"\n  },\n  \"results\": {\n    \"folder\": \"results\"\n  }\n}\nCONFIG_EOF\nelse echo 'config.json already exists'; fi",
+                "echo 'Current config.json:'; cat ${{ env.DOCKER_APP_CONFIG_FOLDER }}/config.json",
+                "echo '=== Creating docker-compose.yml ==='",
+                "echo '${{ steps.compose.outputs.compose_base64 }}' | base64 -d > docker-compose.yml",
+                "echo 'Generated docker-compose.yml:'; cat docker-compose.yml",
+                "echo '=== Pulling latest images ==='",
+                "docker compose pull --quiet",
+                "echo '=== Stopping spatial-power containers by name ==='",
+                "docker ps --filter name=spatial-power -q | xargs -r docker stop || echo 'No spatial-power containers running'",
+                "echo '=== Finding and stopping containers on port 80 ==='",
+                "CONTAINER_80=$(docker ps --format '{{.ID}} {{.Ports}}' | grep '0.0.0.0:80' | awk '{print $1}')",
+                "if [ -n \"$CONTAINER_80\" ]; then echo \"Stopping container using port 80: $CONTAINER_80\"; docker stop $CONTAINER_80; fi",
+                "echo '=== Finding and stopping containers on port 8000 ==='",
+                "CONTAINER_8000=$(docker ps --format '{{.ID}} {{.Ports}}' | grep '0.0.0.0:8000' | awk '{print $1}')",
+                "if [ -n \"$CONTAINER_8000\" ]; then echo \"Stopping container using port 8000: $CONTAINER_8000\"; docker stop $CONTAINER_8000; fi",
+                "echo '=== Running compose down ==='",
+                "docker compose down --remove-orphans || true",
+                "echo '=== Removing only spatial-power containers ==='",
+                "docker ps -a --filter name=spatial-power -q | xargs -r docker rm -f || echo 'No spatial-power containers to remove'",
+                "echo '=== Waiting for port release ==='",
+                "sleep 3",
+                "echo '=== Current containers ==='",
+                "docker ps -a",
+                "echo '=== Starting new containers ==='",
+                "docker compose up -d",
+                "echo '=== Verifying mounted config in backend ==='",
+                "docker compose exec -T backend cat /server/config.json",
+                "echo '=== Running containers ==='",
+                "docker compose ps",
+                "echo '=== Checking backend logs ==='",
+                "docker compose logs backend --tail 50",
+                "echo '=== Deployment completed successfully ==='"
+              ]
+            }
+          }
+          EOF
+
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids "${{ steps.get-instance.outputs.instance_id }}" \
+            --document-name "AWS-RunShellScript" \
+            --cli-input-json file://commands.json \
+            --query "Command.CommandId" \
+            --output text)
+
+          echo "SSM Command ID: $COMMAND_ID"
+
+          echo "Waiting for deployment to complete..."
+          for i in {1..60}; do
+            STATUS=$(aws ssm get-command-invocation \
+              --command-id "$COMMAND_ID" \
+              --instance-id "${{ steps.get-instance.outputs.instance_id }}" \
+              --query "Status" \
+              --output text)
+
+            echo "Status: $STATUS (attempt $i/60)"
+
+            if [[ "$STATUS" == "Success" ]]; then
+              echo "✅ Deployment successful!"
+              break
+            elif [[ "$STATUS" =~ ^(Failed|Cancelled|TimedOut)$ ]]; then
+              echo "❌ Deployment failed with status: $STATUS"
+
+              echo ""
+              echo "=== Deployment Output ==="
+              aws ssm get-command-invocation \
+                --command-id "$COMMAND_ID" \
+                --instance-id "${{ steps.get-instance.outputs.instance_id }}" \
+                --query "StandardOutputContent" \
+                --output text
+
+              echo ""
+              echo "=== Deployment Errors ==="
+              aws ssm get-command-invocation \
+                --command-id "$COMMAND_ID" \
+                --instance-id "${{ steps.get-instance.outputs.instance_id }}" \
+                --query "StandardErrorContent" \
+                --output text
+
+              exit 1
+            fi
+
+            sleep 5
+          done
+
+          echo ""
+          echo "=== Deployment Output ==="
+          aws ssm get-command-invocation \
+            --command-id "$COMMAND_ID" \
+            --instance-id "${{ steps.get-instance.outputs.instance_id }}" \
+            --query "StandardOutputContent" \
+            --output text
+
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Application**: Spatial Power" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: ${{ inputs.tier }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Git Reference**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Backend Image**: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Frontend Image**: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:frontend-${{ inputs.tier }}-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **sparrpowR Version**: ${{ inputs.sparrpowr_tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **EC2 Instance**: ${{ steps.get-instance.outputs.instance_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Components Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "- Frontend (nginx/Apache) - Port 80" >> $GITHUB_STEP_SUMMARY
+          echo "- Backend (Node.js + R) - Port 8000" >> $GITHUB_STEP_SUMMARY
+          echo "- Processor (Queue Worker)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Deployment completed successfully!" >> $GITHUB_STEP_SUMMARY
