@@ -76,7 +76,7 @@ ENV DOWNLOAD_STATIC_LIBV8=1
 
 RUN R -e "\
     options(Ncpus=parallel::detectCores()); \
-    install.packages('renv', repos = 'https://cloud.r-project.org/'); \
+    renv.config.repos.override = 'https://packagemanager.posit.co/cran/__linux__/rhel9/latest', \
     renv::restore();"
 
 # install version of sparrpowR specified by tag or commmit id (preferred, to avoid build cache)
