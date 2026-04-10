@@ -16,11 +16,6 @@ on:
           - qa
           - stage
           - prod
-      sparrpowr_tag:
-        description: "sparrpowR R package version tag"
-        required: false
-        default: "v0.2.5"
-        type: string
 
 jobs:
   Deploy:
@@ -62,8 +57,6 @@ jobs:
           context: .
           file: docker/backend.dockerfile
           push: true
-          build-args: |
-            SPARRPOWR_TAG=${{ inputs.sparrpowr_tag }}
           tags: |
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-${{ github.sha }}
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:backend-${{ inputs.tier }}-latest
