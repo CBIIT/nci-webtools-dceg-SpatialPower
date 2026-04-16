@@ -1,11 +1,11 @@
 version: "3"
 services:
   backend:
-    image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:backend-${TIER}-latest
+    image: ${BACKEND_IMAGE_LATEST}
     volumes:
-      - "${DOCKER_APP_CONFIG_FOLDER}/config.json:/server/config.json:ro"
-      - "${DOCKER_APP_LOGS_FOLDER}:/server/logs"
-      - "${DOCKER_APP_TMP_FOLDER}:/server/results"
+      - "${APP_HOST_CONFIG_FOLDER}/config.json:/server/config.json:ro"
+      - "${APP_HOST_LOGS_FOLDER}:/server/logs"
+      - "${APP_HOST_TMP_FOLDER}:/server/results"
     environment:
       NODE_ENV: production
     ports:
@@ -13,18 +13,18 @@ services:
     restart: unless-stopped
 
   processor:
-    image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:backend-${TIER}-latest
+    image: ${BACKEND_IMAGE_LATEST}
     command: npm run start-queue-worker
     volumes:
-      - "${DOCKER_APP_CONFIG_FOLDER}/config.json:/server/config.json:ro"
-      - "${DOCKER_APP_LOGS_FOLDER}:/server/logs"
-      - "${DOCKER_APP_TMP_FOLDER}:/server/results"
+      - "${APP_HOST_CONFIG_FOLDER}/config.json:/server/config.json:ro"
+      - "${APP_HOST_LOGS_FOLDER}:/server/logs"
+      - "${APP_HOST_TMP_FOLDER}:/server/results"
     environment:
       NODE_ENV: production
     restart: unless-stopped
 
   frontend:
-    image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:frontend-${TIER}-latest
+    image: ${FRONTEND_IMAGE_LATEST}
     environment:
       API_HOST: http://backend:8000
     ports:
