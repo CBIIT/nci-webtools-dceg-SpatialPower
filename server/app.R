@@ -71,9 +71,8 @@
 
 # helper function to transform coordinates between different reference systems
 transform_coords <- function (dataframe, coordinate_columns = c(1,2), from_crs, to_crs) {
-  sp::coordinates(dataframe) <- coordinate_columns
-  sp::proj4string(dataframe) <- from_crs
-  sp::spTransform(dataframe, to_crs)
+  sf::st_as_sf(dataframe, coords = coordinate_columns, crs = from_crs) |>
+    sf::st_transform(crs = to_crs)
 }
 
 GIS_check<- function(win = spatstat.geom::unit.square(),
@@ -162,30 +161,31 @@ calculate <- function(params) {
     if (params$gis) {
         
         # determine local coordinate reference system from starting coordinates
-        local_crs <- sp::CRS(paste0("+proj=webmerc +datum=WGS84 +lon_0=", params$longitude, " +y_0=", params$latitude))
-        global_crs <- sp::CRS("+init=EPSG:4326")
+        local_crs <- paste0("+proj=webmerc +datum=WGS84 +lon_0=", params$longitude, " +y_0=", params$latitude)
+        global_crs <- "EPSG:4326"
         
-        geojson_sp <- geojsonio::geojson_sp(params$geojson)
-        sp_area_union <- maptools::unionSpatialPolygons(geojson_sp, IDs = rep(1, length(geojson_sp)))
-        sp_area_proj <- sp::spTransform(sp_area_union, CRSobj = local_crs)
+        geojson_sf <- sf::st_read(paste0('{"type":"Feature","geometry":', params$geojson, ',"properties":{}}'), quiet = TRUE)
+        geojson_sf <- sf::st_make_valid(geojson_sf)
+        sp_area_union <- sf::st_union(geojson_sf)
+        sp_area_proj <- sf::st_transform(sp_area_union, crs = local_crs)
         sp_params$win <- spatstat.geom::as.owin(sp_area_proj)
         
-        case <- transform_coords(
-            data.frame(x = sp_params$x_case,y = sp_params$y_case),
-            from_crs=global_crs,
-            to_crs=local_crs
-        )@coords
+        case <- sf::st_coordinates(transform_coords(
+            data.frame(x = sp_params$x_case, y = sp_params$y_case),
+            from_crs = global_crs,
+            to_crs = local_crs
+        ))
         
         sp_params$x_case = case[,1]
         sp_params$y_case = case[,2]
 
         if(params$samp_control == "MVN"){
-            control <- transform_coords(
+            control <- sf::st_coordinates(transform_coords(
                 data.frame(x = sp_params$x_control, y = sp_params$y_control),
                 coordinate_columns = c('x', 'y'),
                 from_crs = global_crs, 
                 to_crs = local_crs
-            )@coords
+            ))
     
             sp_params$x_control = control[,1]
             sp_params$y_control = control[,2]
@@ -277,8 +277,8 @@ calculate <- function(params) {
 
 plot_gis <- function(results, params){
 
-    global_crs <- sp::CRS("+init=EPSG:4326")
-    local_crs <- sp::CRS(paste0("+proj=webmerc +datum=WGS84 +lon_0=", params$longitude, " +y_0=", params$latitude))
+    global_crs <- "EPSG:4326"
+    local_crs <- paste0("+proj=webmerc +datum=WGS84 +lon_0=", params$longitude, " +y_0=", params$latitude)
 
     # for now, unproject just the pval_prop_case matrix
     # extract proportion significant
@@ -289,22 +289,25 @@ plot_gis <- function(results, params){
     }
         
     lrr_narm <- na.omit(pvalprop) # remove NAs
-    sp::coordinates(lrr_narm) <- ~ x + y # coordinates
-    sp::gridded(lrr_narm) <- TRUE # gridded
-    pvalprop_raster <- raster::raster(lrr_narm) # convert to raster
-        
-    raster::crs(pvalprop_raster) <- local_crs # todo: change to local UTM
+    pvalprop_raster <- terra::rast(lrr_narm, type = "xyz", crs = local_crs) # convert to raster
+    names(pvalprop_raster) <- "layer"
         
     # Categorized raster by power threshold into two groups 
     ## Level 1 : Insufficiently powered
     ## Level 2: Sufficiently powered
-    pvalprop_raster_reclass <- raster::cut(pvalprop_raster,
-                                        breaks = c(-Inf, params$p_thresh, Inf))
+    pvalprop_raster_reclass <- terra::classify(pvalprop_raster,
+        rcl = matrix(c(-Inf, params$p_thresh, 1, params$p_thresh, Inf, 2), ncol = 3, byrow = TRUE))
         
-    pvalprop_raster_poly <- raster::rasterToPolygons(pvalprop_raster_reclass, dissolve = TRUE) # convert to polygons
-    pvalprop_poly_global_proj <- sp::spTransform(pvalprop_raster_poly, global_crs) # unproject (WGS84) 
-        
-    pvalprop_poly_global_proj
+    pvalprop_raster_poly <- terra::as.polygons(pvalprop_raster_reclass, dissolve = TRUE) # convert to polygons
+    pvalprop_poly_sf <- sf::st_as_sf(terra::project(pvalprop_raster_poly, global_crs)) # unproject (WGS84)
+
+    # Return as a GeoJSON FeatureCollection for client consumption
+    tmp_file <- tempfile(fileext = ".geojson")
+    on.exit(unlink(tmp_file))
+    sf::st_write(pvalprop_poly_sf, tmp_file, quiet = TRUE)
+    result <- jsonlite::fromJSON(tmp_file, simplifyVector = FALSE)
+    result$bbox <- as.numeric(sf::st_bbox(pvalprop_poly_sf))
+    result
 }
 
 replot <- function(params) {

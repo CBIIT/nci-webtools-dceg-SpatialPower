@@ -2,12 +2,9 @@ FROM public.ecr.aws/amazonlinux/amazonlinux:2023
 
 RUN dnf -y update \
  && dnf -y install \
-    gcc-c++ \
     httpd \
-    make \
     nodejs \
     npm \
-    python3-devel \
  && dnf clean all
 
 RUN mkdir /client

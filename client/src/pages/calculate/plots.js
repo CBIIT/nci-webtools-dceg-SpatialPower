@@ -5,7 +5,7 @@ import Tab from 'react-bootstrap/Tab';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button'
 import { useSelector, useDispatch } from 'react-redux';
-import { Map, TileLayer, Polygon } from 'react-leaflet';
+import { Map, TileLayer, GeoJSON } from 'react-leaflet';
 import JSZip from 'jszip'
 import saveAs from 'file-saver';
 import html2canvas from 'html2canvas';
@@ -114,8 +114,8 @@ export function Plots() {
                 let map = mapRef.current.leafletElement;
                 map.invalidateSize();
                 map.fitBounds([
-                    [mapData.bbox[1][0], mapData.bbox[0][0]],
-                    [mapData.bbox[1][1], mapData.bbox[0][1]]
+                    [mapData.bbox[1], mapData.bbox[0]],
+                    [mapData.bbox[3], mapData.bbox[2]]
                 ])
             }, 0);
         }
@@ -133,13 +133,11 @@ export function Plots() {
         { value: 2, label: 'Sufficient', color: params.suff_color },
     ];
 
-    const polygons = (mapData ? mapData.polygons : []).map(({ Polygons }, i) => {
-        const data = mapData.data[i];
-        const category = categories.find(e => e.value === data.layer);
+    const gisStyle = (feature) => {
+        const category = categories.find(e => e.value === feature.properties.layer);
         const color = category ? category.color : params.insuff_color;
-        const paths = Polygons.map(p => p.coords.map(([lng, lat]) => [lat, lng]))
-        return { paths, color };
-    });
+        return { color, fillColor: color, opacity: 0, fillOpacity: 0.4 };
+    };
 
     if (!plots || !plots.length) return null;
 
@@ -234,7 +232,7 @@ export function Plots() {
                                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
                                     maxZoom={19}
                                 />
-                                {polygons.map(p => <Polygon positions={p.paths} color={p.color} opacity={0} fillOpacity={0.4} />)}
+                                {mapData && <GeoJSON key={id} data={mapData} style={gisStyle} />}
                             </Map>
                             {categories.map(({ label, color }) => <span className="d-inline-block mx-3 mt-1">
                                 <span className="d-inline-block mr-1" style={{
