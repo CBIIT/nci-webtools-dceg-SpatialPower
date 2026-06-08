@@ -31,13 +31,13 @@ export function Home() {
             <p>
             Spatial Power is a suite of web-based applications designed to easily and efficiently perform power calculations for select spatial statistics. Each included application is specialized for a specific statistic. Spatial data are randomly generated using study-specific parameters and a statistic is calculated iteratively to assess statistical power. The applications provide graphical presentations of both simulated data and power -- including a Geographic Information System overlay.
             </p>
-            <h4 style={{marginTop:'2.5rem'}}>Credits</h4>
+            <h2 className="h4" style={{marginTop:'2.5rem'}}>Credits</h2>
             <p>
-                Spatial Power was developed by <a href='https://dceg.cancer.gov/fellowship-training/fellowship-experience/meet-fellows/oeeb/buller-ian' target='_blank'>Ian Buller</a> and <a href='https://dceg.cancer.gov/fellowship-training/fellowship-experience/meet-fellows/iteb/brown-derek' target='_blank'>Derek Brown</a> in collaboration with NCI's Center for Biomedical Informatics and Information Technology (CBIIT).
-                Support comes from the <a href='https://dceg.cancer.gov/' target='_blank'>Division of Cancer Epidemiology and Genetics</a> Informatics Tool Challenge and the <a href='https://cpfp.cancer.gov/' target="_blank">Cancer Prevention Fellowship Program</a> Trans-Fellowship Research Award.
+                Spatial Power was developed by <a className='font-weight-bold' href='https://dceg.cancer.gov/fellowship-training/fellowship-experience/meet-fellows/oeeb/buller-ian' target='_blank'>Ian Buller</a> and <a className='font-weight-bold' href='https://dceg.cancer.gov/fellowship-training/fellowship-experience/meet-fellows/iteb/brown-derek' target='_blank'>Derek Brown</a> in collaboration with NCI's Center for Biomedical Informatics and Information Technology (CBIIT).
+                Support comes from the <a className='font-weight-bold' href='https://dceg.cancer.gov/' target='_blank'>Division of Cancer Epidemiology and Genetics</a> Informatics Tool Challenge and the <a className='font-weight-bold' href='https://cpfp.cancer.gov/' target="_blank">Cancer Prevention Fellowship Program</a> Trans-Fellowship Research Award.
             </p>
             <p>
-                Questions or comments? Contact us via <a href='mailto:NCISpatialPowerWebAdmin@nih.gov?subject=Spatial Power'>email.</a>
+                Questions or comments? Contact us via <a className='font-weight-bold' href='mailto:NCISpatialPowerWebAdmin@nih.gov?subject=Spatial Power'>email.</a>
             </p>
         </div>
         {/*
