@@ -41,7 +41,7 @@ export function About() {
             Each module can be accessed by clicking on the desired tab at the top of all Spatial Power pages. Below is a description of each spatial statistic, the required user-specified inputs, and an explanation of its returned output:
         </p>
 
-        <div style={{ paddingLeft: '40px' }}>
+        <div className="pl-5">
             <p><b className='underline' id='sparrpowR'>sparrpowR</b>: Calculate statistical power for the spatial relative risk (SRR) function, which is a spatial cluster detection technique that compares two groups of point-level data.
             Users are able to specify the expected study design parameters, iteratively calculate the SRR function, and visualize the power analysis output.
             The function smooths the relative risk over a 128 x 128 (spatial units depending on the chosen study window) gridded surface with a ‘uniform’ edge correction.
