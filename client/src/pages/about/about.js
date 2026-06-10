@@ -12,12 +12,12 @@ export function About() {
         <ul style={{ listStyle: 'none' }}>
             <li><HashLink className='h6' smooth to='/about/#SpatialData'>Spatial Data</HashLink></li>
             <li><HashLink className='h6' smooth to='/about/#PowerAnalyses'>Power Analyses</HashLink></li>
-            <HashLink className='h6' smooth to='/about/#Modules'>Modules</HashLink>
+            <li><HashLink className='h6' smooth to='/about/#Modules'>Modules</HashLink></li>
             <li>
                 <ol>
-                    <HashLink className='h6' smooth to='/about/#sparrpowR'>sparrpowR</HashLink>
+                    <li><HashLink className='h6' smooth to='/about/#sparrpowR'>sparrpowR</HashLink></li>
                 </ol>
-            </li>   
+            </li>
         </ul>
 
         <h2 id='SpatialData' className='h5'>Spatial Data</h2>
@@ -41,12 +41,12 @@ export function About() {
             Each module can be accessed by clicking on the desired tab at the top of all Spatial Power pages. Below is a description of each spatial statistic, the required user-specified inputs, and an explanation of its returned output:
         </p>
 
-        <ul>
+        <div className="pl-5">
             <p><b className='underline' id='sparrpowR'>sparrpowR</b>: Calculate statistical power for the spatial relative risk (SRR) function, which is a spatial cluster detection technique that compares two groups of point-level data.
             Users are able to specify the expected study design parameters, iteratively calculate the SRR function, and visualize the power analysis output.
             The function smooths the relative risk over a 128 x 128 (spatial units depending on the chosen study window) gridded surface with a ‘uniform’ edge correction.
             For advanced features, see the <a className="font-weight-bold" href="https://cran.r-project.org/web/packages/sparrpowR/index.html" target='_blank'>sparrpowR</a> package available on the Comprehensive R Archive Network. </p>
-            <ul>
+            <div style={{ paddingLeft: '40px' }}>
                 <p>
                     <t className='underline'>Statistic</t>:
                     <div>The spatial relative risk (SRR) function compares two groups of point-level data and detects where the spatial density of a group is statistically different from the other.
@@ -114,8 +114,8 @@ export function About() {
                         <li>- Plot 4 (optional): Overlay of Plot 3 output on an Open Streets Map baselayer.</li>
                     </ul>
                 </p>
-            </ul>
-        </ul>
+            </div>
+        </div>
 
         <h2 id='References' className="h5">References</h2>
         <ol>

@@ -3,6 +3,7 @@ import React from 'react';
 export function Citations() {
 
     return <div className="container py-4">
+        <h1 className="mb-4">Citations</h1>
         <div className="container lead mb-4" style={{minHeight: '50rem'}}>
             <p>
                 Thanks for using Spatial Power! If you use Spatial Power in any publication please cite the Spatial Power manuscript and any relevant module publications:
