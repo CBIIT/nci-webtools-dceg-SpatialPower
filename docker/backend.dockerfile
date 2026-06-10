@@ -6,6 +6,7 @@ RUN dnf -y update \
     npm \
     tar \
     gzip \
+    curl \
     geos \
     proj \
     gdal310 \
