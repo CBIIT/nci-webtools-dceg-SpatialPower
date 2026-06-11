@@ -367,7 +367,7 @@ export function InputForm({
                     <a
                         className='col-md-9'
                         href="assets/files/Washington_DC_Boundary.geojson"
-                        target="_blank"
+                        target="_blank" rel='noopener noreferrer'
                         download
                         style={{ textAlign: 'right' }}
                     >
