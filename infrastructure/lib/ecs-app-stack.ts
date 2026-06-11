@@ -190,7 +190,7 @@ export class EcsAppStack extends cdk.Stack {
         enabled: true,
         path: healthCheckPath,
         port: String(props.containerPort),
-        healthyHttpCodes: "200-399",
+        healthyHttpCodes: "200-499",
       },
     });
 

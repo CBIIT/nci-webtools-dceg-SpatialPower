@@ -215,7 +215,7 @@ class EcsAppStack(Stack):
                 enabled=True,
                 path=health_check_path,
                 port=str(container_port),
-                healthy_http_codes="200-399",
+                healthy_http_codes="200-499",
             ),
         )
 
