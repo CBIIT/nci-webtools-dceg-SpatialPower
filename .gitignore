@@ -2,3 +2,11 @@ node_modules
 config.json
 results
 logs
+
+# --- serverless (ECS Fargate) CDK ---
+**/cdk.out/
+**/cdk.env
+**/.venv/
+**/__pycache__/
+infrastructure/*.js
+infrastructure/*.d.ts

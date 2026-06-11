@@ -1,0 +1,188 @@
+family: "${ECS_WEB_TASK}"
+networkMode: awsvpc
+cpu: "${ECS_WEB_TASK_CPU_UNITS}"
+memory: "${ECS_WEB_TASK_MEMORY_UNITS}"
+executionRoleArn: "${ROLE_ARN}"
+taskRoleArn: "${ROLE_ARN}"
+requiresCompatibilities:
+  - FARGATE
+# SpatialPower is stateless on disk: inputs/outputs flow through S3 and async
+# jobs through SQS, so there are no EFS volumes. The local results/ and logs/
+# folders are task-ephemeral (rebuilt from S3 on demand).
+containerDefinitions:
+  # FireLens (fluent-bit) sidecar: routes container stdout/stderr to Datadog.
+  - name: logs
+    image: public.ecr.aws/aws-observability/aws-for-fluent-bit:stable
+    essential: true
+    firelensConfiguration:
+      type: fluentbit
+    memoryReservation: 50
+    logConfiguration:
+      logDriver: awslogs
+      options:
+        awslogs-group: "/analysistools/${TIER}/${APP}/web"
+        awslogs-region: "${AWS_REGION}"
+        awslogs-stream-prefix: logs
+
+  # Node backend (app.js): accepts job submissions, enqueues to SQS, serves
+  # results fetched from S3. config.json is rendered at start from these env
+  # vars by docker/backend-entrypoint.sh.
+  - name: backend
+    image: "${BACKEND_IMAGE_LATEST}"
+    essential: true
+    portMappings:
+      - protocol: tcp
+        containerPort: ${BACKEND_CONTAINER_PORT}
+    environment:
+      - name: NODE_ENV
+        value: production
+      - name: SERVER_PORT
+        value: "${BACKEND_CONTAINER_PORT}"
+      - name: LOGS_FOLDER
+        value: /server/logs
+      - name: RESULTS_FOLDER
+        value: /server/results
+      - name: LOG_LEVEL
+        value: info
+      - name: AWS_REGION
+        value: "${AWS_REGION}"
+      - name: QUEUE_VISIBILITY_TIMEOUT
+        value: "900"
+      - name: QUEUE_POLL_INTERVAL
+        value: "60"
+      - name: S3_BUCKET
+        value: "${S3_BUCKET}"
+      - name: S3_INPUT_PREFIX
+        value: "${APP}/input/"
+      - name: S3_OUTPUT_PREFIX
+        value: "${APP}/output/"
+    secrets:
+      - name: QUEUE_NAME
+        valueFrom: /analysistools/${TIER}/${APP}/queue_name
+      - name: QUEUE_ERROR_URL
+        valueFrom: /analysistools/${TIER}/${APP}/queue_error_url
+      - name: EMAIL_ADMIN
+        valueFrom: /analysistools/${TIER}/${APP}/email_admin
+      - name: EMAIL_SENDER
+        valueFrom: /analysistools/${TIER}/${APP}/email_sender
+      - name: EMAIL_BASE_URL
+        valueFrom: /analysistools/${TIER}/${APP}/base_url
+      - name: EMAIL_SMTP_HOST
+        valueFrom: /analysistools/${TIER}/${APP}/email_smtp_host
+      - name: EMAIL_SMTP_PORT
+        valueFrom: /analysistools/${TIER}/${APP}/email_smtp_port
+    logConfiguration:
+      logDriver: awsfirelens
+      options:
+        Name: datadog
+        tls: "on"
+        tls.verify: "off"
+        dd_service: "${TIER}-${APP}-backend"
+        dd_source: "nodejs"
+        dd_tags: "project:${APP} tier:${TIER}"
+        provider: ecs
+      secretOptions:
+        - name: Host
+          valueFrom: /analysistools/${TIER}/datadog/log_endpoint_host
+        - name: apikey
+          valueFrom: /analysistools/${TIER}/datadog/api_key
+
+  # Queue worker (queue-worker.js): polls the SQS work queue, runs the sparrpowR
+  # R computation, uploads results to S3. Same image as the backend, different
+  # command. Not an ALB target and has no port.
+  - name: queue
+    image: "${BACKEND_IMAGE_LATEST}"
+    essential: true
+    command: ["node", "queue-worker.js"]
+    environment:
+      - name: NODE_ENV
+        value: production
+      - name: LOGS_FOLDER
+        value: /server/logs
+      - name: RESULTS_FOLDER
+        value: /server/results
+      - name: LOG_LEVEL
+        value: info
+      - name: AWS_REGION
+        value: "${AWS_REGION}"
+      - name: QUEUE_VISIBILITY_TIMEOUT
+        value: "900"
+      - name: QUEUE_POLL_INTERVAL
+        value: "60"
+      - name: S3_BUCKET
+        value: "${S3_BUCKET}"
+      - name: S3_INPUT_PREFIX
+        value: "${APP}/input/"
+      - name: S3_OUTPUT_PREFIX
+        value: "${APP}/output/"
+    secrets:
+      - name: QUEUE_NAME
+        valueFrom: /analysistools/${TIER}/${APP}/queue_name
+      - name: QUEUE_ERROR_URL
+        valueFrom: /analysistools/${TIER}/${APP}/queue_error_url
+      - name: EMAIL_ADMIN
+        valueFrom: /analysistools/${TIER}/${APP}/email_admin
+      - name: EMAIL_SENDER
+        valueFrom: /analysistools/${TIER}/${APP}/email_sender
+      - name: EMAIL_BASE_URL
+        valueFrom: /analysistools/${TIER}/${APP}/base_url
+      - name: EMAIL_SMTP_HOST
+        valueFrom: /analysistools/${TIER}/${APP}/email_smtp_host
+      - name: EMAIL_SMTP_PORT
+        valueFrom: /analysistools/${TIER}/${APP}/email_smtp_port
+    logConfiguration:
+      logDriver: awsfirelens
+      options:
+        Name: datadog
+        tls: "on"
+        tls.verify: "off"
+        dd_service: "${TIER}-${APP}-queue"
+        dd_source: "nodejs"
+        dd_tags: "project:${APP} tier:${TIER}"
+        provider: ecs
+      secretOptions:
+        - name: Host
+          valueFrom: /analysistools/${TIER}/datadog/log_endpoint_host
+        - name: apikey
+          valueFrom: /analysistools/${TIER}/datadog/api_key
+
+  # Apache frontend: serves the built client and reverse-proxies
+  # /spatial-power/api -> the backend over the shared task network (localhost).
+  - name: frontend
+    image: "${FRONTEND_IMAGE_LATEST}"
+    essential: true
+    dependsOn:
+      - containerName: backend
+        condition: START
+    portMappings:
+      - protocol: tcp
+        containerPort: ${WEB_CONTAINER_PORT}
+    environment:
+      - name: API_HOST
+        value: "http://localhost:${BACKEND_CONTAINER_PORT}"
+    logConfiguration:
+      logDriver: awsfirelens
+      options:
+        Name: datadog
+        tls: "on"
+        tls.verify: "off"
+        dd_service: "${TIER}-${APP}-frontend"
+        dd_source: "httpd"
+        dd_tags: "project:${APP} tier:${TIER}"
+        provider: ecs
+      secretOptions:
+        - name: Host
+          valueFrom: /analysistools/${TIER}/datadog/log_endpoint_host
+        - name: apikey
+          valueFrom: /analysistools/${TIER}/datadog/api_key
+tags:
+  - key: Project
+    value: dceg-analysistools
+  - key: ApplicationName
+    value: "${APP}"
+  - key: ResourceName
+    value: "${TIER}-${APP}-web-task"
+  - key: EnvironmentTier
+    value: "${ENVIRONMENT_TIER}"
+  - key: ResourceFunction
+    value: compute
