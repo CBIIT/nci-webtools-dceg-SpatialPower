@@ -1,8 +1,5 @@
-const path = require("path");
 const util = require("util");
-const fs = require("fs");
 const { createLogger, format, transports } = require("winston");
-require("winston-daily-rotate-file");
 
 function objectToString(obj) {
   return ["string", "number"].includes(typeof obj)
@@ -20,9 +17,10 @@ function formatLogMessage({ label, timestamp, level, message }) {
   ].join(" - ");
 }
 
-function getLogger(name, { folder, level }) {
-  fs.mkdirSync(folder, { recursive: true });
-
+// Logs go to stdout/stderr only; on Fargate the FireLens (fluent-bit) sidecar
+// ships them to Datadog. No on-disk log files / rotation (the `logs` container
+// forwards stdout to Datadog, and nothing persists the container filesystem).
+function getLogger(name, { level } = {}) {
   return new createLogger({
     level: level || "info",
     format: format.combine(
@@ -30,18 +28,7 @@ function getLogger(name, { folder, level }) {
       format.label({ label: name }),
       format.printf(formatLogMessage)
     ),
-    transports: [
-      new transports.Console(),
-      new transports.DailyRotateFile({
-        filename: path.resolve(folder, `${name}-%DATE%.log`),
-        datePattern: "YYYY-MM-DD-HH",
-        zippedArchive: false,
-        maxSize: "1024m",
-        timestamp: true,
-        maxFiles: "1d",
-        prepend: true,
-      }),
-    ],
+    transports: [new transports.Console()],
     exitOnError: false,
   });
 }

@@ -23,7 +23,6 @@ if [ -f "$CONFIG_PATH" ]; then
 else
   : "${SERVER_PORT:=8000}"
   : "${CLIENT_FOLDER:=../client/build}"
-  : "${LOGS_FOLDER:=/server/logs}"
   : "${LOG_LEVEL:=info}"
   : "${RESULTS_FOLDER:=/server/results}"
   : "${AWS_REGION:=us-east-1}"
@@ -40,8 +39,9 @@ else
   : "${S3_INPUT_PREFIX:=}"
   : "${S3_OUTPUT_PREFIX:=}"
 
-  # Ensure runtime directories exist (task-ephemeral storage).
-  mkdir -p "$LOGS_FOLDER" "$RESULTS_FOLDER"
+  # Ensure runtime directories exist (task-ephemeral storage). No logs folder:
+  # logs go to stdout → FireLens → Datadog.
+  mkdir -p "$RESULTS_FOLDER"
 
   cat > "$CONFIG_PATH" <<EOF
 {
@@ -50,7 +50,6 @@ else
     "static": "${CLIENT_FOLDER}"
   },
   "logs": {
-    "folder": "${LOGS_FOLDER}",
     "level": "${LOG_LEVEL}"
   },
   "results": {

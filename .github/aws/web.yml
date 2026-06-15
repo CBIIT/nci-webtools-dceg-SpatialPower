@@ -38,8 +38,6 @@ containerDefinitions:
         value: production
       - name: SERVER_PORT
         value: "${BACKEND_CONTAINER_PORT}"
-      - name: LOGS_FOLDER
-        value: /server/logs
       - name: RESULTS_FOLDER
         value: /server/results
       - name: LOG_LEVEL
@@ -97,8 +95,6 @@ containerDefinitions:
     environment:
       - name: NODE_ENV
         value: production
-      - name: LOGS_FOLDER
-        value: /server/logs
       - name: RESULTS_FOLDER
         value: /server/results
       - name: LOG_LEVEL

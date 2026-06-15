@@ -3,8 +3,8 @@
 One-time setup required before the `deploy-serverless-*` GitHub Actions
 workflows can run. This covers the **GitHub-side** configuration and the
 **AWS-side** prerequisites the workflows assume already exist. The application
-code and IaC (`infrastructure/`, `infrastructure-python/`) are already in the
-repo; this is the glue that lets Actions assume a role, read config, and deploy.
+code and the TypeScript CDK IaC (`infrastructure/`) are already in the repo; this
+is the glue that lets Actions assume a role, read config, and deploy.
 
 > Conventions used below
 > - `<AWS_ACCOUNT_ID>` — the 12-digit account for the tier you're deploying to
@@ -185,10 +185,10 @@ aws iam put-role-policy \
 
 ## 3. Per-tier `cdk.env` in S3
 
-The CDK workflows download `s3://<CICD_BUCKET>/env/<tier>/spatial-power/cdk.env`,
-`source` it, and export it into the job environment. Build it from
-[`infrastructure/cdk.env.example`](../infrastructure/cdk.env.example) (the Python
-stack reads the identical variable set). Upload one per tier.
+The CDK workflows download `s3://<CICD_BUCKET>/env/<tier>/spatial-power/cdk.env`
+and load it into the job environment (key=value lines). Build it from
+[`infrastructure/cdk.env.example`](../infrastructure/cdk.env.example). Upload one
+per tier.
 
 ```sh
 # example for dev — fill in the real imported-resource IDs from the platform team
@@ -248,8 +248,7 @@ Notes:
 
 ## 4. First-run order
 
-Run from the **Actions** tab (each is "Run workflow", pick the tier — and for
-the CDK ones, the `iac_language`: `typescript` default, or `python`):
+Run from the **Actions** tab (each is "Run workflow", pick the tier):
 
 1. **Deploy Serverless ECR** → creates the `spatial-power` ECR repository.
 2. **Deploy Serverless Infrastructure** → ECS service, the SQS work + error
