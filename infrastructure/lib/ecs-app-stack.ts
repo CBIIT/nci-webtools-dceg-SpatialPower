@@ -102,15 +102,7 @@ export class EcsAppStack extends cdk.Stack {
       }
     );
 
-    // -------------------------------------------------------------------------
-    // Async job queues (SQS).
-    //
-    // SpatialPower submits long-running sparrpowR jobs to a work queue; the
-    // queue-worker container polls it, runs the R computation, and writes
-    // results to S3. Failed jobs are forwarded to a separate error queue.
-    // Both are FIFO queues because the app supplies MessageGroupId /
-    // MessageDeduplicationId on every send (see server/app.js, queue-worker.js).
-    // -------------------------------------------------------------------------
+    // Async job queues (FIFO)
     const errorQueue = new sqs.Queue(this, "ErrorQueue", {
       queueName: `${tier}-${appName}-error.fifo`,
       fifo: true,
@@ -127,12 +119,6 @@ export class EcsAppStack extends cdk.Stack {
       visibilityTimeout: cdk.Duration.seconds(900),
     });
 
-    // Grant the shared task role access to the queues. APP_ROLE_ARN is the
-    // shared analysistools task role, imported above with fromRoleArn (mutable
-    // by default), so CDK attaches scoped inline policies for THESE queues only
-    // — the same mechanism that already adds the per-app CloudWatch log-group
-    // grants to that role. The backend sends to the work queue; the worker
-    // consumes the work queue and forwards failures to the error queue.
     workQueue.grantSendMessages(taskRole);
     workQueue.grantConsumeMessages(taskRole);
     errorQueue.grantSendMessages(taskRole);
@@ -144,16 +130,7 @@ export class EcsAppStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    // -------------------------------------------------------------------------
-    // Placeholder task definition.
-    //
-    // As in the analysistools-portal reference stack, the real task definition
-    // (frontend + backend + queue + firelens) is rendered and registered by the
-    // deploy-app GitHub workflow from .github/aws/web.yml. This placeholder only
-    // exists so the service can be created/updated by CDK; the CfnService
-    // override below pins the service to the task-definition *family* so CDK
-    // never reverts the workflow-registered revision.
-    // -------------------------------------------------------------------------
+    // Placeholder task definition; real one registered by deploy-app workflow
     const taskDef = new ecs.FargateTaskDefinition(this, "WebTaskDef", {
       family: `${tier}-${appName}-${appService}`,
       cpu: props.cpu,

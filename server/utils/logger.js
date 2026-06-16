@@ -17,9 +17,7 @@ function formatLogMessage({ label, timestamp, level, message }) {
   ].join(" - ");
 }
 
-// Logs go to stdout/stderr only; on Fargate the FireLens (fluent-bit) sidecar
-// ships them to Datadog. No on-disk log files / rotation (the `logs` container
-// forwards stdout to Datadog, and nothing persists the container filesystem).
+// Logs to stdout/stderr only
 function getLogger(name, { level } = {}) {
   return new createLogger({
     level: level || "info",

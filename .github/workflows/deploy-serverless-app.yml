@@ -1,10 +1,6 @@
 name: Deploy Serverless App
 
-# Serverless (ECS Fargate) application deployment: build & push the frontend and
-# backend images, render the task definition (.github/aws/web.yml), register it,
-# and force a new ECS service deployment. This is the data-plane workflow: it
-# consumes the SSM parameters published by Deploy Serverless Infrastructure.
-# Distinct from the EC2 pipeline (spatial-power-deploy.yml).
+# ECS Fargate application deployment: build images, register task def, deploy
 
 on:
   workflow_dispatch:
@@ -40,8 +36,7 @@ jobs:
       ECS_WEB_TASK_MEMORY_UNITS: 2048
       S3_BUCKET: nci-cbiit-dceg-dev
       TIER: ${{ inputs.tier }}
-      # dev/qa build "development" images; stage/prod build "release" images
-      # (matches the EC2 pipeline convention and the sibling Fargate apps).
+      # dev/qa -> development images; stage/prod -> release images
       IMAGE_TIER: ${{ contains(fromJson('["dev","qa"]'), inputs.tier) && 'development' || 'release' }}
       CICD_ROLE_ARN: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/power-user-github-actions-cicd
 

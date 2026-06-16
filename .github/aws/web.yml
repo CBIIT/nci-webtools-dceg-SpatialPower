@@ -6,11 +6,8 @@ executionRoleArn: "${ROLE_ARN}"
 taskRoleArn: "${ROLE_ARN}"
 requiresCompatibilities:
   - FARGATE
-# SpatialPower is stateless on disk: inputs/outputs flow through S3 and async
-# jobs through SQS, so there are no EFS volumes. The local results/ and logs/
-# folders are task-ephemeral (rebuilt from S3 on demand).
 containerDefinitions:
-  # FireLens (fluent-bit) sidecar: routes container stdout/stderr to Datadog.
+  # FireLens (fluent-bit) sidecar
   - name: logs
     image: public.ecr.aws/aws-observability/aws-for-fluent-bit:stable
     essential: true
@@ -24,9 +21,7 @@ containerDefinitions:
         awslogs-region: "${AWS_REGION}"
         awslogs-stream-prefix: logs
 
-  # Node backend (app.js): accepts job submissions, enqueues to SQS, serves
-  # results fetched from S3. config.json is rendered at start from these env
-  # vars by docker/backend-entrypoint.sh.
+  # Node backend (app.js)
   - name: backend
     image: "${BACKEND_IMAGE_LATEST}"
     essential: true
@@ -85,9 +80,7 @@ containerDefinitions:
         - name: apikey
           valueFrom: /analysistools/${TIER}/datadog/api_key
 
-  # Queue worker (queue-worker.js): polls the SQS work queue, runs the sparrpowR
-  # R computation, uploads results to S3. Same image as the backend, different
-  # command. Not an ALB target and has no port.
+  # Queue worker (queue-worker.js)
   - name: queue
     image: "${BACKEND_IMAGE_LATEST}"
     essential: true
@@ -142,8 +135,7 @@ containerDefinitions:
         - name: apikey
           valueFrom: /analysistools/${TIER}/datadog/api_key
 
-  # Apache frontend: serves the built client and reverse-proxies
-  # /spatial-power/api -> the backend over the shared task network (localhost).
+  # Apache frontend
   - name: frontend
     image: "${FRONTEND_IMAGE_LATEST}"
     essential: true

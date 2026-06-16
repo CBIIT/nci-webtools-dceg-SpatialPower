@@ -1,19 +1,5 @@
 #!/bin/sh
-# Backend/queue container entrypoint for SpatialPower.
-#
-# Renders server/config.json from environment variables, then execs the given
-# command. The same image runs both the backend (CMD: npm start -> node app.js)
-# and the queue worker (command override: node queue-worker.js); both read
-# ./config.json via require(), so this entrypoint materializes it once.
-#
-# Two topologies share this image:
-#   1. Serverless / Fargate: the task definition supplies these env vars and we
-#      render config.json here (no host to bind-mount from).
-#   2. Local dev / EC2: if config.json is already present (e.g. bind-mounted),
-#      we leave it untouched so existing local flows keep working.
-#
-# AWS credentials are intentionally left blank: the ECS task role provides them
-# automatically to the aws-sdk via the container credential endpoint.
+# Renders config.json from env vars (unless already present), then execs the command.
 set -e
 
 CONFIG_PATH=/server/config.json
@@ -39,8 +25,6 @@ else
   : "${S3_INPUT_PREFIX:=}"
   : "${S3_OUTPUT_PREFIX:=}"
 
-  # Ensure runtime directories exist (task-ephemeral storage). No logs folder:
-  # logs go to stdout → FireLens → Datadog.
   mkdir -p "$RESULTS_FOLDER"
 
   cat > "$CONFIG_PATH" <<EOF

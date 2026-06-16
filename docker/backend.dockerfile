@@ -35,9 +35,6 @@ RUN npm install
 
 COPY server .
 
-# Render config.json from environment at start (Fargate has no host bind-mount
-# for config.json), then run the given command. The same image serves both the
-# backend (default CMD) and the queue worker (command override in web.yml).
 COPY docker/backend-entrypoint.sh /usr/local/bin/backend-entrypoint.sh
 RUN chmod +x /usr/local/bin/backend-entrypoint.sh
 

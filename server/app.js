@@ -197,7 +197,7 @@ app.listen(config.server.port, () => {
     AWS.config.update(config.aws);
   }
 
-  // create required folders (logs go to stdout, not a folder)
+  // create required folders
   for (let folder of [config.results.folder]) {
     fs.mkdirSync(folder, { recursive: true });
   }
