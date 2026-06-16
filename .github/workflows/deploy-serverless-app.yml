@@ -34,7 +34,7 @@ jobs:
       BACKEND_CONTAINER_PORT: 8000
       ECS_WEB_TASK_CPU_UNITS: 1024
       ECS_WEB_TASK_MEMORY_UNITS: 2048
-      S3_BUCKET: nci-cbiit-dceg-dev
+      S3_BUCKET: ${{ vars.S3_BUCKET }}
       TIER: ${{ inputs.tier }}
       CICD_ROLE_ARN: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/power-user-github-actions-cicd
 
