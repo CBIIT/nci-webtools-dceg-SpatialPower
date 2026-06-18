@@ -167,7 +167,8 @@ export class EcsAppStack extends cdk.Stack {
         enabled: true,
         path: healthCheckPath,
         port: String(props.containerPort),
-        healthyHttpCodes: "200-499",
+        // healthyHttpCodes omitted — defaults to "200" so a broken SPA returning
+        // 4xx is treated as unhealthy and pulled from rotation.
       },
     });
 
