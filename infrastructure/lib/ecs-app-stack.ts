@@ -267,11 +267,6 @@ export class EcsAppStack extends cdk.Stack {
       stringValue: workQueue.queueName,
     });
 
-    new ssm.StringParameter(this, "SsmQueueUrl", {
-      parameterName: `/${appNamespace}/${tier}/${appName}/queue_url`,
-      stringValue: workQueue.queueUrl,
-    });
-
     new ssm.StringParameter(this, "SsmQueueErrorUrl", {
       parameterName: `/${appNamespace}/${tier}/${appName}/queue_error_url`,
       stringValue: errorQueue.queueUrl,

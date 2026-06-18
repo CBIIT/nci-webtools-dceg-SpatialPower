@@ -6,8 +6,5 @@ logs
 **/cdk.out/
 **/cdk.env
 **/cdk.context.json
-**/.venv/
-**/__pycache__/
-*.pyc
 infrastructure/*.js
 infrastructure/*.d.ts

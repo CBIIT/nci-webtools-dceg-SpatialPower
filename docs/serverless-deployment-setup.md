@@ -274,7 +274,6 @@ The app workflow reads these (either CDK language publishes the same set):
 /analysistools/<tier>/spatial-power/ecs_web_service
 /analysistools/<tier>/spatial-power/role_arn
 /analysistools/<tier>/spatial-power/queue_name
-/analysistools/<tier>/spatial-power/queue_url
 /analysistools/<tier>/spatial-power/queue_error_url
 ```
 
@@ -312,8 +311,10 @@ aws ssm put-parameter --name /analysistools/dev/spatial-power/email_smtp_host \
 - **`Unable to download cdk.env` / access denied** → `CICD_BUCKET` var wrong, the
   object isn't at `env/<tier>/spatial-power/cdk.env`, or the role lacks `s3:GetObject`.
 - **Frontend container starts with an empty image / pull error** → the task def
-  expected `FRONTEND_IMAGE_LATEST`; confirm the app workflow exported it (it
-  does — this was a fix over the original fargate workflow).
+  references the immutable `FRONTEND_IMAGE` / `BACKEND_IMAGE` (`:<service>-<timestamp>`)
+  tags so each ECS revision (and any circuit-breaker rollback) pins an exact image;
+  confirm the app workflow exported them. `:<service>-latest` is still pushed for
+  build cache only.
 - **`This stack uses assets, so the toolkit stack must be deployed` (bootstrap)**
   → run `cdk bootstrap aws://<AWS_ACCOUNT_ID>/us-east-1` once.
 - **ALB rule priority conflict** → pick a unique `LISTENER_RULE_PRIORITY`.
