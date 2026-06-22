@@ -190,7 +190,14 @@ export class EcsAppStack extends cdk.Stack {
       serviceName: `${tier}-${appName}-${appService}`,
       cluster,
       taskDefinition: taskDef,
-      desiredCount: props.desiredCount,
+      // Create the placeholder service with 0 tasks. The nginx:alpine placeholder
+      // returns 404 at the health-check path and the matcher is strict 200, so a
+      // running placeholder would trip the deployment circuit breaker on first
+      // CREATE. deploy-app scales the service to the real count (its
+      // `update-service --desired-count 1`) with the real image, which is healthy.
+      // NOTE: infra updates reset the count to 0 — always run deploy-app after
+      // deploy-infrastructure (the documented infra -> app order).
+      desiredCount: 0,
       securityGroups,
       vpcSubnets: { subnets },
       assignPublicIp: false,
@@ -203,13 +210,14 @@ export class EcsAppStack extends cdk.Stack {
 
     service.attachToApplicationTargetGroup(tg);
 
-    // Prevent CDK from reverting task definitions registered by deploy-app workflow
+    // Pin the service to the task-definition family so CDK doesn't revert the
+    // revisions deploy-app registers. (DesiredCount stays at the template's 0
+    // here; deploy-app sets the running count via update-service.)
     const cfnService = service.node.defaultChild as ecs.CfnService;
     cfnService.addPropertyOverride(
       "TaskDefinition",
       `${tier}-${appName}-${appService}`
     );
-    cfnService.addPropertyDeletionOverride("DesiredCount");
 
     // Scheduled auto-scaling (non-prod: scale to 0 nights/weekends)
     if (props.nonProdSchedule) {
