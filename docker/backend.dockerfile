@@ -35,4 +35,10 @@ RUN npm install
 
 COPY server .
 
-CMD npm start
+COPY docker/backend-entrypoint.sh /usr/local/bin/backend-entrypoint.sh
+RUN chmod +x /usr/local/bin/backend-entrypoint.sh
+
+EXPOSE 8000
+
+ENTRYPOINT ["/usr/local/bin/backend-entrypoint.sh"]
+CMD ["npm", "start"]
