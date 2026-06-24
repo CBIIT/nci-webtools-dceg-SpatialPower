@@ -35,8 +35,6 @@ export function Home() {
             <p>
                 Spatial Power was developed by <a className='font-weight-bold' href='https://dceg.cancer.gov/fellowship-training/fellowship-experience/meet-fellows/oeeb/buller-ian' target='_blank' rel='noopener noreferrer'>Ian Buller</a> and <a className='font-weight-bold' href='https://dceg.cancer.gov/fellowship-training/fellowship-experience/meet-fellows/iteb/brown-derek' target='_blank' rel='noopener noreferrer'>Derek Brown</a> in collaboration with NCI's Center for Biomedical Informatics and Information Technology (CBIIT).
                 Support comes from the <a className='font-weight-bold' href='https://dceg.cancer.gov/' target='_blank' rel='noopener noreferrer'>Division of Cancer Epidemiology and Genetics</a> Informatics Tool Challenge and the <a className='font-weight-bold' href='https://cpfp.cancer.gov/' target='_blank' rel='noopener noreferrer'>Cancer Prevention Fellowship Program</a> Trans-Fellowship Research Award.
-                Support comes from the <a className='font-weight-bold' href='https://dceg.cancer.gov/' target='_blank' rel='noopener noreferrer'>Division of Cancer Epidemiology and Genetics</a> Informatics Tool Challenge and the <a className='font-weight-bold' href='https://cpfp.cancer.gov/' target='_blank' rel='noopener noreferrer'>Cancer Prevention Fellowship Program</a> Trans-Fellowship Research Award.
-
             </p>
             <p>
                 Questions or comments? Contact us via <a className='font-weight-bold' href='mailto:NCISpatialPowerWebAdmin@nih.gov?subject=Spatial Power'>email.</a>

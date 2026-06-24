@@ -14,7 +14,7 @@ export function About() {
             <li><HashLink className='h6' smooth to='/about/#PowerAnalyses'>Power Analyses</HashLink></li>
             <li><HashLink className='h6' smooth to='/about/#Modules'>Modules</HashLink></li>
             <li>
-                <ol>
+                <ol style={{ listStyle: 'none' }}>
                     <li><HashLink className='h6' smooth to='/about/#sparrpowR'>sparrpowR</HashLink></li>
                 </ol>
             </li>
