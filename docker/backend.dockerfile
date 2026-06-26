@@ -12,10 +12,6 @@ RUN dnf -y update \
     udunits2 \
     && dnf clean all
 
-# Upgrade the globally-installed npm so its bundled deps (tar, minimatch,
-# brace-expansion) pick up security fixes.
-RUN npm install -g npm@latest
-
 ENV R_VER="4.5.3"
 ENV PATH="/opt/R/${R_VER}/bin:${PATH}"
 RUN ARCH=$(uname -m) \
