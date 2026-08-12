@@ -2,8 +2,8 @@ FROM public.ecr.aws/amazonlinux/amazonlinux:2023
 
 RUN dnf -y update \
     && dnf -y install \
-    nodejs \
-    npm \
+    nodejs24 \
+    nodejs24-npm \
     tar \
     gzip \
     geos \

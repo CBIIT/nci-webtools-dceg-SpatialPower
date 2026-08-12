@@ -3,8 +3,8 @@ FROM public.ecr.aws/amazonlinux/amazonlinux:2023 AS build
 
 RUN dnf -y update \
  && dnf -y install \
-    nodejs \
-    npm \
+    nodejs24 \
+    nodejs24-npm \
  && dnf clean all
 
 WORKDIR /client
