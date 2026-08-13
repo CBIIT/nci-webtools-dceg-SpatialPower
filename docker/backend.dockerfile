@@ -12,6 +12,13 @@ RUN dnf -y update \
     udunits2 \
     && dnf clean all
 
+# The npm shipped with the nodejs24 RPM bundles its own vulnerable dependencies, which account
+# for most of the image scan findings. npm's global root is /usr/lib/nodejs24/lib/node_modules,
+# the same path the RPM installs to, so this replaces that copy in place. It clears the tar and
+# brace-expansion findings; the remaining ip-address and undici ones are still unpatched in the
+# latest npm and are covered by a scan waiver.
+RUN npm install -g npm@latest && npm update -g
+
 ENV R_VER="4.5.3"
 ENV PATH="/opt/R/${R_VER}/bin:${PATH}"
 RUN ARCH=$(uname -m) \
