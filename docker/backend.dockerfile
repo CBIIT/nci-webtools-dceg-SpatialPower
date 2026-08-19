@@ -40,13 +40,14 @@ COPY server/package*.json .
 
 RUN npm install
 
-# Applies any base-OS security updates published since the cached layers above were built.
+# Re-runs the base OS package update from the top of this file, so that any fixes published since
+# the cached layers above were built are actually applied.
 # The deploy workflow passes a unique CACHEBUST value per run attempt, so this layer -- and only
 # this layer -- is rebuilt every deploy; the expensive R and geospatial layers above stay cached
 # and the application dependency tree installed above stays frozen. The global npm upgrade is
 # repeated here because updating the nodejs24-npm RPM restores its own bundled npm over the
 # global root, which would otherwise revert the upgrade performed earlier in this file. The R
-# libraries are loaded afterwards so that an soname change in geos/proj/gdal/udunits2 fails the
+# libraries are loaded afterwards so that a soname change in geos/proj/gdal/udunits2 fails the
 # build here, rather than at container start, since the compiled R packages above are not rebuilt.
 # sf is deliberately excluded from that check: its Posit binary build links libgdal.so.30 on both
 # x86_64 and aarch64 while this image ships gdal310-libs (libgdal.so.36), so it cannot load on any
