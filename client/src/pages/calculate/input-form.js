@@ -307,7 +307,7 @@ export function InputForm({
 
     return <form className={className} onSubmit={handleSubmit} onReset={handleReset}>
         <fieldset className="border px-3 mb-4">
-            <legend className="legend font-weight-bold">Spatial Window</legend>
+            <legend className="legend font-weight-bold" role="heading" aria-level="2">Spatial Window</legend>
 
             <div className="form-group">
                 <div className="row col-md-24">
@@ -367,7 +367,7 @@ export function InputForm({
                     <a
                         className='col-md-9'
                         href="assets/files/Washington_DC_Boundary.geojson"
-                        target="_blank"
+                        target="_blank" rel='noopener noreferrer'
                         download
                         style={{ textAlign: 'right' }}
                     >
@@ -717,7 +717,7 @@ export function InputForm({
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
-            <legend className="legend font-weight-bold">Sample Case</legend>
+            <legend className="legend font-weight-bold" role="heading" aria-level="2">Sample Case</legend>
             <div className="form-group">
                 <label htmlFor="samp_case" className="required">Case Type</label>
                 <OverlayTrigger overlay={<Tooltip id="samp_case_tooltip">Specify how case locations are randomized.</Tooltip>}>
@@ -816,7 +816,7 @@ export function InputForm({
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
-            <legend className="legend font-weight-bold">Sample Control</legend>
+            <legend className="legend font-weight-bold" role="heading" aria-level="2">Sample Control</legend>
             <div className="form-group">
                 <label htmlFor="samp_control" className="required">Control Type</label>
                 <OverlayTrigger overlay={<Tooltip id="samp_control_tooltip">Specify how control locations are randomized.</Tooltip>}>
@@ -899,7 +899,7 @@ export function InputForm({
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
-            <legend className="legend font-weight-bold">Simulations</legend>
+            <legend className="legend font-weight-bold" role="heading" aria-level="2">Simulations</legend>
             <div className="form-group">
                 <label htmlFor="sim_total" className="required">Number of Simulations</label>
                 <OverlayTrigger overlay={<Tooltip id="sim_total_tooltip">Specify the number of simulation iterations to perform.</Tooltip>}>
@@ -977,7 +977,7 @@ export function InputForm({
         </fieldset>
 
         <fieldset className="border px-3 mb-4">
-            <legend className="legend font-weight-bold">Queue</legend>
+            <legend className="legend font-weight-bold" role="heading" aria-level="2">Queue</legend>
             <div className="form-group custom-control custom-checkbox">
                 <input
                     type="checkbox"

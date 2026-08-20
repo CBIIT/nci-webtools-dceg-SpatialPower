@@ -198,7 +198,7 @@ app.listen(config.server.port, () => {
   }
 
   // create required folders
-  for (let folder of [config.logs.folder, config.results.folder]) {
+  for (let folder of [config.results.folder]) {
     fs.mkdirSync(folder, { recursive: true });
   }
 
