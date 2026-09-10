@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const express = require("express");
+const rateLimit = require("express-rate-limit");
 const compression = require("compression");
 const archiver = require("archiver");
 const AWS = require("aws-sdk");
@@ -14,6 +15,30 @@ const app = express();
 const apiRouter = express.Router();
 const logger = createLogger("spatial-power", config.logs);
 app.use("/api", apiRouter);
+
+// rate-limit all api requests
+apiRouter.use(
+  rateLimit({
+    windowMs: 60 * 1000,
+    max: 300,
+    standardHeaders: true,
+    legacyHeaders: false,
+  })
+);
+
+// resolves a path within a base folder, ensuring the resolved path
+// does not traverse outside of the base folder
+function resolveWithin(base, ...segments) {
+  const basePath = path.resolve(base);
+  const resolvedPath = path.resolve(basePath, ...segments);
+  if (
+    resolvedPath !== basePath &&
+    !resolvedPath.startsWith(basePath + path.sep)
+  ) {
+    throw `Invalid path`;
+  }
+  return resolvedPath;
+}
 
 // serve public folder during local development
 if (process.env.NODE_ENV !== "production")
@@ -140,7 +165,7 @@ apiRouter.get("/fetch-results/:id", async (request, response) => {
     }
 
     // ensure output directory exists
-    const resultsFolder = path.resolve(config.results.folder, id);
+    const resultsFolder = resolveWithin(config.results.folder, id);
     await fs.promises.mkdir(resultsFolder, { recursive: true });
 
     // find objects which use the specified id as the prefix
@@ -154,7 +179,7 @@ apiRouter.get("/fetch-results/:id", async (request, response) => {
     // download results
     for (let { Key } of objects.Contents) {
       const filename = path.basename(Key);
-      const filepath = path.resolve(resultsFolder, filename);
+      const filepath = resolveWithin(resultsFolder, filename);
 
       // download results if they do not exist
       if (!fs.existsSync(filepath)) {
@@ -170,8 +195,8 @@ apiRouter.get("/fetch-results/:id", async (request, response) => {
       }
     }
 
-    let paramsFilePath = path.resolve(resultsFolder, `params.json`);
-    let resultsFilePath = path.resolve(resultsFolder, `results.json`);
+    let paramsFilePath = resolveWithin(resultsFolder, `params.json`);
+    let resultsFilePath = resolveWithin(resultsFolder, `results.json`);
     if (fs.existsSync(resultsFilePath) && fs.existsSync(paramsFilePath)) {
       const params = JSON.parse(
         String(await fs.promises.readFile(paramsFilePath))
