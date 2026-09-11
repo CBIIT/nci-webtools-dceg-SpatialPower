@@ -25,6 +25,7 @@
     "aws-sdk": "^2.1693.0",
     "compression": "^1.8.1",
     "express": "^4.22.1",
+    "express-rate-limit": "^7.5.1",
     "nodemailer": "^9.0.1",
     "r-wrapper": "^1.1.2",
     "winston": "^3.19.0",
