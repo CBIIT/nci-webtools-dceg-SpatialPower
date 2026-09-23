@@ -36,6 +36,16 @@ export interface EcsAppStackProps extends cdk.StackProps {
   nonProdSchedule: boolean;
   scheduledMinCapacity: number;
   scheduledMaxCapacity: number;
+
+  // App-config SSM parameters consumed as ECS `secrets` by web.yml (backend +
+  // queue containers). Set these in cdk.env only on tiers where the parameters
+  // do not already exist outside CDK (stage/prod): CloudFormation fails on
+  // creating a parameter that already exists, so dev/qa must leave them unset.
+  appBaseUrl?: string;
+  emailAdmin?: string;
+  emailSender?: string;
+  emailSmtpHost?: string;
+  emailSmtpPort?: string;
 }
 
 export class EcsAppStack extends cdk.Stack {
@@ -279,6 +289,25 @@ export class EcsAppStack extends cdk.Stack {
       parameterName: `/${appNamespace}/${tier}/${appName}/queue_error_url`,
       stringValue: errorQueue.queueUrl,
     });
+
+    // App-config parameters (see EcsAppStackProps): without these five the web
+    // task's containers fail at provisioning ("invalid ssm parameters") and the
+    // deployment circuit breaker rolls the service back to the placeholder.
+    const appConfigParams: Record<string, string | undefined> = {
+      base_url: props.appBaseUrl,
+      email_admin: props.emailAdmin,
+      email_sender: props.emailSender,
+      email_smtp_host: props.emailSmtpHost,
+      email_smtp_port: props.emailSmtpPort,
+    };
+    for (const [name, value] of Object.entries(appConfigParams)) {
+      if (value) {
+        new ssm.StringParameter(this, `SsmAppConfig_${name}`, {
+          parameterName: `/${appNamespace}/${tier}/${appName}/${name}`,
+          stringValue: value,
+        });
+      }
+    }
 
     // Stack outputs
     new cdk.CfnOutput(this, "WebServiceName", {
