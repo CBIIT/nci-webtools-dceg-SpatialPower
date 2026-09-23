@@ -14,8 +14,6 @@ services:
     build:
       context: "."
       dockerfile: "./docker/frontend.dockerfile"
-      args:
-        APP_PATH: /spatial-power
     environment:
       API_HOST: http://backend:8000
     ports:

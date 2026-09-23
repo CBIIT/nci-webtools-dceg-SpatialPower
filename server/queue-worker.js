@@ -15,8 +15,8 @@ const logger = createLogger('spatial-power', config.logs);
         AWS.config.update(config.aws);
     }
 
-    // create required folders 
-    for (let folder of [config.logs.folder, config.results.folder]) {
+    // create required folders
+    for (let folder of [config.results.folder]) {
         fs.mkdirSync(folder, { recursive: true });
     }
 
