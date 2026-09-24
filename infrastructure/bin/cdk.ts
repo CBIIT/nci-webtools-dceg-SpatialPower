@@ -60,13 +60,9 @@ new EcsAppStack(app, `SpatialPowerStack-${TIER}`, {
   scheduledMinCapacity: Number(optional("SCHEDULED_MIN_CAPACITY", "1")),
   scheduledMaxCapacity: Number(optional("SCHEDULED_MAX_CAPACITY", "1")),
 
-  // Unset on dev/qa (parameters pre-exist outside CDK); required in the
-  // stage/prod cdk.env before the first app deploy on that tier.
-  appBaseUrl: process.env.APP_BASE_URL,
-  emailAdmin: process.env.EMAIL_ADMIN,
-  emailSender: process.env.EMAIL_SENDER,
-  emailSmtpHost: process.env.EMAIL_SMTP_HOST,
-  emailSmtpPort: process.env.EMAIL_SMTP_PORT,
+  // Tier app.env, downloaded from S3 by the infrastructure workflow. Each key
+  // becomes an SSM parameter the web task consumes as an ECS secret.
+  appEnvFile: required("APP_ENV_FILE"),
 });
 
 app.synth();

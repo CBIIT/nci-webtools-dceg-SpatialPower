@@ -8,6 +8,26 @@ import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as appscaling from "aws-cdk-lib/aws-applicationautoscaling";
 import { Construct } from "constructs";
+import * as fs from "fs";
+
+/**
+ * Parse a .env file into key-value pairs.
+ * Skips blank lines, comments (#), and lines without '='.
+ */
+function parseEnvFile(filePath: string): Record<string, string> {
+  const content = fs.readFileSync(filePath, "utf-8");
+  const result: Record<string, string> = {};
+  for (const line of content.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const eqIndex = trimmed.indexOf("=");
+    if (eqIndex < 1) continue;
+    const key = trimmed.slice(0, eqIndex).trim();
+    const value = trimmed.slice(eqIndex + 1).trim();
+    result[key] = value;
+  }
+  return result;
+}
 
 export interface EcsAppStackProps extends cdk.StackProps {
   tier: string;
@@ -37,15 +57,9 @@ export interface EcsAppStackProps extends cdk.StackProps {
   scheduledMinCapacity: number;
   scheduledMaxCapacity: number;
 
-  // App-config SSM parameters consumed as ECS `secrets` by web.yml (backend +
-  // queue containers). Set these in cdk.env only on tiers where the parameters
-  // do not already exist outside CDK (stage/prod): CloudFormation fails on
-  // creating a parameter that already exists, so dev/qa must leave them unset.
-  appBaseUrl?: string;
-  emailAdmin?: string;
-  emailSender?: string;
-  emailSmtpHost?: string;
-  emailSmtpPort?: string;
+  // Path to the tier's app.env file. Every key in it is published as an SSM
+  // parameter the web task consumes as an ECS secret (see web.yml).
+  appEnvFile: string;
 }
 
 export class EcsAppStack extends cdk.Stack {
@@ -290,23 +304,17 @@ export class EcsAppStack extends cdk.Stack {
       stringValue: errorQueue.queueUrl,
     });
 
-    // App-config parameters (see EcsAppStackProps): without these five the web
-    // task's containers fail at provisioning ("invalid ssm parameters") and the
-    // deployment circuit breaker rolls the service back to the placeholder.
-    const appConfigParams: Record<string, string | undefined> = {
-      base_url: props.appBaseUrl,
-      email_admin: props.emailAdmin,
-      email_sender: props.emailSender,
-      email_smtp_host: props.emailSmtpHost,
-      email_smtp_port: props.emailSmtpPort,
-    };
-    for (const [name, value] of Object.entries(appConfigParams)) {
-      if (value) {
-        new ssm.StringParameter(this, `SsmAppConfig_${name}`, {
-          parameterName: `/${appNamespace}/${tier}/${appName}/${name}`,
-          stringValue: value,
-        });
-      }
+    // App-config parameters, one per key in the tier's app.env. Without these
+    // the web task's containers fail at provisioning ("invalid ssm parameters")
+    // and the deployment circuit breaker rolls the service back to the
+    // placeholder image, which can never pass the health check.
+    const appEnvVars = parseEnvFile(props.appEnvFile);
+    for (const [key, value] of Object.entries(appEnvVars)) {
+      const paramName = key.toLowerCase();
+      new ssm.StringParameter(this, `SsmParam-${paramName}`, {
+        parameterName: `/${appNamespace}/${tier}/${appName}/${paramName}`,
+        stringValue: value,
+      });
     }
 
     // Stack outputs
