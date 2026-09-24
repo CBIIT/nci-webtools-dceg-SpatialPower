@@ -45,7 +45,7 @@ jobs:
       - name: Download env file from S3
         run: |
           aws s3 cp \
-            "s3://${{ vars.CICD_BUCKET }}/env/${{ env.TIER }}/spatial-power/cdk.env" \
+            "s3://${{ vars.CICD_BUCKET }}/env/${{ env.TIER }}/spatial-power/${{ env.TIER }}-cdk.env" \
             "${{ env.CDK_DIR }}/cdk.env"
 
       - name: Load CDK environment variables

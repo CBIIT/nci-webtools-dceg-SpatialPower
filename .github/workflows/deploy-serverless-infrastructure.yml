@@ -44,11 +44,14 @@ jobs:
           role-session-name: ${{ env.TIER }}-spatial-power-infra-${{ github.run_id }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Download env file from S3
+      - name: Download env files from S3
         run: |
           aws s3 cp \
-            "s3://${{ vars.CICD_BUCKET }}/env/${{ env.TIER }}/spatial-power/cdk.env" \
+            "s3://${{ vars.CICD_BUCKET }}/env/${{ env.TIER }}/spatial-power/${{ env.TIER }}-cdk.env" \
             "${{ env.CDK_DIR }}/cdk.env"
+          aws s3 cp \
+            "s3://${{ vars.CICD_BUCKET }}/env/${{ env.TIER }}/spatial-power/${{ env.TIER }}-app.env" \
+            "${{ env.CDK_DIR }}/app.env"
 
       - name: Load CDK environment variables
         working-directory: ${{ env.CDK_DIR }}
@@ -57,6 +60,10 @@ jobs:
             case "$line" in ''|\#*) continue ;; esac
             echo "$line" >> "$GITHUB_ENV"
           done < cdk.env
+
+      - name: Set APP_ENV_FILE
+        working-directory: ${{ env.CDK_DIR }}
+        run: echo "APP_ENV_FILE=$(pwd)/app.env" >> "$GITHUB_ENV"
 
       - name: Setup Node.js
         uses: actions/setup-node@v6.3.0
@@ -78,7 +85,7 @@ jobs:
       - name: Clean up env files
         if: always()
         working-directory: ${{ env.CDK_DIR }}
-        run: rm -f cdk.env
+        run: rm -f cdk.env app.env
 
       - name: Deployment Summary
         run: |
