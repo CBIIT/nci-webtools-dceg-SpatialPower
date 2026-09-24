@@ -59,6 +59,10 @@ new EcsAppStack(app, `SpatialPowerStack-${TIER}`, {
   nonProdSchedule: process.env.WEB_NON_PROD_SCHEDULE === "true",
   scheduledMinCapacity: Number(optional("SCHEDULED_MIN_CAPACITY", "1")),
   scheduledMaxCapacity: Number(optional("SCHEDULED_MAX_CAPACITY", "1")),
+
+  // Tier app.env, downloaded from S3 by the infrastructure workflow. Each key
+  // becomes an SSM parameter the web task consumes as an ECS secret.
+  appEnvFile: required("APP_ENV_FILE"),
 });
 
 app.synth();
