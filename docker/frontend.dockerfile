@@ -11,7 +11,7 @@ WORKDIR /client
 
 COPY client/package*.json /client/
 
-RUN npm install
+RUN npm ci
 
 COPY client /client/
 
@@ -37,6 +37,13 @@ RUN touch index.html && chown apache:apache index.html
 
 EXPOSE 80
 EXPOSE 443
+
+# httpd must bind port 80 (the ALB target group and .github/aws/web.yml expose 80), so the master
+# process stays root; httpd itself drops its worker processes to the 'apache' user. A non-root
+# master would mean listening above 1024 and changing the task definition, which is a deployment
+# change rather than an image one.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -fsS http://localhost/spatial-power/ >/dev/null || exit 1
 
 CMD rm -rf /run/httpd/* /tmp/httpd* \
  && exec /usr/sbin/httpd -DFOREGROUND
