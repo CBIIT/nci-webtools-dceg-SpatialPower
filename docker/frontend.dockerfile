@@ -20,9 +20,13 @@ RUN npm run build
 # ---- runtime stage: httpd serving the static build only (no node_modules/npm) ----
 FROM public.ecr.aws/amazonlinux/amazonlinux:2023
 
+# Python 3.9 is present only because dnf is written in it; httpd never runs it, and the AL2023
+# build carries unfixed CVEs such as CVE-2025-12781. Restrict it to root, the Analysis Tools
+# standard mitigation (same line in the pimixture, FORGE2-TF, icdgenie, APC and linkage images).
 RUN dnf -y update \
  && dnf -y install httpd \
- && dnf clean all
+ && dnf clean all \
+ && chmod 700 /usr/bin/python3.9
 
 # Copy only the compiled static assets — build tooling never reaches the runtime
 # image, removing every build-time npm CVE (rollup, webpack, babel, etc.).

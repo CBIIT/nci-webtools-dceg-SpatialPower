@@ -129,7 +129,12 @@ RUN npm ci
 # npm is removed here, after the upgrade, because an upgrade of the nodejs24-npm RPM would
 # otherwise restore npm's files; the RPM is removed (nothing else requires it) and any remaining
 # globally-installed copy is deleted. The final `! command -v npm` fails the build if npm is
-# still reachable. The R libraries are loaded afterwards so that a soname change in geos/proj/gdal/udunits2 fails the
+# still reachable. Python 3.9 (present only because dnf is written in it; the app never runs it,
+# and the AL2023 build carries unfixed CVEs such as CVE-2025-12781) is restricted to root here,
+# after the upgrade, so an upgraded python3 RPM cannot restore the default 0755 mode. This is the
+# Analysis Tools standard mitigation (same line in the pimixture, FORGE2-TF, icdgenie, APC and
+# linkage images); the container runs as the non-root app user, so python is unreachable at runtime.
+# The R libraries are loaded afterwards so that a soname change in geos/proj/gdal/udunits2 fails the
 # build here, rather than at container start, since the compiled R packages above are not rebuilt.
 # This check also guards the stage boundary: it is what proves the library copied out of the
 # builder can actually load against the runtime image's geospatial libraries.
@@ -147,6 +152,7 @@ RUN echo "cachebust=${CACHEBUST}" \
               /usr/lib/node_modules/npm \
               /usr/bin/npm /usr/bin/npx /usr/bin/npm-24 /usr/bin/npx-24 \
               /etc/alternatives/npm /etc/alternatives/npx \
+    && chmod 700 /usr/bin/python3.9 \
     && ! command -v npm \
     && node -v | grep -qE '^v24\.' \
     && Rscript -e 'library(sf); library(terra); library(sparrpowR); library(spatstat.geom); library(jsonlite); library(testthat)'
@@ -163,6 +169,10 @@ RUN chmod +x /usr/local/bin/backend-entrypoint.sh
 RUN groupadd -g 1000 app && useradd -u 1000 -g 1000 -m -s /sbin/nologin app \
     && chown -R app:app /server
 USER app
+
+# Prove the python restriction holds for the runtime user: this fails the build if the app user
+# can execute the system python.
+RUN ! python3.9 -c 1 2>/dev/null
 
 EXPOSE 8000
 
