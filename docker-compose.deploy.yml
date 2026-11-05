@@ -14,7 +14,7 @@ services:
 
   processor:
     image: ${BACKEND_IMAGE_LATEST}
-    command: npm run start-queue-worker
+    command: node queue-worker.js
     volumes:
       - "${APP_HOST_CONFIG_FOLDER}/config.json:/server/config.json:ro"
       - "${APP_HOST_LOGS_FOLDER}:/server/logs"

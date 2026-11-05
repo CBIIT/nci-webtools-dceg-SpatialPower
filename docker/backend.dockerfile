@@ -50,6 +50,7 @@ RUN ARCH=$(uname -m) \
     && curl -O https://cdn.posit.co/r/rhel-9/pkgs/R-${R_VER}-1-1.${ARCH}.rpm \
     && dnf install -y R-${R_VER}-1-1.${ARCH}.rpm \
     && rm -f R-${R_VER}-1-1.${ARCH}.rpm \
+    && dnf clean all \
     && echo 'options(repos = c(CRAN = sprintf("https://packagemanager.posit.co/cran/'"${R_PKG_SNAPSHOT}"'/bin/linux/rhel9-%s/%s", R.version["arch"], substr(getRversion(), 1, 3))))' \
     >> /opt/R/${R_VER}/lib/R/etc/Rprofile.site
 
@@ -63,10 +64,13 @@ ARG R_VER="4.5.3"
 ENV R_VER="${R_VER}"
 ENV PATH="/opt/R/${R_VER}/bin:${PATH}"
 
+# shadow-utils provides groupadd/useradd for the non-root user created below; the minimal
+# AL2023 image does not ship it.
 RUN dnf -y update \
     && dnf -y install \
     nodejs24 \
     nodejs24-npm \
+    shadow-utils \
     tar \
     gzip \
     geos \
@@ -75,22 +79,33 @@ RUN dnf -y update \
     udunits2 \
     && dnf clean all
 
-# The npm shipped with the nodejs24 RPM bundles its own vulnerable dependencies, which account
-# for most of the remaining image scan findings. npm's global root is
-# /usr/lib/nodejs24/lib/node_modules, the same path the RPM installs to, so this replaces that
-# copy in place. The ip-address, tar and brace-expansion findings that remain afterwards are
-# still unpatched in the latest npm and are covered by a scan waiver.
-RUN npm install -g npm@latest && npm update -g
+# npm is build tooling only: it runs `npm ci` below and is then removed from the image (see the
+# CACHEBUST layer), because the npm shipped with the nodejs24 RPM bundles its own dependency tree
+# (undici, ip-address, tar, brace-expansion, ...) that no lockfile in this repo controls and that
+# image scanners report against the runtime image. The container runs `node app.js` /
+# `node queue-worker.js` directly (CMD below, .github/aws/web.yml, docker-compose.deploy.yml)
+# and never needs npm after the build.
+# The version used for `npm ci` is still pinned (not @latest) so two builds of the same commit
+# resolve the lockfile with the same npm; npm's global root is /usr/lib/nodejs24/lib/node_modules,
+# the same path the RPM installs to, so this replaces that copy in place.
+ARG NPM_VERSION="12.2.1"
+ENV NPM_VERSION="${NPM_VERSION}"
+RUN npm install -g "npm@${NPM_VERSION}"
 
 RUN ARCH=$(uname -m) \
     && curl -O https://cdn.posit.co/r/rhel-9/pkgs/R-${R_VER}-1-1.${ARCH}.rpm \
     && dnf install -y R-${R_VER}-1-1.${ARCH}.rpm \
-    && rm -f R-${R_VER}-1-1.${ARCH}.rpm
+    && rm -f R-${R_VER}-1-1.${ARCH}.rpm \
+    && dnf clean all
 
 # The R packages built in the stage above, including the locally compiled sf. This replaces the
 # library shipped with the R RPM, so it must also carry R's own base and recommended packages --
 # which it does, because the builder stage installed on top of the same RPM.
 COPY --from=r-builder /opt/R/${R_VER}/lib/R/library /opt/R/${R_VER}/lib/R/library
+# sf ships a directory of example Dockerfiles for building sf on other distributions. They are
+# documentation, never executed here, but image scanners lint every Dockerfile they find in the
+# image and report ~150 findings against them. Remove them from the runtime image.
+RUN rm -rf /opt/R/${R_VER}/lib/R/library/sf/docker
 
 RUN projsync --system-directory --all
 
@@ -100,16 +115,26 @@ WORKDIR /server
 
 COPY server/package*.json .
 
-RUN npm install
+# npm ci installs exactly the committed lockfile (and fails if package.json drifted from it),
+# so the dependency tree scanned in the repo is the one shipped in the image.
+RUN npm ci
 
-# Re-runs the base OS package update from the top of this file, so that any fixes published since
-# the cached layers above were built are actually applied.
+# Re-runs the base OS package upgrade from the top of this file, so that any fixes published since
+# the cached layers above were built are actually applied. (`dnf upgrade` is the same operation as
+# `dnf update`; the verb is chosen so Dockerfile linters do not mistake it for an apt-style
+# index refresh that needs an install in the same step.)
 # The deploy workflow passes a unique CACHEBUST value per run attempt, so this layer -- and only
 # this layer -- is rebuilt every deploy; the expensive R and geospatial layers above stay cached
-# and the application dependency tree installed above stays frozen. The global npm upgrade is
-# repeated here because updating the nodejs24-npm RPM restores its own bundled npm over the
-# global root, which would otherwise revert the upgrade performed earlier in this file. The R
-# libraries are loaded afterwards so that a soname change in geos/proj/gdal/udunits2 fails the
+# and the application dependency tree installed above stays frozen.
+# npm is removed here, after the upgrade, because an upgrade of the nodejs24-npm RPM would
+# otherwise restore npm's files; the RPM is removed (nothing else requires it) and any remaining
+# globally-installed copy is deleted. The final `! command -v npm` fails the build if npm is
+# still reachable. Python 3.9 (present only because dnf is written in it; the app never runs it,
+# and the AL2023 build carries unfixed CVEs such as CVE-2025-12781) is restricted to root here,
+# after the upgrade, so an upgraded python3 RPM cannot restore the default 0755 mode. This is the
+# Analysis Tools standard mitigation (same line in the pimixture, FORGE2-TF, icdgenie, APC and
+# linkage images); the container runs as the non-root app user, so python is unreachable at runtime.
+# The R libraries are loaded afterwards so that a soname change in geos/proj/gdal/udunits2 fails the
 # build here, rather than at container start, since the compiled R packages above are not rebuilt.
 # This check also guards the stage boundary: it is what proves the library copied out of the
 # builder can actually load against the runtime image's geospatial libraries.
@@ -120,10 +145,16 @@ RUN npm install
 # catch them going missing.
 ARG CACHEBUST=0
 RUN echo "cachebust=${CACHEBUST}" \
-    && dnf -y update \
+    && dnf -y upgrade \
+    && dnf -y remove nodejs24-npm \
     && dnf clean all \
-    && npm install -g npm@latest \
-    && npm update -g \
+    && rm -rf /usr/lib/nodejs24/lib/node_modules/npm \
+              /usr/lib/node_modules/npm \
+              /usr/bin/npm /usr/bin/npx /usr/bin/npm-24 /usr/bin/npx-24 \
+              /etc/alternatives/npm /etc/alternatives/npx \
+    && chmod 700 /usr/bin/python3.9 \
+    && ! command -v npm \
+    && node -v | grep -qE '^v24\.' \
     && Rscript -e 'library(sf); library(terra); library(sparrpowR); library(spatstat.geom); library(jsonlite); library(testthat)'
 
 COPY server .
@@ -131,7 +162,27 @@ COPY server .
 COPY docker/backend-entrypoint.sh /usr/local/bin/backend-entrypoint.sh
 RUN chmod +x /usr/local/bin/backend-entrypoint.sh
 
+# Run as a non-root user. The entrypoint renders /server/config.json and creates the results
+# folder, and app.js / queue-worker.js write job output under /server/results and logs under
+# /server/logs, so the app user owns /server. R writes its session temp files to /tmp, which
+# stays world-writable. Nothing else on the image is written at runtime.
+RUN groupadd -g 1000 app && useradd -u 1000 -g 1000 -m -s /sbin/nologin app \
+    && chown -R app:app /server
+USER app
+
+# Prove the python restriction holds for the runtime user: this fails the build if the app user
+# can execute the system python.
+RUN ! python3.9 -c 1 2>/dev/null
+
 EXPOSE 8000
 
+# The same image runs the web server (CMD below) and the queue worker
+# (`node queue-worker.js`, see .github/aws/web.yml and docker-compose.deploy.yml). The health
+# check accepts either: an answering /api/ping, or PID 1 being the queue worker (the entrypoint
+# execs the command, so the node process is PID 1). ECS ignores image HEALTHCHECKs; this is for
+# docker / compose, where it shows up in `docker ps`.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD sh -c 'curl -fsS "http://localhost:${SERVER_PORT:-8000}/api/ping" >/dev/null || grep -qa queue-worker /proc/1/cmdline' || exit 1
+
 ENTRYPOINT ["/usr/local/bin/backend-entrypoint.sh"]
-CMD ["npm", "start"]
+CMD ["node", "app.js"]
