@@ -164,7 +164,7 @@ calculate <- function(params) {
         local_crs <- paste0("+proj=webmerc +datum=WGS84 +lon_0=", params$longitude, " +y_0=", params$latitude)
         global_crs <- "EPSG:4326"
         
-        geojson_sf <- sf::st_read(paste0('{"type":"Feature","geometry":', params$geojson, ',"properties":{}}'), quiet = TRUE)
+        geojson_sf <- sf::st_sf(geometry = sf::st_as_sfc(params$geojson, GeoJSON = TRUE), crs = global_crs)
         geojson_sf <- sf::st_make_valid(geojson_sf)
         sp_area_union <- sf::st_union(geojson_sf)
         sp_area_proj <- sf::st_transform(sp_area_union, crs = local_crs)
